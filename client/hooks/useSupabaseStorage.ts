@@ -178,6 +178,7 @@ export const useSupabaseStorage = () => {
         if (updates.type) updateData.type = updates.type;
         if (updates.description !== undefined) updateData.description = updates.description;
         if (updates.color) updateData.color = updates.color;
+        if (updates.icon !== undefined) updateData.icon = updates.icon;
         if (updates.parentId !== undefined) updateData.parent_id = updates.parentId;
 
         const { error: updateError } = await supabase
