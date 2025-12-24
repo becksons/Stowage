@@ -19,7 +19,12 @@ export default function Inventory() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
-  const locationNames = locations.map((loc) => loc.name);
+  // Include both storage locations and storage items as available places to put items
+  const storageItems = items.filter((item) => item.isStorageItem);
+  const locationNames = [
+    ...locations.map((loc) => loc.name),
+    ...storageItems.map((item) => item.name),
+  ];
 
   let displayItems = getFilteredItems();
 
