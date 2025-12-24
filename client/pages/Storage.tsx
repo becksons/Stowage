@@ -506,6 +506,46 @@ export default function Storage() {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="icon">Storage Icon</Label>
+              <div className="flex gap-2 items-center">
+                {formData.icon && (
+                  <div className="w-10 h-10 rounded-lg bg-primary/15 border border-primary/30 p-1 flex items-center justify-center flex-shrink-0">
+                    <img
+                      src={getStorageIconPath(formData.icon)}
+                      alt={formData.icon}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                )}
+                <Select
+                  value={formData.icon}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, icon: value })
+                  }
+                >
+                  <SelectTrigger id="icon" className="flex-1">
+                    <SelectValue placeholder="Choose a custom icon" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Use type icon</SelectItem>
+                    {getStorageIconOptions().map((icon) => (
+                      <SelectItem key={icon} value={icon}>
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={getStorageIconPath(icon)}
+                            alt={icon}
+                            className="w-4 h-4"
+                          />
+                          <span>{icon}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
               <Label>Color</Label>
               <div className="grid grid-cols-6 gap-2">
                 {colorOptions.map((color) => (
