@@ -49,6 +49,7 @@ export default function AddEditItemDialog({
     location: "",
     quantity: 1,
     icon: "",
+    isStorageItem: false,
   });
   const [tags, setTags] = useState<ItemTag[]>([]);
   const [tagInput, setTagInput] = useState({
