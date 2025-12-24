@@ -40,28 +40,33 @@ export default function Inventory() {
 
   const handleSaveItem = async (data: any) => {
     try {
-      if (editingItem) {
-        // Determine location_id: use existing if location hasn't changed, otherwise look it up
-        let location_id = editingItem.location_id;
-        if (data.location && data.location !== editingItem.location) {
-          const newLocation = locations.find((loc) => loc.name === data.location);
-          if (newLocation) {
-            location_id = newLocation.id;
-          }
-        }
+      // Look up location_id from location name
+      const location = locations.find((loc) => loc.name === data.location);
+      const location_id = location?.id;
 
-        const updateData = {
-          ...data,
-          location_id,
-        };
-        await updateItem(editingItem.id, updateData);
+      if (!location_id) {
+        toast({
+          title: "Error",
+          description: "Selected location not found",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const itemData = {
+        ...data,
+        location_id,
+      };
+
+      if (editingItem) {
+        await updateItem(editingItem.id, itemData);
         toast({
           title: "Success",
           description: "Item updated successfully",
         });
         setEditingItem(null);
       } else {
-        await addItem(data);
+        await addItem(itemData);
         toast({
           title: "Success",
           description: "Item added successfully",
