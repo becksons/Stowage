@@ -72,7 +72,11 @@ export default function Storage() {
   });
 
   const getItemsByLocation = (locationName: string) => {
-    return items.filter((item) => item.location === locationName);
+    return items.filter((item) => item.location === locationName && !item.isStorageItem);
+  };
+
+  const getStorageItems = () => {
+    return items.filter((item) => item.isStorageItem);
   };
 
   const filteredLocations = getFilteredLocations();
