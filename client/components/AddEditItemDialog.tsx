@@ -268,7 +268,18 @@ export default function AddEditItemDialog({
                           <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">CONTAINERS (ITEMS)</div>
                           {storageItems.map((item) => (
                             <SelectItem key={item.name} value={item.name}>
-                              📦 Inside: {item.name}
+                              <div className="flex items-center gap-2">
+                                {item.icon ? (
+                                  <img
+                                    src={getItemIconPath(item.icon)}
+                                    alt={item.icon}
+                                    className="w-4 h-4"
+                                  />
+                                ) : (
+                                  <Box className="w-4 h-4" />
+                                )}
+                                <span>Inside: {item.name}</span>
+                              </div>
                             </SelectItem>
                           ))}
                         </>
