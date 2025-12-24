@@ -517,7 +517,18 @@ export default function Storage() {
                                   <Edit className="w-4 h-4 mr-2" />
                                   Edit Item
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="text-destructive">
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    if (confirm("Are you sure you want to delete this storage item?")) {
+                                      deleteItem(storageItem.id);
+                                      toast({
+                                        title: "Success",
+                                        description: "Storage item deleted successfully",
+                                      });
+                                    }
+                                  }}
+                                  className="text-destructive"
+                                >
                                   <Trash2 className="w-4 h-4 mr-2" />
                                   Delete Item
                                 </DropdownMenuItem>
