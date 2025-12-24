@@ -274,12 +274,6 @@ export default function Storage() {
                             <Filter className="w-3 h-3" />
                             {storageType?.label}
                           </span>
-                          {childLocations.length > 0 && (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-secondary/15 text-secondary border border-secondary/30">
-                              <Layers className="w-3 h-3" />
-                              {childLocations.length} nested
-                            </span>
-                          )}
                         </div>
                         {parentLocation && (
                           <p className="text-xs text-muted-foreground font-medium flex items-center justify-center gap-1">
@@ -355,7 +349,6 @@ export default function Storage() {
 
                   {childLocations.length > 0 && (
                     <div className="ml-4 sm:ml-6 space-y-3 border-l-2 border-primary/30 pl-4 sm:pl-6">
-                      <p className="text-sm font-semibold text-muted-foreground ml-2">Storage inside this space:</p>
                       {childLocations.map((child) => {
                         const childItemCount = getItemsByLocation(child.name).length;
                         const childStorageType = storageTypes.find(
