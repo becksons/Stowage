@@ -67,6 +67,7 @@ export const useSupabaseStorage = () => {
           type: loc.type,
           description: loc.description,
           color: loc.color,
+          icon: loc.icon,
           parentId: loc.parent_id,
           createdAt: new Date(loc.created_at),
           updatedAt: new Date(loc.updated_at),
