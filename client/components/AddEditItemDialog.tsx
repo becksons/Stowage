@@ -66,6 +66,7 @@ export default function AddEditItemDialog({
         location: existingItem.location,
         quantity: existingItem.quantity,
         icon: existingItem.icon || "",
+        isStorageItem: existingItem.isStorageItem || false,
       });
       setTags(existingItem.tags);
     } else {
@@ -75,6 +76,7 @@ export default function AddEditItemDialog({
         location: "",
         quantity: 1,
         icon: "",
+        isStorageItem: false,
       });
       setTags([]);
     }
