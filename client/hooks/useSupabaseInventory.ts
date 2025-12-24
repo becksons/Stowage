@@ -144,6 +144,7 @@ export const useSupabaseInventory = () => {
             location_name: item.location,
             quantity: item.quantity,
             icon: item.icon,
+            is_storage_item: item.isStorageItem || false,
           })
           .select()
           .single();
