@@ -67,6 +67,7 @@ export default function Storage() {
     type: "drawer" as const,
     description: "",
     color: "bg-blue-100 dark:bg-blue-950",
+    icon: "",
     parentId: null as string | null,
   });
 
