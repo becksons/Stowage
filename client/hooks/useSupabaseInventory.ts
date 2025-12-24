@@ -141,6 +141,7 @@ export const useSupabaseInventory = () => {
             location_id: item.location_id,
             location_name: item.location,
             quantity: item.quantity,
+            icon: item.icon,
           })
           .select()
           .single();
