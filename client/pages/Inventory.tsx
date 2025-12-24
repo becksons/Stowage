@@ -48,11 +48,15 @@ export default function Inventory() {
 
   const handleSaveItem = async (data: any) => {
     try {
-      // Look up location_id from location name
-      const location = locations.find((loc) => loc.name === data.location);
-      const location_id = location?.id;
+      // Look up location_id from location name (could be a storage location or storage item)
+      const storageLocation = locations.find((loc) => loc.name === data.location);
+      const location_id = storageLocation?.id;
 
-      if (!location_id) {
+      // If it's not a storage location, it might be a storage item being used as a container
+      // For now, we'll use the location name only if it's a storage item
+      const isStorageItemContainer = !location_id && storageItems.some((item) => item.name === data.location);
+
+      if (!location_id && !isStorageItemContainer) {
         toast({
           title: "Error",
           description: "Selected location not found",
