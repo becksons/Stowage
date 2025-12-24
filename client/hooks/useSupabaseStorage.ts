@@ -130,6 +130,7 @@ export const useSupabaseStorage = () => {
             type: location.type,
             description: location.description,
             color: location.color,
+            icon: location.icon,
             parent_id: location.parentId,
           })
           .select()
