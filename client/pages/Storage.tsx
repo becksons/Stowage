@@ -324,24 +324,33 @@ export default function Storage() {
                       </p>
                     )}
 
-                    <div className="relative pt-4 border-t border-primary/20">
-                      <div className="flex items-center justify-between">
-                        <div className="inline-flex items-center gap-2">
-                          <Box className="w-4 h-4 text-primary/60" />
-                          <p className="text-sm font-bold text-foreground">
-                            {itemCount} item{itemCount !== 1 ? "s" : ""} stored
-                          </p>
+                    {itemCount > 0 ? (
+                      <div className="relative pt-4 border-t border-primary/20">
+                        <p className="text-sm font-semibold text-foreground mb-3">Items in this location:</p>
+                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                          {getItemsByLocation(location.name).map((item) => (
+                            <div key={item.id} className="flex flex-col items-center text-center">
+                              <div className="w-12 h-12 rounded-lg bg-primary/15 border border-primary/30 p-1.5 flex items-center justify-center mb-2">
+                                {item.icon ? (
+                                  <img
+                                    src={getItemIconPath(item.icon)}
+                                    alt={item.name}
+                                    className="w-full h-full object-contain"
+                                  />
+                                ) : (
+                                  <Box className="w-6 h-6 text-primary/60" />
+                                )}
+                              </div>
+                              <p className="text-xs font-medium text-foreground line-clamp-2">{item.name}</p>
+                            </div>
+                          ))}
                         </div>
-                        {itemCount > 0 && (
-                          <div className="w-24 h-1.5 bg-muted rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-to-r from-primary to-secondary rounded-full"
-                              style={{ width: `${Math.min((itemCount / 10) * 100, 100)}%` }}
-                            />
-                          </div>
-                        )}
                       </div>
-                    </div>
+                    ) : (
+                      <div className="relative pt-4 border-t border-primary/20">
+                        <p className="text-sm text-muted-foreground text-center italic">No items stored yet</p>
+                      </div>
+                    )}
                   </div>
 
                   {childLocations.length > 0 && (
