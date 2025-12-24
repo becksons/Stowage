@@ -38,12 +38,30 @@ export default function Inventory() {
     }
   });
 
-  const handleSaveItem = (data: any) => {
-    if (editingItem) {
-      updateItem(editingItem.id, data);
-      setEditingItem(null);
-    } else {
-      addItem(data);
+  const handleSaveItem = async (data: any) => {
+    try {
+      if (editingItem) {
+        await updateItem(editingItem.id, data);
+        toast({
+          title: "Success",
+          description: "Item updated successfully",
+        });
+        setEditingItem(null);
+      } else {
+        await addItem(data);
+        toast({
+          title: "Success",
+          description: "Item added successfully",
+        });
+      }
+      setDialogOpen(false);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to save item";
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
     }
   };
 
