@@ -322,7 +322,7 @@ export default function AddEditItemDialog({
                 Make this a storage container
               </Label>
               <p className="text-xs text-muted-foreground mt-1">
-                Converting this item to a storage container will move it to the Storage page where you can organize items inside it.
+                Converting this item to a storage container will move it to the Storage page where you can organize items inside it. The icon you selected above will be displayed for this container.
               </p>
             </div>
           </div>
