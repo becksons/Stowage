@@ -16,6 +16,7 @@ export interface InventoryItem {
   location: string;
   location_id: string;
   quantity: number;
+  icon?: string;
   tags: ItemTag[];
   createdAt: Date;
   updatedAt: Date;
