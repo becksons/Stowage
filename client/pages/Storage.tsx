@@ -362,8 +362,17 @@ export default function Storage() {
                             <div className="relative flex items-start justify-between mb-3">
                               <div className="flex items-center gap-3 flex-1">
                                 <div className="p-2 rounded-lg bg-primary/15 border border-primary/30 transform group-hover:scale-110 transition-transform duration-300">
-                                  {childStorageType && <childStorageType.icon className="w-4 h-4 text-primary" />}
-                                  {!childStorageType && <Box className="w-4 h-4 text-primary" />}
+                                  {child.icon ? (
+                                    <img
+                                      src={getStorageIconPath(child.icon)}
+                                      alt={child.icon}
+                                      className="w-4 h-4 object-contain"
+                                    />
+                                  ) : childStorageType ? (
+                                    <childStorageType.icon className="w-4 h-4 text-primary" />
+                                  ) : (
+                                    <Box className="w-4 h-4 text-primary" />
+                                  )}
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <h4 className="text-lg font-bold text-foreground">{child.name}</h4>
