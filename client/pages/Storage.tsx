@@ -536,16 +536,16 @@ export default function Storage() {
                   </div>
                 )}
                 <Select
-                  value={formData.icon}
+                  value={formData.icon || "none"}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, icon: value })
+                    setFormData({ ...formData, icon: value === "none" ? "" : value })
                   }
                 >
                   <SelectTrigger id="icon" className="flex-1">
                     <SelectValue placeholder="Choose a custom icon" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Use type icon</SelectItem>
+                    <SelectItem value="none">Use type icon</SelectItem>
                     {getStorageIconOptions().map((icon) => (
                       <SelectItem key={icon} value={icon}>
                         <div className="flex items-center gap-2">
