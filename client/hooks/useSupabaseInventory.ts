@@ -210,12 +210,18 @@ export const useSupabaseInventory = () => {
         setIsSyncing(true);
 
         const updateData: any = {};
-        if (updates.name) updateData.name = updates.name;
-        if (updates.description) updateData.description = updates.description;
-        if (updates.location) updateData.location_name = updates.location;
-        if (updates.location_id) updateData.location_id = updates.location_id;
-        if (updates.quantity) updateData.quantity = updates.quantity;
+        if (updates.name !== undefined) updateData.name = updates.name;
+        if (updates.description !== undefined) updateData.description = updates.description;
+        if (updates.location !== undefined) updateData.location_name = updates.location;
+        if (updates.location_id !== undefined) updateData.location_id = updates.location_id;
+        if (updates.quantity !== undefined) updateData.quantity = updates.quantity;
         if (updates.icon !== undefined) updateData.icon = updates.icon;
+
+        // Only update if there's data to update
+        if (Object.keys(updateData).length === 0) {
+          setError(null);
+          return;
+        }
 
         const { error: updateError } = await supabase
           .from('inventory_items')
