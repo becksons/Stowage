@@ -135,6 +135,7 @@ export default function Storage() {
         type: "drawer",
         description: "",
         color: "bg-blue-100 dark:bg-blue-950",
+        icon: "",
         parentId: null,
       });
     } catch (err) {
