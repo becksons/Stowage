@@ -354,7 +354,8 @@ export default function Storage() {
                   </div>
 
                   {childLocations.length > 0 && (
-                    <div className="ml-4 sm:ml-6 space-y-3 border-l-4 border-gradient-to-b from-primary/40 to-secondary/40 pl-4 sm:pl-6">
+                    <div className="ml-4 sm:ml-6 space-y-3 border-l-2 border-primary/30 pl-4 sm:pl-6">
+                      <p className="text-sm font-semibold text-muted-foreground ml-2">Storage inside this space:</p>
                       {childLocations.map((child) => {
                         const childItemCount = getItemsByLocation(child.name).length;
                         const childStorageType = storageTypes.find(
