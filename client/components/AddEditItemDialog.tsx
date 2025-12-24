@@ -247,11 +247,33 @@ export default function AddEditItemDialog({
                       No locations available. Create one first!
                     </div>
                   ) : (
-                    locations.map((loc) => (
-                      <SelectItem key={loc} value={loc}>
-                        {getLocationDisplayName(loc)}
-                      </SelectItem>
-                    ))
+                    <>
+                      {/* Storage Locations */}
+                      {locations.filter((loc) => !storageItems.some((item) => item.name === loc)).length > 0 && (
+                        <>
+                          <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">STORAGE LOCATIONS</div>
+                          {locations
+                            .filter((loc) => !storageItems.some((item) => item.name === loc))
+                            .map((loc) => (
+                              <SelectItem key={loc} value={loc}>
+                                📍 {getLocationDisplayName(loc)}
+                              </SelectItem>
+                            ))}
+                        </>
+                      )}
+
+                      {/* Storage Items as Containers */}
+                      {storageItems.length > 0 && (
+                        <>
+                          <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">CONTAINERS (ITEMS)</div>
+                          {storageItems.map((item) => (
+                            <SelectItem key={item.name} value={item.name}>
+                              📦 Inside: {item.name}
+                            </SelectItem>
+                          ))}
+                        </>
+                      )}
+                    </>
                   )}
                 </SelectContent>
               </Select>
