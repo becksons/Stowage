@@ -195,16 +195,16 @@ export default function AddEditItemDialog({
                 </div>
               )}
               <Select
-                value={formData.icon}
+                value={formData.icon || "none"}
                 onValueChange={(value) =>
-                  setFormData({ ...formData, icon: value })
+                  setFormData({ ...formData, icon: value === "none" ? "" : value })
                 }
               >
                 <SelectTrigger id="icon" className="flex-1">
                   <SelectValue placeholder="Choose an icon for this item" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No icon</SelectItem>
+                  <SelectItem value="none">No icon</SelectItem>
                   {getItemIconOptions().map((icon) => (
                     <SelectItem key={icon} value={icon}>
                       <div className="flex items-center gap-2">
