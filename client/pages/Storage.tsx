@@ -226,7 +226,7 @@ export default function Storage() {
           )}
         </div>
 
-        {filteredLocations.length === 0 ? (
+        {filteredLocations.length === 0 && getStorageItems().length === 0 ? (
           <div className="text-center py-16 sm:py-20">
             <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 border-2 border-primary/40 mb-6 group">
               <Box className="w-12 h-12 text-primary transform group-hover:scale-110 transition-transform duration-300" />
