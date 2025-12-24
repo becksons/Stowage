@@ -272,6 +272,26 @@ export default function AddEditItemDialog({
             </div>
           </div>
 
+          {/* Storage Item Option */}
+          <div className="flex items-center gap-3 p-4 rounded-lg bg-primary/5 border border-primary/20">
+            <Checkbox
+              id="isStorageItem"
+              checked={formData.isStorageItem}
+              onCheckedChange={(checked) =>
+                setFormData({ ...formData, isStorageItem: checked === true })
+              }
+            />
+            <div className="flex-1">
+              <Label htmlFor="isStorageItem" className="cursor-pointer font-semibold flex items-center gap-2">
+                <Box className="w-4 h-4" />
+                Make this a storage container
+              </Label>
+              <p className="text-xs text-muted-foreground mt-1">
+                Converting this item to a storage container will move it to the Storage page where you can organize items inside it.
+              </p>
+            </div>
+          </div>
+
           {/* Tags Section */}
           <div className="space-y-3 border-t pt-4">
             <Label>Tags & Attributes</Label>
