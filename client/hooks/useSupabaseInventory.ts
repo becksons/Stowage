@@ -76,6 +76,7 @@ export const useSupabaseInventory = () => {
           location: item.location_name,
           location_id: item.location_id,
           quantity: item.quantity,
+          icon: item.icon,
           tags: item.item_tags || [],
           createdAt: new Date(item.created_at),
           updatedAt: new Date(item.updated_at),
