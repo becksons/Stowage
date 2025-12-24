@@ -229,7 +229,10 @@ export const useSupabaseInventory = () => {
           .eq('id', id)
           .eq('user_id', user.id);
 
-        if (updateError) throw updateError;
+        if (updateError) {
+          console.error('Supabase update error:', updateError);
+          throw updateError;
+        }
 
         // Update tags if provided
         if (updates.tags) {
