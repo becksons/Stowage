@@ -241,51 +241,49 @@ export default function Inventory() {
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl opacity-0 group-hover:opacity-50 transition-opacity duration-300 -z-10" />
 
-                <div className="relative flex items-start justify-between mb-4">
-                  <div className="flex-1 flex items-start gap-3">
-                    {item.icon && (
-                      <div className="w-12 h-12 rounded-lg bg-primary/15 border border-primary/30 p-1.5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <img
-                          src={getItemIconPath(item.icon)}
-                          alt={item.icon}
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-foreground line-clamp-2 mb-2">
-                        {item.name}
-                      </h3>
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/30">
-                        <MapPin className="w-4 h-4 text-primary" />
-                        <span className="text-sm font-semibold text-primary">{item.location}</span>
-                      </div>
+                <div className="relative flex flex-col items-center text-center mb-4">
+                  {item.icon && (
+                    <div className="w-16 h-16 rounded-xl bg-primary/15 border-2 border-primary/30 p-2 flex items-center justify-center mb-3">
+                      <img
+                        src={getItemIconPath(item.icon)}
+                        alt={item.icon}
+                        className="w-full h-full object-contain"
+                      />
                     </div>
+                  )}
+                  <h3 className="text-xl font-bold text-foreground line-clamp-2 mb-2">
+                    {item.name}
+                  </h3>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/30">
+                    <MapPin className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-semibold text-primary">{item.location}</span>
                   </div>
 
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <MoreVertical className="w-4 h-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => handleOpenEdit(item)}>
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => deleteItem(item.id)}
-                        className="text-destructive"
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <div className="absolute top-4 right-4">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <MoreVertical className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handleOpenEdit(item)}>
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => deleteItem(item.id)}
+                          className="text-destructive"
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </div>
 
                 {item.description && (
