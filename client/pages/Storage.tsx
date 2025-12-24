@@ -59,7 +59,7 @@ export default function Storage() {
     getLocationPath,
     getRootLocations,
   } = useSupabaseStorage();
-  const { items } = useSupabaseInventory();
+  const { items, deleteItem } = useSupabaseInventory();
   const [openDialog, setOpenDialog] = useState(false);
   const [editingLocation, setEditingLocation] = useState(null);
   const [formData, setFormData] = useState({
