@@ -236,21 +236,29 @@ export const useSupabaseInventory = () => {
 
         // Update tags if provided
         if (updates.tags) {
-          await supabase.from('item_tags').delete().eq('item_id', id);
+          const { error: deleteError } = await supabase.from('item_tags').delete().eq('item_id', id);
+
+          if (deleteError) {
+            console.error('Supabase delete tags error:', deleteError);
+            throw deleteError;
+          }
 
           if (updates.tags.length > 0) {
+            const tagsToInsert = updates.tags.map((tag) => ({
+              item_id: id,
+              name: tag.name,
+              value: tag.value,
+              type: tag.type,
+            }));
+
             const { error: tagsError } = await supabase
               .from('item_tags')
-              .insert(
-                updates.tags.map((tag) => ({
-                  item_id: id,
-                  name: tag.name,
-                  value: tag.value,
-                  type: tag.type,
-                }))
-              );
+              .insert(tagsToInsert);
 
-            if (tagsError) throw tagsError;
+            if (tagsError) {
+              console.error('Supabase insert tags error:', tagsError);
+              throw tagsError;
+            }
           }
         }
 
