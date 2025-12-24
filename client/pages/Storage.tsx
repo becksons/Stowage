@@ -512,7 +512,10 @@ export default function Storage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="parentId">Parent Location (optional)</Label>
+              <Label htmlFor="parentId">Part of (optional)</Label>
+              <p className="text-xs text-muted-foreground mb-2">
+                If this storage is inside another space (e.g., a dresser inside a bedroom), select the parent location here.
+              </p>
               <Select
                 value={formData.parentId || "none"}
                 onValueChange={(value) =>
@@ -523,15 +526,15 @@ export default function Storage() {
                 }
               >
                 <SelectTrigger id="parentId">
-                  <SelectValue placeholder="None - This is a root location" />
+                  <SelectValue placeholder="None - Top level location" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">None - Root Location</SelectItem>
+                  <SelectItem value="none">Top level (not inside anything)</SelectItem>
                   {locations
                     .filter((loc) => loc.id !== editingLocation?.id)
                     .map((location) => (
                       <SelectItem key={location.id} value={location.id}>
-                        {getLocationPath(location.id)}
+                        Inside: {getLocationPath(location.id)}
                       </SelectItem>
                     ))}
                 </SelectContent>
