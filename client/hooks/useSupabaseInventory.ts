@@ -202,6 +202,7 @@ export const useSupabaseInventory = () => {
         if (updates.location) updateData.location_name = updates.location;
         if (updates.location_id) updateData.location_id = updates.location_id;
         if (updates.quantity) updateData.quantity = updates.quantity;
+        if (updates.icon !== undefined) updateData.icon = updates.icon;
 
         const { error: updateError } = await supabase
           .from('inventory_items')
