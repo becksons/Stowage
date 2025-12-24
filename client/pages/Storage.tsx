@@ -452,6 +452,120 @@ export default function Storage() {
                 </div>
               );
             })}
+
+            {/* Storage Items Section */}
+            {getStorageItems().length > 0 && (
+              <div className="mt-12">
+                <div className="flex items-center gap-3 px-2 mb-4">
+                  <h2 className="text-xl font-bold text-foreground">Items as Containers</h2>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-secondary/15 text-secondary border border-secondary/30">
+                    <Layers className="w-3 h-3" />
+                    {getStorageItems().length} item{getStorageItems().length !== 1 ? "s" : ""}
+                  </span>
+                </div>
+                <div className="space-y-4 sm:space-y-6">
+                  {getStorageItems().map((storageItem) => {
+                    const itemCount = getItemsByLocation(storageItem.name).length;
+
+                    return (
+                      <div key={storageItem.id} className="space-y-3">
+                        <div className={`group relative p-6 sm:p-8 rounded-2xl border-2 border-secondary/20 hover:border-secondary/60 transition-all duration-300 overflow-hidden bg-secondary/5`}>
+                          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          <div className="absolute top-0 right-0 w-40 h-40 bg-secondary/10 rounded-full blur-3xl opacity-0 group-hover:opacity-50 transition-opacity duration-300 -z-10" />
+
+                          <div className="relative flex flex-col items-center text-center mb-6">
+                            <div className="relative p-4 rounded-2xl bg-secondary/15 border-2 border-secondary/30 transform group-hover:scale-105 transition-transform duration-300 mb-4">
+                              {storageItem.icon ? (
+                                <img
+                                  src={getItemIconPath(storageItem.icon)}
+                                  alt={storageItem.icon}
+                                  className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+                                />
+                              ) : (
+                                <Box className="w-16 h-16 sm:w-20 sm:h-20 text-secondary" />
+                              )}
+                            </div>
+                            <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">{storageItem.name}</h3>
+                            <div className="flex flex-col gap-3 w-full">
+                              <div className="flex items-center justify-center gap-2 flex-wrap">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-secondary/15 text-secondary border border-secondary/30">
+                                  <Box className="w-3 h-3" />
+                                  Storage Item
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="relative flex items-center justify-end">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <MoreVertical className="w-4 h-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    setEditingLocation(storageItem as any);
+                                    setOpenDialog(true);
+                                  }}
+                                >
+                                  <Edit className="w-4 h-4 mr-2" />
+                                  Edit Item
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="text-destructive">
+                                  <Trash2 className="w-4 h-4 mr-2" />
+                                  Delete Item
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+
+                          {storageItem.description && (
+                            <p className="text-sm text-foreground mb-4 italic opacity-90 flex items-start gap-2">
+                              <Filter className="w-4 h-4 mt-0.5 flex-shrink-0 text-secondary/60" />
+                              {storageItem.description}
+                            </p>
+                          )}
+
+                          {itemCount > 0 ? (
+                            <div className="relative pt-4 border-t border-secondary/20">
+                              <p className="text-sm font-semibold text-foreground mb-3">Items inside:</p>
+                              <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                                {getItemsByLocation(storageItem.name).map((item) => (
+                                  <div key={item.id} className="flex flex-col items-center text-center">
+                                    <div className="w-12 h-12 rounded-lg bg-secondary/15 border border-secondary/30 p-1.5 flex items-center justify-center mb-2">
+                                      {item.icon ? (
+                                        <img
+                                          src={getItemIconPath(item.icon)}
+                                          alt={item.name}
+                                          className="w-full h-full object-contain"
+                                        />
+                                      ) : (
+                                        <Box className="w-6 h-6 text-secondary/60" />
+                                      )}
+                                    </div>
+                                    <p className="text-xs font-medium text-foreground line-clamp-2">{item.name}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="relative pt-4 border-t border-secondary/20">
+                              <p className="text-sm text-muted-foreground text-center italic">No items inside yet</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
