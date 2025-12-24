@@ -359,6 +359,7 @@ export default function Inventory() {
         existingItem={editingItem}
         getLocationPath={getLocationPath}
         locationObjects={locations}
+        storageItems={storageItems}
       />
     </Layout>
   );
