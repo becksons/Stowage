@@ -19,6 +19,7 @@ interface AddEditItemDialogProps {
   existingItem?: InventoryItem;
   getLocationPath?: (locationId: string) => string;
   locationObjects?: StorageLocation[];
+  storageItems?: any[];
 }
 
 const TAG_TYPES = [
