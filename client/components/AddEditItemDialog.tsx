@@ -44,6 +44,7 @@ export default function AddEditItemDialog({
   existingItem,
   getLocationPath,
   locationObjects,
+  storageItems = [],
 }: AddEditItemDialogProps) {
   const [formData, setFormData] = useState({
     name: "",
