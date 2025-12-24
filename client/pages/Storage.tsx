@@ -253,46 +253,44 @@ export default function Storage() {
                     <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-3xl opacity-0 group-hover:opacity-50 transition-opacity duration-300 -z-10" />
 
-                    <div className="relative flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-4 flex-1">
-                        <div className="relative p-3 rounded-lg bg-primary/15 border border-primary/30 transform group-hover:scale-110 transition-transform duration-300">
-                          {location.icon ? (
-                            <img
-                              src={getStorageIconPath(location.icon)}
-                              alt={location.icon}
-                              className="w-6 h-6 sm:w-7 sm:h-7 object-contain"
-                            />
-                          ) : storageType ? (
-                            <storageType.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
-                          ) : (
-                            <Box className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+                    <div className="relative flex flex-col items-center text-center mb-6">
+                      <div className="relative p-4 rounded-2xl bg-primary/15 border-2 border-primary/30 transform group-hover:scale-105 transition-transform duration-300 mb-4">
+                        {location.icon ? (
+                          <img
+                            src={getStorageIconPath(location.icon)}
+                            alt={location.icon}
+                            className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+                          />
+                        ) : storageType ? (
+                          <storageType.icon className="w-16 h-16 sm:w-20 sm:h-20 text-primary" />
+                        ) : (
+                          <Box className="w-16 h-16 sm:w-20 sm:h-20 text-primary" />
+                        )}
+                      </div>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">{location.name}</h3>
+                      <div className="flex flex-col gap-3 w-full">
+                        <div className="flex items-center justify-center gap-2 flex-wrap">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary/15 text-primary border border-primary/30">
+                            <Filter className="w-3 h-3" />
+                            {storageType?.label}
+                          </span>
+                          {childLocations.length > 0 && (
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-secondary/15 text-secondary border border-secondary/30">
+                              <Layers className="w-3 h-3" />
+                              {childLocations.length} nested
+                            </span>
                           )}
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-1">{location.name}</h3>
-                          <div className="flex flex-col gap-2">
-                            <div className="inline-flex items-center gap-2 w-fit flex-wrap">
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary/15 text-primary border border-primary/30">
-                                <Filter className="w-3 h-3" />
-                                {storageType?.label}
-                              </span>
-                              {childLocations.length > 0 && (
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-secondary/15 text-secondary border border-secondary/30">
-                                  <Layers className="w-3 h-3" />
-                                  {childLocations.length} nested
-                                </span>
-                              )}
-                            </div>
-                            {parentLocation && (
-                              <p className="text-xs text-muted-foreground font-medium flex items-center gap-1">
-                                <MapPin className="w-3 h-3" />
-                                Part of <span className="text-primary font-semibold">{parentLocation.name}</span>
-                              </p>
-                            )}
-                          </div>
-                        </div>
+                        {parentLocation && (
+                          <p className="text-xs text-muted-foreground font-medium flex items-center justify-center gap-1">
+                            <MapPin className="w-3 h-3" />
+                            Part of <span className="text-primary font-semibold">{parentLocation.name}</span>
+                          </p>
+                        )}
                       </div>
+                    </div>
 
+                    <div className="relative flex items-center justify-end">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
@@ -360,27 +358,25 @@ export default function Storage() {
                           >
                             <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/3 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                             <div className="relative flex items-start justify-between mb-3">
-                              <div className="flex items-center gap-3 flex-1">
-                                <div className="p-2 rounded-lg bg-primary/15 border border-primary/30 transform group-hover:scale-110 transition-transform duration-300">
+                              <div className="flex flex-col items-center text-center">
+                                <div className="p-3 rounded-lg bg-primary/15 border-2 border-primary/30 transform group-hover:scale-110 transition-transform duration-300 mb-2">
                                   {child.icon ? (
                                     <img
                                       src={getStorageIconPath(child.icon)}
                                       alt={child.icon}
-                                      className="w-4 h-4 object-contain"
+                                      className="w-10 h-10 object-contain"
                                     />
                                   ) : childStorageType ? (
-                                    <childStorageType.icon className="w-4 h-4 text-primary" />
+                                    <childStorageType.icon className="w-10 h-10 text-primary" />
                                   ) : (
-                                    <Box className="w-4 h-4 text-primary" />
+                                    <Box className="w-10 h-10 text-primary" />
                                   )}
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                  <h4 className="text-lg font-bold text-foreground">{child.name}</h4>
-                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/15 text-primary border border-primary/30 mt-1">
-                                    <Filter className="w-3 h-3" />
-                                    {childStorageType?.label}
-                                  </span>
-                                </div>
+                                <h4 className="text-lg font-bold text-foreground mb-1">{child.name}</h4>
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/15 text-primary border border-primary/30">
+                                  <Filter className="w-3 h-3" />
+                                  {childStorageType?.label}
+                                </span>
                               </div>
 
                               <DropdownMenu>
