@@ -41,7 +41,12 @@ export default function Inventory() {
   const handleSaveItem = async (data: any) => {
     try {
       if (editingItem) {
-        await updateItem(editingItem.id, data);
+        // Include location_id from existing item when updating
+        const updateData = {
+          ...data,
+          location_id: editingItem.location_id,
+        };
+        await updateItem(editingItem.id, updateData);
         toast({
           title: "Success",
           description: "Item updated successfully",
