@@ -256,8 +256,17 @@ export default function Storage() {
                     <div className="relative flex items-start justify-between mb-4">
                       <div className="flex items-center gap-4 flex-1">
                         <div className="relative p-3 rounded-lg bg-primary/15 border border-primary/30 transform group-hover:scale-110 transition-transform duration-300">
-                          {storageType && <storageType.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />}
-                          {!storageType && <Box className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />}
+                          {location.icon ? (
+                            <img
+                              src={getStorageIconPath(location.icon)}
+                              alt={location.icon}
+                              className="w-6 h-6 sm:w-7 sm:h-7 object-contain"
+                            />
+                          ) : storageType ? (
+                            <storageType.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+                          ) : (
+                            <Box className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+                          )}
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-1">{location.name}</h3>
