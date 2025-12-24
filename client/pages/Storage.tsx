@@ -85,6 +85,7 @@ export default function Storage() {
         type: location.type,
         description: location.description || "",
         color: location.color || "bg-blue-100 dark:bg-blue-950",
+        icon: location.icon || "",
         parentId: location.parentId || null,
       });
     } else {
@@ -94,6 +95,7 @@ export default function Storage() {
         type: "drawer",
         description: "",
         color: "bg-blue-100 dark:bg-blue-950",
+        icon: "",
         parentId: null,
       });
     }
