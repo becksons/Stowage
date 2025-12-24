@@ -236,7 +236,7 @@ export default function Storage() {
           </div>
         ) : (
           <div className="space-y-4 sm:space-y-6">
-            {filteredLocations.map((location) => {
+            {filteredLocations.filter((loc) => !loc.parentId).map((location) => {
               const itemCount = getItemsByLocation(location.name).length;
               const childLocations = getChildLocations(location.id);
               const parentLocation = getParentLocation(location.parentId);
