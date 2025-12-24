@@ -65,9 +65,11 @@ export default function Inventory() {
         return;
       }
 
+      // For storage item containers, location_id might be null, but that's ok
+      // since we store the location name which is used to find items
       const itemData = {
         ...data,
-        location_id,
+        location_id: location_id || null,
       };
 
       if (editingItem) {
