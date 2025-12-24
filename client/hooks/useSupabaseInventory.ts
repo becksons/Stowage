@@ -175,10 +175,23 @@ export const useSupabaseInventory = () => {
         setError(null);
         return itemData;
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to add item';
+        let message = 'Failed to add item';
+
+        if (err instanceof Error) {
+          message = err.message;
+        } else if (typeof err === 'object' && err !== null) {
+          message = JSON.stringify(err);
+        } else if (typeof err === 'string') {
+          message = err;
+        }
+
         setError(message);
-        console.error('Add item error:', err);
-        throw err;
+        console.error('Add item error details:', {
+          error: err,
+          message: message,
+          item: item,
+        });
+        throw new Error(message);
       } finally {
         setIsSyncing(false);
       }
