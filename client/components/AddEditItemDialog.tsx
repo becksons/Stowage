@@ -120,6 +120,7 @@ export default function AddEditItemDialog({
       description: formData.description,
       location: formData.location,
       quantity: formData.quantity,
+      icon: formData.icon || undefined,
       tags,
     });
 
