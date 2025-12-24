@@ -80,7 +80,17 @@ export default function Inventory() {
       if (err instanceof Error) {
         errorMessage = err.message;
       } else if (typeof err === 'object' && err !== null) {
-        errorMessage = JSON.stringify(err);
+        // Handle Supabase errors and other objects
+        const errObj = err as any;
+        if (errObj.message) {
+          errorMessage = errObj.message;
+        } else if (errObj.error_description) {
+          errorMessage = errObj.error_description;
+        } else if (errObj.msg) {
+          errorMessage = errObj.msg;
+        } else {
+          errorMessage = JSON.stringify(errObj);
+        }
       } else if (typeof err === 'string') {
         errorMessage = err;
       }
