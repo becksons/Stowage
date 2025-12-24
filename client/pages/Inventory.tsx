@@ -74,7 +74,17 @@ export default function Inventory() {
       }
       setDialogOpen(false);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to save item";
+      console.error('Item save error:', err);
+      let errorMessage = "Failed to save item";
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === 'object' && err !== null) {
+        errorMessage = JSON.stringify(err);
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      }
+
       toast({
         title: "Error",
         description: errorMessage,
