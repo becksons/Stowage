@@ -243,10 +243,23 @@ export const useSupabaseInventory = () => {
 
         setError(null);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to update item';
+        let message = 'Failed to update item';
+
+        if (err instanceof Error) {
+          message = err.message;
+        } else if (typeof err === 'object' && err !== null) {
+          message = JSON.stringify(err);
+        } else if (typeof err === 'string') {
+          message = err;
+        }
+
         setError(message);
-        console.error('Update item error:', err);
-        throw err;
+        console.error('Update item error details:', {
+          error: err,
+          message: message,
+          updates: updates,
+        });
+        throw new Error(message);
       } finally {
         setIsSyncing(false);
       }
