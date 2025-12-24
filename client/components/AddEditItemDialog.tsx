@@ -64,6 +64,7 @@ export default function AddEditItemDialog({
         description: existingItem.description || "",
         location: existingItem.location,
         quantity: existingItem.quantity,
+        icon: existingItem.icon || "",
       });
       setTags(existingItem.tags);
     } else {
@@ -72,6 +73,7 @@ export default function AddEditItemDialog({
         description: "",
         location: "",
         quantity: 1,
+        icon: "",
       });
       setTags([]);
     }
