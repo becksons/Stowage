@@ -420,11 +420,32 @@ export default function Storage() {
                               </p>
                             )}
 
-                            <div className="pt-3 border-t border-border/50">
-                              <p className="text-xs font-semibold text-foreground">
-                                {childItemCount} item{childItemCount !== 1 ? "s" : ""} stored
-                              </p>
-                            </div>
+                            {childItemCount > 0 ? (
+                              <div className="pt-3 border-t border-border/50">
+                                <div className="grid grid-cols-3 gap-2">
+                                  {getItemsByLocation(child.name).map((item) => (
+                                    <div key={item.id} className="flex flex-col items-center text-center">
+                                      <div className="w-8 h-8 rounded-md bg-primary/15 border border-primary/30 p-1 flex items-center justify-center">
+                                        {item.icon ? (
+                                          <img
+                                            src={getItemIconPath(item.icon)}
+                                            alt={item.name}
+                                            className="w-full h-full object-contain"
+                                          />
+                                        ) : (
+                                          <Box className="w-4 h-4 text-primary/60" />
+                                        )}
+                                      </div>
+                                      <p className="text-xs font-medium text-foreground line-clamp-1 mt-0.5">{item.name}</p>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="pt-3 border-t border-border/50">
+                                <p className="text-xs text-muted-foreground text-center italic">No items</p>
+                              </div>
+                            )}
                           </div>
                         );
                       })}
