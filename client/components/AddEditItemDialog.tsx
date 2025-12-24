@@ -182,6 +182,46 @@ export default function AddEditItemDialog({
             />
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="icon">Item Icon</Label>
+            <div className="flex gap-2 items-center">
+              {formData.icon && (
+                <div className="w-12 h-12 rounded-lg bg-primary/15 border border-primary/30 p-1 flex items-center justify-center flex-shrink-0">
+                  <img
+                    src={getItemIconPath(formData.icon)}
+                    alt={formData.icon}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              )}
+              <Select
+                value={formData.icon}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, icon: value })
+                }
+              >
+                <SelectTrigger id="icon" className="flex-1">
+                  <SelectValue placeholder="Choose an icon for this item" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">No icon</SelectItem>
+                  {getItemIconOptions().map((icon) => (
+                    <SelectItem key={icon} value={icon}>
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={getItemIconPath(icon)}
+                          alt={icon}
+                          className="w-4 h-4"
+                        />
+                        <span>{icon}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="location">Storage Location *</Label>
