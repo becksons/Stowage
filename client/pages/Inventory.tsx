@@ -41,10 +41,18 @@ export default function Inventory() {
   const handleSaveItem = async (data: any) => {
     try {
       if (editingItem) {
-        // Include location_id from existing item when updating
+        // Determine location_id: use existing if location hasn't changed, otherwise look it up
+        let location_id = editingItem.location_id;
+        if (data.location && data.location !== editingItem.location) {
+          const newLocation = locations.find((loc) => loc.name === data.location);
+          if (newLocation) {
+            location_id = newLocation.id;
+          }
+        }
+
         const updateData = {
           ...data,
-          location_id: editingItem.location_id,
+          location_id,
         };
         await updateItem(editingItem.id, updateData);
         toast({
