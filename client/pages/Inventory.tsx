@@ -23,6 +23,9 @@ export default function Inventory() {
 
   let displayItems = getFilteredItems();
 
+  // Filter out items that are marked as storage items
+  displayItems = displayItems.filter((item) => !item.isStorageItem);
+
   if (filterLocation) {
     displayItems = displayItems.filter((item) => item.location === filterLocation);
   }
