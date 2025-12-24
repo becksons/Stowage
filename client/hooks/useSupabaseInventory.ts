@@ -134,18 +134,24 @@ export const useSupabaseInventory = () => {
         setIsSyncing(true);
 
         // Insert item
+        const insertData: any = {
+          user_id: user.id,
+          name: item.name,
+          description: item.description,
+          location_id: item.location_id,
+          location_name: item.location,
+          quantity: item.quantity,
+          icon: item.icon,
+        };
+
+        // Only include is_storage_item if it's true (to avoid schema issues)
+        if (item.isStorageItem) {
+          insertData.is_storage_item = true;
+        }
+
         const { data: itemData, error: itemError } = await supabase
           .from('inventory_items')
-          .insert({
-            user_id: user.id,
-            name: item.name,
-            description: item.description,
-            location_id: item.location_id,
-            location_name: item.location,
-            quantity: item.quantity,
-            icon: item.icon,
-            is_storage_item: item.isStorageItem || false,
-          })
+          .insert(insertData)
           .select()
           .single();
 
