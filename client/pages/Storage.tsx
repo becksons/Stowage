@@ -361,81 +361,62 @@ export default function Storage() {
           ) : (
             <div className="space-y-8">
               {/* Selected Room Header */}
-              <div className="space-y-4">
-                <div className="flex items-start gap-6">
-                  {/* Room Icon */}
-                  <div className="w-32 h-32 rounded-xl flex-shrink-0 flex items-center justify-center" style={{
-                    backgroundColor: getColorWithOpacity('#6366f1', 0.1),
-                  }}>
-                    {selectedLocation.icon ? (
-                      <img
-                        src={getStorageIconPath(selectedLocation.icon)}
-                        alt={selectedLocation.icon}
-                        className="w-24 h-24 object-contain"
-                      />
-                    ) : storageTypes.find((t) => t.value === selectedLocation.type) ? (
-                      <>
-                        {(() => {
-                          const Icon = storageTypes.find((t) => t.value === selectedLocation.type)?.icon;
-                          return Icon ? <Icon className="w-24 h-24 text-primary" /> : null;
-                        })()}
-                      </>
-                    ) : (
-                      <Box className="w-24 h-24 text-primary" />
-                    )}
-                  </div>
-
-                  {/* Room Info */}
+              <div className="space-y-6 pb-6 border-b border-primary/20">
+                <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h2 className="text-4xl font-black gradient-heading mb-2">{selectedLocation.name}</h2>
-                    <div className="flex flex-wrap items-center gap-3 mb-4">
-                      <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/15 text-primary text-sm font-semibold border border-primary/30">
-                        <Filter className="w-4 h-4" />
+                    <h2 className="text-5xl font-black gradient-heading mb-3">{selectedLocation.name}</h2>
+                    {selectedLocation.description && (
+                      <p className="text-base text-muted-foreground mb-4">{selectedLocation.description}</p>
+                    )}
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="px-3 py-1.5 rounded-full bg-primary/15 text-primary text-xs font-semibold border border-primary/30">
                         {storageTypes.find((t) => t.value === selectedLocation.type)?.label}
                       </span>
-                      {selectedLocation.description && (
-                        <p className="text-sm text-muted-foreground italic">{selectedLocation.description}</p>
-                      )}
                     </div>
-                    <div className="flex items-center gap-4">
-                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 border border-primary/40">
-                        <Sparkles className="w-4 h-4 text-primary" />
-                        <p className="text-sm font-semibold text-primary">
-                          {selectedChildLocations.length} section{selectedChildLocations.length !== 1 ? 's' : ''} • {getItemsByLocation(selectedLocation.name).length} item{getItemsByLocation(selectedLocation.name).length !== 1 ? 's' : ''}
-                        </p>
-                      </div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="outline" size="sm">
-                            <MoreVertical className="w-4 h-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => {
-                            setEditingLocation(selectedLocation);
-                            setFormData({
-                              name: selectedLocation.name,
-                              type: selectedLocation.type,
-                              description: selectedLocation.description || "",
-                              color: selectedLocation.color || "bg-blue-100 dark:bg-blue-950",
-                              icon: selectedLocation.icon || "",
-                              parentId: selectedLocation.parentId || null,
-                            });
-                            setOpenDialog(true);
-                          }}>
-                            <Edit className="w-4 h-4 mr-2" />
-                            Edit Room
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDeleteLocation(selectedLocation.id)}
-                            className="text-destructive"
-                          >
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            Delete Room
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        <MoreVertical className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => {
+                        setEditingLocation(selectedLocation);
+                        setFormData({
+                          name: selectedLocation.name,
+                          type: selectedLocation.type,
+                          description: selectedLocation.description || "",
+                          color: selectedLocation.color || "bg-blue-100 dark:bg-blue-950",
+                          icon: selectedLocation.icon || "",
+                          parentId: selectedLocation.parentId || null,
+                        });
+                        setOpenDialog(true);
+                      }}>
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit Room
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleDeleteLocation(selectedLocation.id)}
+                        className="text-destructive"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete Room
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+
+                {/* Stats Bar */}
+                <div className="inline-flex items-center gap-6">
+                  <div className="flex flex-col">
+                    <span className="text-3xl font-black text-primary">{selectedChildLocations.length}</span>
+                    <span className="text-xs text-muted-foreground font-semibold">section{selectedChildLocations.length !== 1 ? 's' : ''}</span>
+                  </div>
+                  <div className="w-px h-12 bg-primary/20"></div>
+                  <div className="flex flex-col">
+                    <span className="text-3xl font-black text-primary">{getItemsByLocation(selectedLocation.name).length}</span>
+                    <span className="text-xs text-muted-foreground font-semibold">item{getItemsByLocation(selectedLocation.name).length !== 1 ? 's' : ''}</span>
                   </div>
                 </div>
               </div>
