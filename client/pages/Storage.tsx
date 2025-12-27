@@ -489,7 +489,29 @@ export default function Storage() {
                           <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                           <div className="relative space-y-4">
                             {/* Header */}
-                            <div className="flex items-start justify-between">
+                            <div className="flex items-start justify-between gap-3">
+                              {/* Icon */}
+                              <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-lg flex-shrink-0 flex items-center justify-center" style={{
+                                backgroundColor: getColorWithOpacity('#6366f1', 0.15),
+                              }}>
+                                {child.icon ? (
+                                  <img
+                                    src={getStorageIconPath(child.icon)}
+                                    alt={child.icon}
+                                    className="w-8 h-8 lg:w-10 lg:h-10 object-contain"
+                                  />
+                                ) : childStorageType ? (
+                                  <>
+                                    {(() => {
+                                      const Icon = childStorageType.icon;
+                                      return <Icon className="w-7 h-7 lg:w-8 lg:h-8 text-primary" />;
+                                    })()}
+                                  </>
+                                ) : (
+                                  <Box className="w-7 h-7 lg:w-8 lg:h-8 text-primary" />
+                                )}
+                              </div>
+
                               <div className="flex-1 min-w-0">
                                 <h4 className="text-lg font-bold text-foreground mb-1">{child.name}</h4>
                                 <p className="text-xs text-muted-foreground font-semibold mb-2">{childStorageType?.label}</p>
