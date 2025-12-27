@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Search, MapPin, Trash2, MoreVertical, X, Edit, Loader2, Briefcase, Home, Grid3x3, BookOpen, Box } from "lucide-react";
+import { Plus, Search, MapPin, Trash2, MoreVertical, X, Edit, Loader2, Layers, Briefcase, Home, Grid3x3, BookOpen, Box } from "lucide-react";
 import Layout from "@/components/Layout";
 import ColorizedIcon from "@/components/ColorizedIcon";
 import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
