@@ -241,36 +241,24 @@ export default function AddEditItemDialog({
 
           <div className="space-y-2">
             <Label htmlFor="color">Item Color</Label>
-            <div className="flex gap-3 items-end">
-              <div className="flex-shrink-0">
-                <Input
-                  id="color"
-                  type="color"
-                  value={formData.color}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setFormData({ ...formData, color: value });
-                  }}
-                  className="w-16 h-10 p-1 cursor-pointer"
-                />
-              </div>
+            <div className="flex gap-2 items-end">
+              <Input
+                id="color"
+                type="color"
+                value={formData.color}
+                onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+                className="w-14 h-10 p-1 cursor-pointer flex-shrink-0"
+              />
               <Input
                 type="text"
                 value={formData.color}
                 onChange={(e) => {
-                  let value = e.target.value.trim();
-                  // Add # if missing
-                  if (value && !value.startsWith("#")) {
-                    value = "#" + value;
-                  }
-                  // Validate hex color format
-                  if (value === "#" || /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(value)) {
-                    setFormData({ ...formData, color: value });
-                  }
+                  const value = e.target.value.trim();
+                  // Allow any input while typing, will be validated on save
+                  setFormData({ ...formData, color: value });
                 }}
                 placeholder="#6366f1"
                 className="flex-1"
-                maxLength={7}
               />
               <div
                 className="w-10 h-10 rounded-lg border-2 border-primary/30 flex-shrink-0"
@@ -278,7 +266,7 @@ export default function AddEditItemDialog({
                 title={formData.color}
               />
             </div>
-            <p className="text-xs text-muted-foreground">Choose a color for this item and its icon</p>
+            <p className="text-xs text-muted-foreground">Choose a color for this item and its icon. First, make sure the color column migration is applied to your Supabase database!</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
