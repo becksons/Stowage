@@ -556,15 +556,21 @@ export default function Storage() {
                               <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                                 {getItemsByLocation(storageItem.name).map((item) => (
                                   <div key={item.id} className="flex flex-col items-center text-center">
-                                    <div className="w-12 h-12 rounded-lg bg-secondary/15 border border-secondary/30 p-1.5 flex items-center justify-center mb-2">
+                                    <div className="w-12 h-12 rounded-lg border p-1.5 flex items-center justify-center mb-2" style={{
+                                      backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
+                                      borderColor: getColorBorder(item.color || '#6366f1', 0.3),
+                                    }}>
                                       {item.icon ? (
                                         <img
                                           src={getItemIconPath(item.icon)}
                                           alt={item.name}
                                           className="w-full h-full object-contain"
+                                          style={{
+                                            filter: getIconColorFilter(item.color || '#6366f1'),
+                                          }}
                                         />
                                       ) : (
-                                        <Box className="w-6 h-6 text-secondary/60" />
+                                        <Box className="w-6 h-6" style={{ color: item.color || '#6366f1' }} />
                                       )}
                                     </div>
                                     <p className="text-xs font-medium text-foreground line-clamp-2">{item.name}</p>
