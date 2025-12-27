@@ -64,6 +64,7 @@ export default function Storage() {
   const { items, deleteItem } = useSupabaseInventory();
   const [openDialog, setOpenDialog] = useState(false);
   const [editingLocation, setEditingLocation] = useState(null);
+  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     type: "drawer" as const,
