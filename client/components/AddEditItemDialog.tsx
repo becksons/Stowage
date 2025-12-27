@@ -52,6 +52,7 @@ export default function AddEditItemDialog({
     location: "",
     quantity: 1,
     icon: "",
+    color: "#6366f1",
     isStorageItem: false,
   });
   const [tags, setTags] = useState<ItemTag[]>([]);
