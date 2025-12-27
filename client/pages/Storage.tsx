@@ -435,131 +435,110 @@ export default function Storage() {
               );
             })}
 
-            {/* Storage Items Section */}
+            {/* Storage Items as Containers Section */}
             {getStorageItems().length > 0 && (
-              <div className="mt-12">
-                <div className="flex items-center gap-3 px-2 mb-4">
-                  <h2 className="text-xl font-bold text-foreground">Items as Containers</h2>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-secondary/15 text-secondary border border-secondary/30">
-                    <Layers className="w-3 h-3" />
-                    {getStorageItems().length} item{getStorageItems().length !== 1 ? "s" : ""}
-                  </span>
-                </div>
-                <div className="space-y-4 sm:space-y-6">
+              <div className="mt-8">
+                <h2 className="text-2xl font-bold text-foreground mb-4">Items as Containers</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                   {getStorageItems().map((storageItem) => {
                     const itemCount = getItemsByLocation(storageItem.name).length;
 
                     return (
-                      <div key={storageItem.id} className="space-y-3">
-                        <div className={`group relative p-6 sm:p-8 rounded-2xl border-2 border-secondary/20 hover:border-secondary/60 transition-all duration-300 overflow-hidden bg-secondary/5`}>
-                          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                          <div className="absolute top-0 right-0 w-40 h-40 bg-secondary/10 rounded-full blur-3xl opacity-0 group-hover:opacity-50 transition-opacity duration-300 -z-10" />
-
-                          <div className="relative flex flex-col items-center text-center mb-6">
-                            <div className="relative p-4 rounded-2xl border-2 transform group-hover:scale-105 transition-transform duration-300 mb-4" style={{
-                              backgroundColor: getColorWithOpacity(storageItem.color || '#6366f1', 0.15),
-                              borderColor: getColorBorder(storageItem.color || '#6366f1', 0.3),
-                            }}>
-                              {storageItem.icon ? (
-                                <ColorizedIcon
-                                  src={getItemIconPath(storageItem.icon)}
-                                  alt={storageItem.icon}
-                                  color={storageItem.color || '#6366f1'}
-                                  className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
-                                />
-                              ) : (
-                                <Box className="w-16 h-16 sm:w-20 sm:h-20" style={{ color: storageItem.color || '#6366f1' }} />
-                              )}
-                            </div>
-                            <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">{storageItem.name}</h3>
-                            <div className="flex flex-col gap-3 w-full">
-                              <div className="flex items-center justify-center gap-2 flex-wrap">
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-secondary/15 text-secondary border border-secondary/30">
-                                  <Box className="w-3 h-3" />
-                                  Storage Item
-                                </span>
-                              </div>
-                            </div>
+                      <div key={storageItem.id} className="group relative flex flex-col items-center text-center transition-all duration-300 p-2">
+                        {/* Icon */}
+                        <div className="relative mb-2 transform group-hover:scale-110 transition-transform duration-300 cursor-pointer" onClick={() => {
+                          setEditingLocation(storageItem as any);
+                          setOpenDialog(true);
+                        }}>
+                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg flex items-center justify-center" style={{
+                            backgroundColor: getColorWithOpacity(storageItem.color || '#6366f1', 0.1),
+                          }}>
+                            {storageItem.icon ? (
+                              <ColorizedIcon
+                                src={getItemIconPath(storageItem.icon)}
+                                alt={storageItem.icon}
+                                color={storageItem.color || '#6366f1'}
+                                className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+                              />
+                            ) : (
+                              <Box className="w-16 h-16 sm:w-20 sm:h-20" style={{ color: storageItem.color || '#6366f1' }} />
+                            )}
                           </div>
+                          <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-20 transition-opacity shadow-xl blur-lg -z-10" style={{
+                            backgroundColor: storageItem.color || '#6366f1',
+                          }} />
+                        </div>
 
-                          <div className="relative flex items-center justify-end">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="opacity-0 group-hover:opacity-100 transition-opacity"
-                                >
-                                  <MoreVertical className="w-4 h-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                  onClick={() => {
-                                    setEditingLocation(storageItem as any);
-                                    setOpenDialog(true);
-                                  }}
-                                >
-                                  <Edit className="w-4 h-4 mr-2" />
-                                  Edit Item
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => {
-                                    if (confirm("Are you sure you want to delete this storage item?")) {
-                                      deleteItem(storageItem.id);
-                                      toast({
-                                        title: "Success",
-                                        description: "Storage item deleted successfully",
-                                      });
-                                    }
-                                  }}
-                                  className="text-destructive"
-                                >
-                                  <Trash2 className="w-4 h-4 mr-2" />
-                                  Delete Item
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
+                        {/* Name */}
+                        <h3 className="text-sm sm:text-base font-bold text-foreground line-clamp-2 mb-1 px-1 hover:underline cursor-pointer" onClick={() => {
+                          setEditingLocation(storageItem as any);
+                          setOpenDialog(true);
+                        }}>
+                          {storageItem.name}
+                        </h3>
 
-                          {storageItem.description && (
-                            <p className="text-sm text-foreground mb-4 italic opacity-90 flex items-start gap-2">
-                              <Filter className="w-4 h-4 mt-0.5 flex-shrink-0 text-secondary/60" />
-                              {storageItem.description}
-                            </p>
-                          )}
+                        {/* Badge */}
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold mb-1" style={{
+                          backgroundColor: getColorWithOpacity(storageItem.color || '#6366f1', 0.15),
+                          color: storageItem.color || '#6366f1',
+                        }}>
+                          <Box className="w-3 h-3" />
+                          Container
+                        </span>
 
-                          {itemCount > 0 ? (
-                            <div className="relative pt-4 border-t border-secondary/20">
-                              <p className="text-sm font-semibold text-foreground mb-3">Items inside:</p>
-                              <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                                {getItemsByLocation(storageItem.name).map((item) => (
-                                  <div key={item.id} className="flex flex-col items-center text-center">
-                                    <div className="w-12 h-12 rounded-lg border p-1.5 flex items-center justify-center mb-2" style={{
-                                      backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
-                                      borderColor: getColorBorder(item.color || '#6366f1', 0.3),
-                                    }}>
-                                      {item.icon ? (
-                                        <ColorizedIcon
-                                          src={getItemIconPath(item.icon)}
-                                          alt={item.name}
-                                          color={item.color || '#6366f1'}
-                                          className="w-full h-full object-contain"
-                                        />
-                                      ) : (
-                                        <Box className="w-6 h-6" style={{ color: item.color || '#6366f1' }} />
-                                      )}
-                                    </div>
-                                    <p className="text-xs font-medium text-foreground line-clamp-2">{item.name}</p>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="relative pt-4 border-t border-secondary/20">
-                              <p className="text-sm text-muted-foreground text-center italic">No items inside yet</p>
-                            </div>
-                          )}
+                        {/* Description */}
+                        {storageItem.description && (
+                          <p className="text-xs text-foreground/60 line-clamp-1 mb-1 px-1 italic">
+                            {storageItem.description}
+                          </p>
+                        )}
+
+                        {/* Item count */}
+                        {itemCount > 0 && (
+                          <p className="text-xs text-muted-foreground mb-2">
+                            {itemCount} item{itemCount !== 1 ? 's' : ''}
+                          </p>
+                        )}
+
+                        {/* More menu */}
+                        <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 w-7 p-0"
+                              >
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setEditingLocation(storageItem as any);
+                                  setOpenDialog(true);
+                                }}
+                              >
+                                <Edit className="w-4 h-4 mr-2" />
+                                Edit Item
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  if (confirm("Are you sure you want to delete this storage item?")) {
+                                    deleteItem(storageItem.id);
+                                    toast({
+                                      title: "Success",
+                                      description: "Storage item deleted successfully",
+                                    });
+                                  }
+                                }}
+                                className="text-destructive"
+                              >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete Item
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </div>
                     );
