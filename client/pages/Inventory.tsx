@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { getItemIconPath } from "@/lib/customIcons";
+import { getColorWithOpacity, getColorBorder, getIconColorFilter } from "@/lib/colorUtils";
 
 export default function Inventory() {
   const { toast } = useToast();
