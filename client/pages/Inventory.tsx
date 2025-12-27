@@ -148,12 +148,9 @@ export default function Inventory() {
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div>
               <h1 className="text-4xl sm:text-5xl font-black gradient-heading mb-3">Inventory</h1>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 border border-primary/40 hover:border-primary/60 transition-all">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <p className="text-sm font-semibold text-primary">
-                  {items.length} item{items.length !== 1 ? "s" : ""} tracked
-                </p>
-              </div>
+              <p className="text-xs text-muted-foreground font-medium">
+                {items.length} item{items.length !== 1 ? "s" : ""} tracked
+              </p>
             </div>
             <Button
               onClick={() => {
