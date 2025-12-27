@@ -237,6 +237,8 @@ export const useSupabaseInventory = () => {
           return;
         }
 
+        console.log('Updating item with data:', updateData);
+
         const { error: updateError } = await supabase
           .from('inventory_items')
           .update(updateData)
@@ -249,34 +251,7 @@ export const useSupabaseInventory = () => {
           throw updateError;
         }
 
-        // Trigger a refresh to get updated data from database
-        const { data: updatedItem, error: fetchError } = await supabase
-          .from('inventory_items')
-          .select('*, item_tags(*)')
-          .eq('id', id)
-          .single();
-
-        if (!fetchError && updatedItem) {
-          // Update local state with the fresh data
-          setItems(prevItems =>
-            prevItems.map(item =>
-              item.id === id
-                ? {
-                    ...item,
-                    color: updatedItem.color || '#6366f1',
-                    name: updatedItem.name,
-                    description: updatedItem.description,
-                    location: updatedItem.location_name,
-                    location_id: updatedItem.location_id,
-                    quantity: updatedItem.quantity,
-                    icon: updatedItem.icon,
-                    isStorageItem: updatedItem.is_storage_item || false,
-                    tags: updatedItem.item_tags || [],
-                  }
-                : item
-            )
-          );
-        }
+        console.log('Item updated successfully, updating tags if needed');
 
         // Update tags if provided
         if (updates.tags) {
@@ -306,14 +281,40 @@ export const useSupabaseInventory = () => {
           }
         }
 
-        // Log activity
-        await supabase.from('activity_log').insert({
-          user_id: user.id,
-          action_type: 'item_updated',
-          entity_type: 'inventory_item',
-          entity_id: id,
-          changes: updateData,
-        });
+        console.log('Tags updated, fetching latest data');
+
+        // Fetch the latest data from database
+        const { data: updatedItem, error: fetchError } = await supabase
+          .from('inventory_items')
+          .select('*, item_tags(*)')
+          .eq('id', id)
+          .single();
+
+        if (fetchError) {
+          console.error('Failed to fetch updated item:', fetchError);
+          // Still proceed, the real-time subscription will update the data
+        } else if (updatedItem) {
+          console.log('Fetched updated item:', updatedItem);
+          // Update local state with the fresh data
+          setItems(prevItems =>
+            prevItems.map(item =>
+              item.id === id
+                ? {
+                    ...item,
+                    color: updatedItem.color || '#6366f1',
+                    name: updatedItem.name,
+                    description: updatedItem.description,
+                    location: updatedItem.location_name,
+                    location_id: updatedItem.location_id,
+                    quantity: updatedItem.quantity,
+                    icon: updatedItem.icon,
+                    isStorageItem: updatedItem.is_storage_item || false,
+                    tags: updatedItem.item_tags || [],
+                  }
+                : item
+            )
+          );
+        }
 
         setError(null);
       } catch (err) {
