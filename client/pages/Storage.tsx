@@ -65,6 +65,7 @@ export default function Storage() {
   const [openDialog, setOpenDialog] = useState(false);
   const [editingLocation, setEditingLocation] = useState(null);
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     type: "drawer" as const,
