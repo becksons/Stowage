@@ -241,7 +241,7 @@ export default function Storage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-12">
             {filteredLocations.filter((loc) => !loc.parentId).map((location) => {
               const itemCount = getItemsByLocation(location.name).length;
               const childLocations = getChildLocations(location.id);
@@ -251,52 +251,67 @@ export default function Storage() {
               );
 
               return (
-                <div key={location.id} className="space-y-3">
-                  <div
-                    className={`group relative p-6 sm:p-8 rounded-2xl border-2 border-primary/20 hover:border-primary/60 transition-all duration-300 overflow-hidden ${location.color}`}
-                  >
-                    {/* Animated gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-3xl opacity-0 group-hover:opacity-50 transition-opacity duration-300 -z-10" />
-
-                    <div className="relative flex flex-col items-center text-center mb-6">
-                      <div className="relative p-4 rounded-2xl bg-primary/15 border-2 border-primary/30 transform group-hover:scale-105 transition-transform duration-300 mb-4">
+                <div key={location.id} className="group relative flex flex-col items-center text-center transition-all duration-300 p-3 rounded-lg" style={{ backgroundColor: location.color ? location.color.replace('dark:', '').split(' ')[0] + '/5' : 'transparent' }}>
+                  <div className="relative w-full">
+                    {/* Icon */}
+                    <div className="relative mb-3 transform group-hover:scale-110 transition-transform duration-300 cursor-pointer mx-auto">
+                      <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg flex items-center justify-center" style={{
+                        backgroundColor: getColorWithOpacity('#6366f1', 0.1),
+                      }}>
                         {location.icon ? (
                           <img
                             src={getStorageIconPath(location.icon)}
                             alt={location.icon}
-                            className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+                            className="w-20 h-20 sm:w-24 sm:h-24 object-contain"
                           />
                         ) : storageType ? (
-                          <storageType.icon className="w-16 h-16 sm:w-20 sm:h-20 text-primary" />
+                          <storageType.icon className="w-20 h-20 sm:w-24 sm:h-24 text-primary" />
                         ) : (
-                          <Box className="w-16 h-16 sm:w-20 sm:h-20 text-primary" />
-                        )}
-                      </div>
-                      <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">{location.name}</h3>
-                      <div className="flex flex-col gap-3 w-full">
-                        <div className="flex items-center justify-center gap-2 flex-wrap">
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary/15 text-primary border border-primary/30">
-                            <Filter className="w-3 h-3" />
-                            {storageType?.label}
-                          </span>
-                        </div>
-                        {parentLocation && (
-                          <p className="text-xs text-muted-foreground font-medium flex items-center justify-center gap-1">
-                            <MapPin className="w-3 h-3" />
-                            Part of <span className="text-primary font-semibold">{parentLocation.name}</span>
-                          </p>
+                          <Box className="w-20 h-20 sm:w-24 sm:h-24 text-primary" />
                         )}
                       </div>
                     </div>
 
-                    <div className="relative flex items-center justify-end">
+                    {/* Name */}
+                    <h3 className="text-base sm:text-lg font-bold text-foreground line-clamp-2 mb-1 px-1 hover:underline cursor-pointer" onClick={() => handleOpenDialog(location)}>
+                      {location.name}
+                    </h3>
+
+                    {/* Type badge */}
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/15 text-primary mb-1">
+                      <Filter className="w-3 h-3" />
+                      {storageType?.label}
+                    </span>
+
+                    {/* Parent location */}
+                    {parentLocation && (
+                      <p className="text-xs text-muted-foreground font-medium mb-1">
+                        in <span className="text-primary font-semibold">{parentLocation.name}</span>
+                      </p>
+                    )}
+
+                    {/* Description */}
+                    {location.description && (
+                      <p className="text-xs text-foreground/60 line-clamp-1 mb-1 px-1 italic">
+                        {location.description}
+                      </p>
+                    )}
+
+                    {/* Item count */}
+                    {itemCount > 0 && (
+                      <p className="text-xs text-muted-foreground mb-2">
+                        {itemCount} item{itemCount !== 1 ? 's' : ''}
+                      </p>
+                    )}
+
+                    {/* More menu */}
+                    <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="h-7 w-7 p-0"
                           >
                             <MoreVertical className="w-4 h-4" />
                           </Button>
@@ -316,41 +331,6 @@ export default function Storage() {
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
-
-                    {location.description && (
-                      <p className="text-sm text-foreground mb-4 italic opacity-90 flex items-start gap-2">
-                        <Filter className="w-4 h-4 mt-0.5 flex-shrink-0 text-primary/60" />
-                        {location.description}
-                      </p>
-                    )}
-
-                    {itemCount > 0 ? (
-                      <div className="relative pt-4 border-t border-primary/20">
-                        <p className="text-sm font-semibold text-foreground mb-3">Items in this location:</p>
-                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                          {getItemsByLocation(location.name).map((item) => (
-                            <div key={item.id} className="flex flex-col items-center text-center">
-                              <div className="w-12 h-12 rounded-lg bg-primary/15 border border-primary/30 p-1.5 flex items-center justify-center mb-2">
-                                {item.icon ? (
-                                  <img
-                                    src={getItemIconPath(item.icon)}
-                                    alt={item.name}
-                                    className="w-full h-full object-contain"
-                                  />
-                                ) : (
-                                  <Box className="w-6 h-6 text-primary/60" />
-                                )}
-                              </div>
-                              <p className="text-xs font-medium text-foreground line-clamp-2">{item.name}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="relative pt-4 border-t border-primary/20">
-                        <p className="text-sm text-muted-foreground text-center italic">No items stored yet</p>
-                      </div>
-                    )}
                   </div>
 
                   {childLocations.length > 0 && (
