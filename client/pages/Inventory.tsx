@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Search, Trash2, MapPin, Package, MoreVertical, Plus, Loader2, Sparkles, Clock, Type, Layers, Tag, DollarSign, Star, Zap, AlertCircle } from "lucide-react";
 import Layout from "@/components/Layout";
 import AddEditItemDialog from "@/components/AddEditItemDialog";
+import ColorizedIcon from "@/components/ColorizedIcon";
 import { useSupabaseInventory } from "@/hooks/useSupabaseInventory";
 import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
 import { useToast } from "@/hooks/use-toast";
@@ -9,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { getItemIconPath } from "@/lib/customIcons";
-import { getColorWithOpacity, getColorBorder, getIconColorFilter } from "@/lib/colorUtils";
+import { getColorWithOpacity, getColorBorder } from "@/lib/colorUtils";
 
 export default function Inventory() {
   const { toast } = useToast();
