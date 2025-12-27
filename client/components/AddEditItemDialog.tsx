@@ -70,6 +70,7 @@ export default function AddEditItemDialog({
         location: existingItem.location,
         quantity: existingItem.quantity,
         icon: existingItem.icon || "",
+        color: existingItem.color || "#6366f1",
         isStorageItem: existingItem.isStorageItem || false,
       });
       setTags(existingItem.tags);
@@ -80,6 +81,7 @@ export default function AddEditItemDialog({
         location: "",
         quantity: 1,
         icon: "",
+        color: "#6366f1",
         isStorageItem: false,
       });
       setTags([]);
