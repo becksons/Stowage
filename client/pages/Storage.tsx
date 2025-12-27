@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, Search, MapPin, Trash2, MoreVertical, X, Edit, Loader2, Layers, Briefcase, Home, Grid3x3, BookOpen, Box, Sparkles, Filter } from "lucide-react";
 import Layout from "@/components/Layout";
+import ColorizedIcon from "@/components/ColorizedIcon";
 import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
 import { useSupabaseInventory } from "@/hooks/useSupabaseInventory";
 import { useToast } from "@/hooks/use-toast";
@@ -22,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getStorageIconPath, getStorageIconOptions, getItemIconPath } from "@/lib/customIcons";
-import { getColorWithOpacity, getColorBorder, getIconColorFilter } from "@/lib/colorUtils";
+import { getColorWithOpacity, getColorBorder } from "@/lib/colorUtils";
 
 const storageTypes = [
   { value: "drawer", label: "Drawer", icon: Layers },
