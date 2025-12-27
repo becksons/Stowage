@@ -454,19 +454,6 @@ export default function Storage() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-
-                {/* Stats Bar */}
-                <div className="inline-flex items-center gap-6">
-                  <div className="flex flex-col">
-                    <span className="text-3xl font-black text-primary">{selectedChildLocations.length}</span>
-                    <span className="text-xs text-muted-foreground font-semibold">section{selectedChildLocations.length !== 1 ? 's' : ''}</span>
-                  </div>
-                  <div className="w-px h-12 bg-primary/20"></div>
-                  <div className="flex flex-col">
-                    <span className="text-3xl font-black text-primary">{getItemsByLocation(selectedLocation.name).length}</span>
-                    <span className="text-xs text-muted-foreground font-semibold">item{getItemsByLocation(selectedLocation.name).length !== 1 ? 's' : ''}</span>
-                  </div>
-                </div>
               </div>
 
               {/* Storage Sections / Child Locations */}
