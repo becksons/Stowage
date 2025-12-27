@@ -275,9 +275,12 @@ export default function Inventory() {
                   <h3 className="text-xl font-bold text-foreground line-clamp-2 mb-2">
                     {item.name}
                   </h3>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/30">
-                    <MapPin className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-semibold text-primary">{item.location}</span>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border" style={{
+                    backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
+                    borderColor: getColorBorder(item.color || '#6366f1', 0.3),
+                  }}>
+                    <MapPin className="w-4 h-4" style={{ color: item.color || '#6366f1' }} />
+                    <span className="text-sm font-semibold" style={{ color: item.color || '#6366f1' }}>{item.location}</span>
                   </div>
 
                   <div className="absolute top-4 right-4">
