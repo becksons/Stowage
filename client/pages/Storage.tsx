@@ -247,7 +247,7 @@ export default function Storage() {
           </div>
 
           {/* Room List */}
-          <div className="flex-1 overflow-y-auto mt-6 space-y-2">
+          <div className="flex-1 overflow-y-auto mt-4 lg:mt-6 space-y-2 px-1 lg:px-0">
             {rootLocations.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 <p className="text-sm">No rooms yet</p>
