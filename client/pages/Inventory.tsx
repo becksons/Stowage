@@ -203,18 +203,73 @@ export default function Inventory() {
             </div>
           </div>
 
-          <select
-            value={filterLocation}
-            onChange={(e) => setFilterLocation(e.target.value)}
-            className="px-4 py-2.5 rounded-lg border-2 border-primary/20 hover:border-primary/40 bg-card/50 backdrop-blur-sm text-sm font-semibold focus:outline-none focus:border-primary/60 focus:ring-primary/30 transition-all"
-          >
-            <option value="">All locations</option>
-            {locationNames.map((name) => (
-              <option key={name} value={name}>
-                • {name}
-              </option>
-            ))}
-          </select>
+          {/* Location Filter Buttons */}
+          <div className="flex flex-wrap gap-2 items-center">
+            {/* All Locations Button */}
+            <Button
+              onClick={() => setFilterLocation("")}
+              variant={filterLocation === "" ? "default" : "outline"}
+              size="sm"
+              className={`gap-2 transition-all ${
+                filterLocation === ""
+                  ? "bg-gradient-to-r from-primary to-secondary hover:shadow-lg"
+                  : "border-primary/20 hover:border-primary/40"
+              }`}
+            >
+              <Home className="w-4 h-4" />
+              <span className="hidden sm:inline">All</span>
+            </Button>
+
+            {/* Location Filter Buttons */}
+            {locationNames.map((name) => {
+              const location = locations.find((loc) => loc.name === name);
+              const storageItem = storageItems.find((item) => item.name === name);
+
+              return (
+                <Button
+                  key={name}
+                  onClick={() => setFilterLocation(name)}
+                  variant={filterLocation === name ? "default" : "outline"}
+                  size="sm"
+                  className={`gap-2 transition-all ${
+                    filterLocation === name
+                      ? "bg-gradient-to-r from-primary to-secondary hover:shadow-lg"
+                      : "border-primary/20 hover:border-primary/40"
+                  }`}
+                  title={name}
+                >
+                  {location ? (
+                    // Storage location with icon
+                    <>
+                      {location.icon ? (
+                        <img
+                          src={getStorageIconPath(location.icon)}
+                          alt={name}
+                          className="w-4 h-4"
+                        />
+                      ) : (
+                        <Home className="w-4 h-4" />
+                      )}
+                    </>
+                  ) : storageItem ? (
+                    // Storage item container
+                    <>
+                      {storageItem.icon ? (
+                        <img
+                          src={getItemIconPath(storageItem.icon)}
+                          alt={name}
+                          className="w-4 h-4"
+                        />
+                      ) : (
+                        <Box className="w-4 h-4" />
+                      )}
+                    </>
+                  ) : null}
+                  <span className="hidden sm:inline text-xs">{name}</span>
+                </Button>
+              );
+            })}
+          </div>
 
           <select
             value={sortBy}
