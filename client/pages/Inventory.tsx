@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Search, Trash2, MapPin, Package, MoreVertical, Plus, Loader2, Sparkles, Clock, Type, Layers, Tag, DollarSign, Star, Zap, AlertCircle } from "lucide-react";
+import { Search, Trash2, MapPin, Package, MoreVertical, Plus, Loader2, Sparkles, Clock, Type, Layers, Tag, DollarSign, Star, Zap, AlertCircle, Home, Box } from "lucide-react";
 import Layout from "@/components/Layout";
 import AddEditItemDialog from "@/components/AddEditItemDialog";
 import ColorizedIcon from "@/components/ColorizedIcon";
