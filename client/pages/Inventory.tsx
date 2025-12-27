@@ -263,13 +263,11 @@ export default function Inventory() {
                       backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
                       borderColor: getColorBorder(item.color || '#6366f1', 0.3),
                     }}>
-                      <img
+                      <ColorizedIcon
                         src={getItemIconPath(item.icon)}
                         alt={item.icon}
+                        color={item.color || '#6366f1'}
                         className="w-full h-full object-contain"
-                        style={{
-                          filter: getIconColorFilter(item.color || '#6366f1'),
-                        }}
                       />
                     </div>
                   )}
