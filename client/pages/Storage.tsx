@@ -262,8 +262,14 @@ export default function Storage() {
                 return (
                   <div
                     key={location.id}
-                    onClick={() => setSelectedLocationId(location.id)}
-                    className={`group relative p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 hover:border-primary/50 ${
+                    onClick={() => {
+                      setSelectedLocationId(location.id);
+                      // Close sidebar on mobile after selection
+                      if (window.innerWidth < 1024) {
+                        setSidebarOpen(false);
+                      }
+                    }}
+                    className={`group relative p-4 lg:p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 active:scale-95 lg:active:scale-100 hover:border-primary/50 ${
                       isSelected
                         ? "border-primary/50 bg-primary/10"
                         : "border-primary/20 hover:bg-primary/5"
@@ -271,7 +277,7 @@ export default function Storage() {
                   >
                     <div className="flex items-start justify-between gap-3">
                       {/* Location Icon */}
-                      <div className={`w-12 h-12 rounded-lg flex-shrink-0 flex items-center justify-center transform transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-105'}`} style={{
+                      <div className={`w-12 h-12 lg:w-12 lg:h-12 rounded-lg flex-shrink-0 flex items-center justify-center transform transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-105'}`} style={{
                         backgroundColor: getColorWithOpacity('#6366f1', 0.1),
                       }}>
                         {location.icon ? (
@@ -289,20 +295,20 @@ export default function Storage() {
 
                       {/* Location Info */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-sm text-foreground line-clamp-1">{location.name}</h3>
+                        <h3 className="font-bold text-sm lg:text-sm text-foreground line-clamp-1">{location.name}</h3>
                       </div>
 
                       {/* Menu Button */}
-                      <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex-shrink-0 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-6 w-6 p-0"
+                              className="h-8 w-8 lg:h-6 lg:w-6 p-0"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              <MoreVertical className="w-3 h-3" />
+                              <MoreVertical className="w-4 h-4 lg:w-3 lg:h-3" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
