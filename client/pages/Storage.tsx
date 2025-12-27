@@ -560,13 +560,11 @@ export default function Storage() {
                                       borderColor: getColorBorder(item.color || '#6366f1', 0.3),
                                     }}>
                                       {item.icon ? (
-                                        <img
+                                        <ColorizedIcon
                                           src={getItemIconPath(item.icon)}
                                           alt={item.name}
+                                          color={item.color || '#6366f1'}
                                           className="w-full h-full object-contain"
-                                          style={{
-                                            filter: getIconColorFilter(item.color || '#6366f1'),
-                                          }}
                                         />
                                       ) : (
                                         <Box className="w-6 h-6" style={{ color: item.color || '#6366f1' }} />
