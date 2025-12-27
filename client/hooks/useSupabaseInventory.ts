@@ -144,6 +144,7 @@ export const useSupabaseInventory = () => {
           location_name: item.location,
           quantity: item.quantity,
           icon: item.icon,
+          color: item.color || '#6366f1',
         };
 
         // Only include is_storage_item if it's true (to avoid schema issues)
