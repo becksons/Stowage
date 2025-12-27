@@ -280,6 +280,21 @@ interface InventoryItem {
 
 ## Notes for Developers
 
+### Using ColorizedIcon Component
+When displaying item icons that should use the item's color:
+
+```typescript
+import ColorizedIcon from '@/components/ColorizedIcon';
+import { getItemIconPath } from '@/lib/customIcons';
+
+<ColorizedIcon
+  src={getItemIconPath(item.icon)}
+  alt={item.icon}
+  color={item.color || '#6366f1'}
+  className="w-full h-full object-contain"
+/>
+```
+
 ### Adding Color to New Features
 If you add new UI elements that should respect item colors, use the color utility functions:
 
@@ -300,6 +315,29 @@ Always provide a fallback to the default color when the item color might be unde
 ```typescript
 const color = item.color || '#6366f1';
 ```
+
+### Performance Considerations
+The `ColorizedIcon` component fetches and parses SVG files. To optimize:
+1. **Use simple icons**: Complex SVGs with many elements take longer to process
+2. **Single-color icons work best**: Multi-color SVGs may not colorize as expected
+3. **Memoize components**: Consider using React.memo for lists with many colored icons:
+
+```typescript
+const ColorizedIconMemo = React.memo(ColorizedIcon);
+```
+
+4. **Batch SVG fetches**: If displaying many icons, consider pre-fetching SVG files
+
+### SVG Compatibility
+The colorizer works best with SVGs that use:
+- ✅ `fill` and `stroke` attributes
+- ✅ Inline `style` properties
+- ✅ Simple single-color designs
+
+It may not work well with:
+- ❌ SVGs using `<style>` tags with CSS classes
+- ❌ Complex gradients with hardcoded colors
+- ❌ Multi-color raster images
 
 ---
 
