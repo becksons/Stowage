@@ -319,7 +319,11 @@ export default function Inventory() {
 
                 <div className="relative space-y-3">
                   {item.quantity > 1 && (
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/15 border border-secondary/30 text-sm font-bold text-secondary mb-3">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-bold mb-3 border" style={{
+                      backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
+                      borderColor: getColorBorder(item.color || '#6366f1', 0.3),
+                      color: item.color || '#6366f1',
+                    }}>
                       <Package className="w-4 h-4" />
                       Qty: {item.quantity}
                     </div>
