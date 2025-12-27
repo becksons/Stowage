@@ -17,6 +17,7 @@ export interface InventoryItem {
   location_id: string;
   quantity: number;
   icon?: string;
+  color?: string;
   isStorageItem: boolean;
   tags: ItemTag[];
   createdAt: Date;
