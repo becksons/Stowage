@@ -82,8 +82,6 @@ export default function Storage() {
     return items.filter((item) => item.isStorageItem);
   };
 
-  const filteredLocations = getFilteredLocations();
-
   const handleOpenDialog = (location = null) => {
     if (location) {
       setEditingLocation(location);
@@ -162,6 +160,9 @@ export default function Storage() {
           title: "Success",
           description: "Location deleted successfully",
         });
+        if (selectedLocationId === id) {
+          setSelectedLocationId(null);
+        }
       } catch (err) {
         toast({
           title: "Error",
@@ -182,205 +183,344 @@ export default function Storage() {
     );
   }
 
+  const rootLocations = getRootLocations();
+  const selectedLocation = selectedLocationId ? locations.find((loc) => loc.id === selectedLocationId) : null;
+  const selectedChildLocations = selectedLocation ? getChildLocations(selectedLocation.id) : [];
+
   return (
     <Layout>
-      <div className="space-y-8 animate-fade-in">
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-          <div>
-            <h1 className="text-4xl sm:text-5xl font-black gradient-heading mb-2">Storage Spaces</h1>
-            <div className="flex items-center gap-2 mt-3">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 border border-primary/40 hover:border-primary/60 transition-all">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <p className="text-sm font-semibold text-primary">
-                  {locations.length} location{locations.length !== 1 ? "s" : ""} organized
-                </p>
+      <div className="h-screen flex flex-col lg:flex-row gap-6 animate-fade-in overflow-hidden">
+        {/* Left Sidebar - Room Navigation */}
+        <div className="lg:w-80 flex flex-col border-r border-primary/20 pr-6">
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-3xl font-black gradient-heading mb-2">Storage Spaces</h1>
+              <p className="text-sm text-muted-foreground">Select a room to view</p>
+            </div>
+
+            {/* Add Location Button */}
+            <Button
+              onClick={() => {
+                setEditingLocation(null);
+                setFormData({
+                  name: "",
+                  type: "drawer",
+                  description: "",
+                  color: "bg-blue-100 dark:bg-blue-950",
+                  icon: "",
+                  parentId: null,
+                });
+                setOpenDialog(true);
+              }}
+              className="w-full gap-2 bg-gradient-to-r from-primary to-secondary hover:shadow-2xl hover:scale-105 transition-all duration-300 font-bold text-sm px-4 py-2 rounded-lg"
+            >
+              <Plus className="w-4 h-4" />
+              Add Room
+            </Button>
+
+            {/* Search Bar */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-lg blur opacity-0 group-focus-within:opacity-100 transition-opacity duration-300" />
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-primary/60" />
+                <Input
+                  placeholder="Search..."
+                  className="pl-10 py-2 text-sm border-primary/20 focus:border-primary/50 focus:ring-primary/30 rounded-lg bg-card/50 backdrop-blur-sm"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </div>
             </div>
           </div>
 
-          <Button
-            onClick={() => handleOpenDialog()}
-            className="gap-2 bg-gradient-to-r from-primary to-secondary hover:shadow-2xl hover:scale-105 transition-all duration-300 font-bold text-base px-6 py-3 rounded-lg"
-          >
-            <Plus className="w-5 h-5" />
-            <span className="hidden sm:inline">Add Location</span>
-          </Button>
-        </div>
+          {/* Room List */}
+          <div className="flex-1 overflow-y-auto mt-6 space-y-2">
+            {rootLocations.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <p className="text-sm">No rooms yet</p>
+              </div>
+            ) : (
+              rootLocations.map((location) => {
+                const itemCount = getItemsByLocation(location.name).length;
+                const childCount = getChildLocations(location.id).length;
+                const storageType = storageTypes.find((t) => t.value === location.type);
+                const isSelected = selectedLocationId === location.id;
 
-        <div className="flex gap-4 items-end">
-          <div className="relative group flex-1">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-lg blur opacity-0 group-focus-within:opacity-100 transition-opacity duration-300" />
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary/60" />
-              <Input
-                placeholder="Search storage locations..."
-                className="pl-12 py-2.5 text-base border-primary/20 focus:border-primary/50 focus:ring-primary/30 rounded-lg bg-card/50 backdrop-blur-sm"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {isSyncing && (
-            <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary/10 border-2 border-primary/40 text-primary font-semibold text-sm whitespace-nowrap">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Syncing...
-            </div>
-          )}
-        </div>
-
-        {filteredLocations.length === 0 && getStorageItems().length === 0 ? (
-          <div className="text-center py-16 sm:py-20">
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 border-2 border-primary/40 mb-6 group">
-              <Box className="w-12 h-12 text-primary transform group-hover:scale-110 transition-transform duration-300" />
-            </div>
-            <h3 className="text-2xl font-black gradient-heading mb-3">No storage locations</h3>
-            <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
-              {locations.length === 0
-                ? "Create your first storage location to get started organizing!"
-                : "No locations match your search. Try adjusting your query."}
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-12">
-            {filteredLocations.filter((loc) => !loc.parentId).map((location) => {
-              const itemCount = getItemsByLocation(location.name).length;
-              const childLocations = getChildLocations(location.id);
-              const parentLocation = getParentLocation(location.parentId);
-              const storageType = storageTypes.find(
-                (t) => t.value === location.type
-              );
-
-              return (
-                <div key={location.id} className="group relative flex flex-col items-center text-center transition-all duration-300 p-3 rounded-lg" style={{ backgroundColor: location.color ? location.color.replace('dark:', '').split(' ')[0] + '/5' : 'transparent' }}>
-                  <div className="relative w-full">
-                    {/* Icon */}
-                    <div className="relative mb-3 transform group-hover:scale-110 transition-transform duration-300 cursor-pointer mx-auto">
-                      <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg flex items-center justify-center" style={{
+                return (
+                  <div
+                    key={location.id}
+                    onClick={() => setSelectedLocationId(location.id)}
+                    className={`group relative p-3 rounded-lg border-2 cursor-pointer transition-all duration-300 hover:border-primary/50 ${
+                      isSelected
+                        ? "border-primary/50 bg-primary/10"
+                        : "border-primary/20 hover:bg-primary/5"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      {/* Location Icon */}
+                      <div className={`w-12 h-12 rounded-lg flex-shrink-0 flex items-center justify-center transform transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-105'}`} style={{
                         backgroundColor: getColorWithOpacity('#6366f1', 0.1),
                       }}>
                         {location.icon ? (
                           <img
                             src={getStorageIconPath(location.icon)}
                             alt={location.icon}
-                            className="w-20 h-20 sm:w-24 sm:h-24 object-contain"
+                            className="w-8 h-8 object-contain"
                           />
                         ) : storageType ? (
-                          <storageType.icon className="w-20 h-20 sm:w-24 sm:h-24 text-primary" />
+                          <storageType.icon className="w-6 h-6 text-primary" />
                         ) : (
-                          <Box className="w-20 h-20 sm:w-24 sm:h-24 text-primary" />
+                          <Box className="w-6 h-6 text-primary" />
                         )}
                       </div>
+
+                      {/* Location Info */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-bold text-sm text-foreground line-clamp-1">{location.name}</h3>
+                        <p className="text-xs text-muted-foreground">{storageType?.label}</p>
+                        {(childCount > 0 || itemCount > 0) && (
+                          <p className="text-xs text-primary/60 font-semibold mt-1">
+                            {childCount > 0 && `${childCount} section${childCount !== 1 ? 's' : ''}`}
+                            {childCount > 0 && itemCount > 0 && ' • '}
+                            {itemCount > 0 && `${itemCount} item${itemCount !== 1 ? 's' : ''}`}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Menu Button */}
+                      <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <MoreVertical className="w-3 h-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingLocation(location);
+                              setFormData({
+                                name: location.name,
+                                type: location.type,
+                                description: location.description || "",
+                                color: location.color || "bg-blue-100 dark:bg-blue-950",
+                                icon: location.icon || "",
+                                parentId: location.parentId || null,
+                              });
+                              setOpenDialog(true);
+                            }}>
+                              <Edit className="w-4 h-4 mr-2" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteLocation(location.id);
+                              }}
+                              className="text-destructive"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
 
-                    {/* Name */}
-                    <h3 className="text-base sm:text-lg font-bold text-foreground line-clamp-2 mb-1 px-1 hover:underline cursor-pointer" onClick={() => handleOpenDialog(location)}>
-                      {location.name}
-                    </h3>
+          {/* Sync indicator */}
+          {isSyncing && (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 border border-primary/30 text-primary text-xs font-semibold">
+              <Loader2 className="w-3 h-3 animate-spin" />
+              Syncing...
+            </div>
+          )}
+        </div>
 
-                    {/* Type badge */}
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/15 text-primary mb-1">
-                      <Filter className="w-3 h-3" />
-                      {storageType?.label}
-                    </span>
-
-                    {/* Parent location */}
-                    {parentLocation && (
-                      <p className="text-xs text-muted-foreground font-medium mb-1">
-                        in <span className="text-primary font-semibold">{parentLocation.name}</span>
-                      </p>
+        {/* Right Content Area - Room Details */}
+        <div className="flex-1 overflow-y-auto">
+          {!selectedLocation ? (
+            <div className="flex flex-col items-center justify-center h-full py-12">
+              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 border-2 border-primary/40 mb-6">
+                <Home className="w-12 h-12 text-primary" />
+              </div>
+              <h3 className="text-2xl font-bold text-foreground mb-2">Select a Room</h3>
+              <p className="text-muted-foreground text-center max-w-sm">
+                Choose a room from the sidebar to view and manage its storage spaces and items.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-8">
+              {/* Selected Room Header */}
+              <div className="space-y-4">
+                <div className="flex items-start gap-6">
+                  {/* Room Icon */}
+                  <div className="w-32 h-32 rounded-xl flex-shrink-0 flex items-center justify-center" style={{
+                    backgroundColor: getColorWithOpacity('#6366f1', 0.1),
+                  }}>
+                    {selectedLocation.icon ? (
+                      <img
+                        src={getStorageIconPath(selectedLocation.icon)}
+                        alt={selectedLocation.icon}
+                        className="w-24 h-24 object-contain"
+                      />
+                    ) : storageTypes.find((t) => t.value === selectedLocation.type) ? (
+                      <>
+                        {(() => {
+                          const Icon = storageTypes.find((t) => t.value === selectedLocation.type)?.icon;
+                          return Icon ? <Icon className="w-24 h-24 text-primary" /> : null;
+                        })()}
+                      </>
+                    ) : (
+                      <Box className="w-24 h-24 text-primary" />
                     )}
+                  </div>
 
-                    {/* Description */}
-                    {location.description && (
-                      <p className="text-xs text-foreground/60 line-clamp-1 mb-1 px-1 italic">
-                        {location.description}
-                      </p>
-                    )}
-
-                    {/* Item count */}
-                    {itemCount > 0 && (
-                      <p className="text-xs text-muted-foreground mb-2">
-                        {itemCount} item{itemCount !== 1 ? 's' : ''}
-                      </p>
-                    )}
-
-                    {/* More menu */}
-                    <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {/* Room Info */}
+                  <div className="flex-1">
+                    <h2 className="text-4xl font-black gradient-heading mb-2">{selectedLocation.name}</h2>
+                    <div className="flex flex-wrap items-center gap-3 mb-4">
+                      <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/15 text-primary text-sm font-semibold border border-primary/30">
+                        <Filter className="w-4 h-4" />
+                        {storageTypes.find((t) => t.value === selectedLocation.type)?.label}
+                      </span>
+                      {selectedLocation.description && (
+                        <p className="text-sm text-muted-foreground italic">{selectedLocation.description}</p>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 border border-primary/40">
+                        <Sparkles className="w-4 h-4 text-primary" />
+                        <p className="text-sm font-semibold text-primary">
+                          {selectedChildLocations.length} section{selectedChildLocations.length !== 1 ? 's' : ''} • {getItemsByLocation(selectedLocation.name).length} item{getItemsByLocation(selectedLocation.name).length !== 1 ? 's' : ''}
+                        </p>
+                      </div>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 w-7 p-0"
-                          >
+                          <Button variant="outline" size="sm">
                             <MoreVertical className="w-4 h-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleOpenDialog(location)}>
+                          <DropdownMenuItem onClick={() => {
+                            setEditingLocation(selectedLocation);
+                            setFormData({
+                              name: selectedLocation.name,
+                              type: selectedLocation.type,
+                              description: selectedLocation.description || "",
+                              color: selectedLocation.color || "bg-blue-100 dark:bg-blue-950",
+                              icon: selectedLocation.icon || "",
+                              parentId: selectedLocation.parentId || null,
+                            });
+                            setOpenDialog(true);
+                          }}>
                             <Edit className="w-4 h-4 mr-2" />
-                            Edit
+                            Edit Room
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => handleDeleteLocation(location.id)}
+                            onClick={() => handleDeleteLocation(selectedLocation.id)}
                             className="text-destructive"
                           >
                             <Trash2 className="w-4 h-4 mr-2" />
-                            Delete
+                            Delete Room
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
                   </div>
+                </div>
+              </div>
 
-                  {childLocations.length > 0 && (
-                    <div className="ml-4 sm:ml-6 space-y-3 border-l-2 border-primary/30 pl-4 sm:pl-6">
-                      {childLocations.map((child) => {
-                        const childItemCount = getItemsByLocation(child.name).length;
-                        const childStorageType = storageTypes.find(
-                          (t) => t.value === child.type
-                        );
-                        return (
-                          <div
-                            key={child.id}
-                            className={`group relative p-4 sm:p-6 rounded-xl border-2 border-primary/20 hover:border-primary/50 transition-all duration-300 overflow-hidden ${child.color}`}
-                          >
-                            <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/3 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            <div className="relative flex items-start justify-between mb-3">
-                              <div className="flex flex-col items-center text-center">
-                                <div className="p-3 rounded-lg bg-primary/15 border-2 border-primary/30 transform group-hover:scale-110 transition-transform duration-300 mb-2">
+              {/* Storage Sections / Child Locations */}
+              {selectedChildLocations.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                    <Layers className="w-5 h-5 text-primary" />
+                    Storage Sections
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {selectedChildLocations.map((child) => {
+                      const childItemCount = getItemsByLocation(child.name).length;
+                      const childStorageType = storageTypes.find((t) => t.value === child.type);
+
+                      return (
+                        <div
+                          key={child.id}
+                          className="group relative p-6 rounded-xl border-2 border-primary/20 hover:border-primary/50 transition-all duration-300 overflow-hidden hover:shadow-xl"
+                          style={{
+                            backgroundColor: getColorWithOpacity(child.color ? child.color.replace('dark:', '').split(' ')[0] : 'bg-blue-100', 0.05),
+                          }}
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/3 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          <div className="relative space-y-4">
+                            {/* Header */}
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-start gap-4 flex-1">
+                                {/* Icon */}
+                                <div className="w-16 h-16 rounded-lg flex-shrink-0 flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300" style={{
+                                  backgroundColor: getColorWithOpacity('#6366f1', 0.15),
+                                }}>
                                   {child.icon ? (
                                     <img
                                       src={getStorageIconPath(child.icon)}
                                       alt={child.icon}
-                                      className="w-10 h-10 object-contain"
+                                      className="w-12 h-12 object-contain"
                                     />
                                   ) : childStorageType ? (
-                                    <childStorageType.icon className="w-10 h-10 text-primary" />
+                                    <>
+                                      {(() => {
+                                        const Icon = childStorageType.icon;
+                                        return <Icon className="w-10 h-10 text-primary" />;
+                                      })()}
+                                    </>
                                   ) : (
                                     <Box className="w-10 h-10 text-primary" />
                                   )}
                                 </div>
-                                <h4 className="text-lg font-bold text-foreground mb-1">{child.name}</h4>
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/15 text-primary border border-primary/30">
-                                  <Filter className="w-3 h-3" />
-                                  {childStorageType?.label}
-                                </span>
+
+                                {/* Info */}
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="text-lg font-bold text-foreground">{child.name}</h4>
+                                  <p className="text-xs text-muted-foreground">{childStorageType?.label}</p>
+                                  {child.description && (
+                                    <p className="text-sm text-foreground/60 mt-2 italic">{child.description}</p>
+                                  )}
+                                </div>
                               </div>
 
+                              {/* Menu */}
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
                                   >
                                     <MoreVertical className="w-4 h-4" />
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
-                                  <DropdownMenuItem onClick={() => handleOpenDialog(child)}>
+                                  <DropdownMenuItem onClick={() => {
+                                    setEditingLocation(child);
+                                    setFormData({
+                                      name: child.name,
+                                      type: child.type,
+                                      description: child.description || "",
+                                      color: child.color || "bg-blue-100 dark:bg-blue-950",
+                                      icon: child.icon || "",
+                                      parentId: child.parentId || null,
+                                    });
+                                    setOpenDialog(true);
+                                  }}>
                                     <Edit className="w-4 h-4 mr-2" />
                                     Edit
                                   </DropdownMenuItem>
@@ -395,111 +535,77 @@ export default function Storage() {
                               </DropdownMenu>
                             </div>
 
-                            {child.description && (
-                              <p className="text-xs text-foreground mb-3">
-                                {child.description}
-                              </p>
-                            )}
-
+                            {/* Items Grid */}
                             {childItemCount > 0 ? (
-                              <div className="pt-3 border-t border-border/50">
-                                <div className="grid grid-cols-3 gap-2">
+                              <div className="pt-4 border-t border-primary/20">
+                                <p className="text-xs text-muted-foreground font-semibold mb-3">
+                                  {childItemCount} item{childItemCount !== 1 ? 's' : ''}
+                                </p>
+                                <div className="grid grid-cols-4 gap-2">
                                   {getItemsByLocation(child.name).map((item) => (
-                                    <div key={item.id} className="flex flex-col items-center text-center">
-                                      <div className="w-8 h-8 rounded-md bg-primary/15 border border-primary/30 p-1 flex items-center justify-center">
+                                    <div key={item.id} className="group/item">
+                                      <div className="w-full aspect-square rounded-lg flex items-center justify-center p-2 transform group-hover/item:scale-110 transition-transform duration-300" style={{
+                                        backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.1),
+                                      }}>
                                         {item.icon ? (
-                                          <img
+                                          <ColorizedIcon
                                             src={getItemIconPath(item.icon)}
                                             alt={item.name}
-                                            className="w-full h-full object-contain"
+                                            color={item.color || '#6366f1'}
+                                            className="w-6 h-6 object-contain"
                                           />
                                         ) : (
-                                          <Box className="w-4 h-4 text-primary/60" />
+                                          <Box className="w-5 h-5 text-primary/60" />
                                         )}
                                       </div>
-                                      <p className="text-xs font-medium text-foreground line-clamp-1 mt-0.5">{item.name}</p>
+                                      <p className="text-xs font-medium text-foreground text-center line-clamp-1 mt-1">{item.name}</p>
                                     </div>
                                   ))}
                                 </div>
                               </div>
                             ) : (
-                              <div className="pt-3 border-t border-border/50">
-                                <p className="text-xs text-muted-foreground text-center italic">No items</p>
+                              <div className="pt-4 border-t border-primary/20">
+                                <p className="text-xs text-muted-foreground text-center italic">No items in this section</p>
                               </div>
                             )}
                           </div>
-                        );
-                      })}
-                    </div>
-                  )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              );
-            })}
+              )}
 
-            {/* Storage Items as Containers Section */}
-            {getStorageItems().length > 0 && (
-              <div className="mt-8">
-                <h2 className="text-2xl font-bold text-foreground mb-4">Items as Containers</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-                  {getStorageItems().map((storageItem) => {
-                    const itemCount = getItemsByLocation(storageItem.name).length;
-
-                    return (
-                      <div key={storageItem.id} className="group relative flex flex-col items-center text-center transition-all duration-300 p-2">
+              {/* Items in Room (not in subsections) */}
+              {getItemsByLocation(selectedLocation.name).length > 0 && selectedChildLocations.length > 0 && (
+                <div className="space-y-4 pt-6 border-t border-primary/20">
+                  <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                    <Box className="w-5 h-5 text-primary" />
+                    Items in {selectedLocation.name}
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    {getItemsByLocation(selectedLocation.name).map((item) => (
+                      <div key={item.id} className="group relative flex flex-col items-center text-center transition-all duration-300 p-2">
                         {/* Icon */}
-                        <div className="relative mb-2 transform group-hover:scale-110 transition-transform duration-300 cursor-pointer" onClick={() => {
-                          setEditingLocation(storageItem as any);
-                          setOpenDialog(true);
-                        }}>
-                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg flex items-center justify-center" style={{
-                            backgroundColor: getColorWithOpacity(storageItem.color || '#6366f1', 0.1),
+                        <div className="relative mb-2 transform group-hover:scale-110 transition-transform duration-300 cursor-pointer w-full">
+                          <div className="aspect-square rounded-lg flex items-center justify-center" style={{
+                            backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.1),
                           }}>
-                            {storageItem.icon ? (
+                            {item.icon ? (
                               <ColorizedIcon
-                                src={getItemIconPath(storageItem.icon)}
-                                alt={storageItem.icon}
-                                color={storageItem.color || '#6366f1'}
-                                className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+                                src={getItemIconPath(item.icon)}
+                                alt={item.name}
+                                color={item.color || '#6366f1'}
+                                className="w-12 h-12 object-contain"
                               />
                             ) : (
-                              <Box className="w-16 h-16 sm:w-20 sm:h-20" style={{ color: storageItem.color || '#6366f1' }} />
+                              <Box className="w-12 h-12" style={{ color: item.color || '#6366f1' }} />
                             )}
                           </div>
-                          <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-20 transition-opacity shadow-xl blur-lg -z-10" style={{
-                            backgroundColor: storageItem.color || '#6366f1',
-                          }} />
                         </div>
 
                         {/* Name */}
-                        <h3 className="text-sm sm:text-base font-bold text-foreground line-clamp-2 mb-1 px-1 hover:underline cursor-pointer" onClick={() => {
-                          setEditingLocation(storageItem as any);
-                          setOpenDialog(true);
-                        }}>
-                          {storageItem.name}
-                        </h3>
-
-                        {/* Badge */}
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold mb-1" style={{
-                          backgroundColor: getColorWithOpacity(storageItem.color || '#6366f1', 0.15),
-                          color: storageItem.color || '#6366f1',
-                        }}>
-                          <Box className="w-3 h-3" />
-                          Container
-                        </span>
-
-                        {/* Description */}
-                        {storageItem.description && (
-                          <p className="text-xs text-foreground/60 line-clamp-1 mb-1 px-1 italic">
-                            {storageItem.description}
-                          </p>
-                        )}
-
-                        {/* Item count */}
-                        {itemCount > 0 && (
-                          <p className="text-xs text-muted-foreground mb-2">
-                            {itemCount} item{itemCount !== 1 ? 's' : ''}
-                          </p>
-                        )}
+                        <h3 className="text-sm font-bold text-foreground line-clamp-2 mb-1 px-1">{item.name}</h3>
 
                         {/* More menu */}
                         <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -508,47 +614,45 @@ export default function Storage() {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-7 w-7 p-0"
+                                className="h-6 w-6 p-0"
                               >
-                                <MoreVertical className="w-4 h-4" />
+                                <MoreVertical className="w-3 h-3" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem
                                 onClick={() => {
-                                  setEditingLocation(storageItem as any);
-                                  setOpenDialog(true);
-                                }}
-                              >
-                                <Edit className="w-4 h-4 mr-2" />
-                                Edit Item
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => {
-                                  if (confirm("Are you sure you want to delete this storage item?")) {
-                                    deleteItem(storageItem.id);
+                                  if (confirm("Are you sure you want to delete this item?")) {
+                                    deleteItem(item.id);
                                     toast({
                                       title: "Success",
-                                      description: "Storage item deleted successfully",
+                                      description: "Item deleted successfully",
                                     });
                                   }
                                 }}
                                 className="text-destructive"
                               >
                                 <Trash2 className="w-4 h-4 mr-2" />
-                                Delete Item
+                                Delete
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </div>
                       </div>
-                    );
-                  })}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+
+              {selectedChildLocations.length === 0 && getItemsByLocation(selectedLocation.name).length === 0 && (
+                <div className="text-center py-12">
+                  <Box className="w-16 h-16 text-primary/30 mx-auto mb-4" />
+                  <p className="text-muted-foreground">This room is empty. Add sections or items to get started.</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
