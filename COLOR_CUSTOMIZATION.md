@@ -82,16 +82,29 @@ Located in `client/lib/colorUtils.ts`:
    - Added `color` to form state
    - Added color picker UI with hex input
    - Updated form submission to include color
+   - Updated icon preview to show color applied
+   - Integrated ColorizedIcon component for live color preview
 
 4. **client/pages/Inventory.tsx**
-   - Imported color utility functions
+   - Imported color utility functions and ColorizedIcon
    - Updated icon container styling to use item color
    - Updated location badge to use item color
    - Updated quantity badge to use item color
-   - Applied color filters to icon images
+   - Applied actual SVG color via ColorizedIcon component
 
-5. **client/lib/colorUtils.ts** (NEW)
+5. **client/pages/Storage.tsx**
+   - Integrated ColorizedIcon for storage item icons
+   - Applied colors to container icons
+   - Applied colors to items inside containers
+
+6. **client/lib/colorUtils.ts** (NEW)
    - Utility functions for color operations
+
+7. **client/components/ColorizedIcon.tsx** (NEW)
+   - Smart SVG colorization component
+   - Fetches SVG and modifies fill/stroke colors
+   - Handles color replacement in gradients and styles
+   - Creates data URLs for colored SVG display
 
 ## Usage Examples
 
