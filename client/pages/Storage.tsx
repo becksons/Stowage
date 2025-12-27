@@ -375,9 +375,20 @@ export default function Storage() {
             <div className="space-y-8">
               {/* Selected Room Header */}
               <div className="space-y-6 pb-6 border-b border-primary/20">
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-4">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="lg:hidden h-8 w-8 p-0 flex-shrink-0"
+                    onClick={() => {
+                      setSelectedLocationId(null);
+                      setSidebarOpen(true);
+                    }}
+                  >
+                    <X className="w-5 h-5" />
+                  </Button>
                   <div className="flex-1">
-                    <h2 className="text-5xl font-black gradient-heading mb-3">{selectedLocation.name}</h2>
+                    <h2 className="text-3xl lg:text-5xl font-black gradient-heading mb-3">{selectedLocation.name}</h2>
                     {selectedLocation.description && (
                       <p className="text-base text-muted-foreground mb-4">{selectedLocation.description}</p>
                     )}
