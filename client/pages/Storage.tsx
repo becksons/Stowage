@@ -258,19 +258,19 @@ export default function Storage() {
                   >
                     <div className="flex items-start justify-between gap-3">
                       {/* Location Icon */}
-                      <div className={`w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center transform transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-105'}`} style={{
+                      <div className={`w-12 h-12 rounded-lg flex-shrink-0 flex items-center justify-center transform transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-105'}`} style={{
                         backgroundColor: getColorWithOpacity('#6366f1', 0.1),
                       }}>
                         {location.icon ? (
                           <img
                             src={getStorageIconPath(location.icon)}
                             alt={location.icon}
-                            className="w-6 h-6 object-contain"
+                            className="w-7 h-7 object-contain"
                           />
                         ) : storageType ? (
-                          <storageType.icon className="w-5 h-5 text-primary" />
+                          <storageType.icon className="w-6 h-6 text-primary" />
                         ) : (
-                          <Box className="w-5 h-5 text-primary" />
+                          <Box className="w-6 h-6 text-primary" />
                         )}
                       </div>
 
