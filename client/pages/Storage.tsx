@@ -358,7 +358,9 @@ export default function Storage() {
         </div>
 
         {/* Right Content Area - Room Details */}
-        <div className="flex-1 overflow-y-auto">
+        <div className={`${
+          selectedLocationId ? 'flex' : 'hidden'
+        } lg:flex flex-1 overflow-y-auto flex-col`}>
           {!selectedLocation ? (
             <div className="flex flex-col items-center justify-center h-full py-12">
               <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 border-2 border-primary/40 mb-6">
