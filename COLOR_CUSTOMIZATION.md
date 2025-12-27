@@ -56,12 +56,45 @@ The selected color is applied to:
 - **Name:** Indigo
 - **RGB:** (99, 102, 241)
 
+### SVG Colorization
+
+The `ColorizedIcon` component (`client/components/ColorizedIcon.tsx`) is responsible for applying colors to SVG icons. It works by:
+
+1. **Fetching the SVG file** from the icon path
+2. **Parsing the SVG XML** to find color attributes
+3. **Replacing color values**:
+   - Replaces `fill` attributes with the custom color
+   - Replaces `stroke` attributes with the custom color
+   - Updates inline `style` properties
+   - Updates gradient `stop-color` values
+4. **Creating a data URL** with the modified SVG
+5. **Displaying the colored SVG** via the `<img>` tag
+
+**Usage:**
+```tsx
+import ColorizedIcon from '@/components/ColorizedIcon';
+
+<ColorizedIcon
+  src="/icons/items/Laptop.svg"
+  alt="Laptop"
+  color="#EF4444"  // Red
+  className="w-full h-full object-contain"
+/>
+```
+
+**Features:**
+- ✅ Preserves transparent areas (won't colorize `fill="none"`)
+- ✅ Handles multiple fill/stroke attributes
+- ✅ Supports gradient colors
+- ✅ Works with inline styles
+- ✅ Gracefully falls back to original icon on error
+- ✅ Cleans up object URLs to prevent memory leaks
+
 ### Color Utility Functions
 Located in `client/lib/colorUtils.ts`:
 
 - **`hexToRgb(hex)`**: Converts hex color to RGB object
 - **`rgbToHex(r, g, b)`**: Converts RGB to hex color
-- **`getIconColorFilter(hexColor)`**: Generates CSS filter for icon coloring
 - **`getColorWithOpacity(hexColor, opacity)`**: Gets rgba color string
 - **`getColorBorder(hexColor, opacity)`**: Gets rgba border color
 - **`isDarkColor(hexColor)`**: Determines if color is dark or light
