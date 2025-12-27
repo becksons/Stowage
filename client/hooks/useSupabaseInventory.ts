@@ -79,6 +79,7 @@ export const useSupabaseInventory = () => {
           location_id: item.location_id,
           quantity: item.quantity,
           icon: item.icon,
+          color: item.color || '#6366f1',
           isStorageItem: item.is_storage_item || false,
           tags: item.item_tags || [],
           createdAt: new Date(item.created_at),
