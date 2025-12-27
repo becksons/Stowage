@@ -576,11 +576,11 @@ export default function Storage() {
 
               {/* Items in Room (not in subsections) */}
               {getItemsByLocation(selectedLocation.name).length > 0 && selectedChildLocations.length > 0 && (
-                <div className="space-y-6 pt-6 border-t border-primary/20">
-                  <h3 className="text-2xl font-bold text-foreground">
+                <div className="space-y-4 lg:space-y-6 pt-6 border-t border-primary/20">
+                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">
                     Loose Items
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4">
                     {getItemsByLocation(selectedLocation.name).map((item) => (
                       <div key={item.id} className="group relative flex flex-col items-center text-center transition-all duration-300 p-2">
                         {/* Icon */}
