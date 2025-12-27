@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getStorageIconPath, getStorageIconOptions, getItemIconPath } from "@/lib/customIcons";
+import { getColorWithOpacity, getColorBorder, getIconColorFilter } from "@/lib/colorUtils";
 
 const storageTypes = [
   { value: "drawer", label: "Drawer", icon: Layers },
