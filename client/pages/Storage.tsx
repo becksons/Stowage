@@ -489,38 +489,38 @@ export default function Storage() {
                             </div>
 
                             {/* Items Grid */}
-                            {childItemCount > 0 ? (
-                              <div className="pt-4 border-t border-primary/20">
-                                <p className="text-xs text-muted-foreground font-semibold mb-3">
-                                  {childItemCount} item{childItemCount !== 1 ? 's' : ''}
-                                </p>
-                                <div className="grid grid-cols-4 gap-2">
-                                  {getItemsByLocation(child.name).map((item) => (
-                                    <div key={item.id} className="group/item">
-                                      <div className="w-full aspect-square rounded-lg flex items-center justify-center p-2 transform group-hover/item:scale-110 transition-transform duration-300" style={{
-                                        backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.1),
-                                      }}>
-                                        {item.icon ? (
-                                          <ColorizedIcon
-                                            src={getItemIconPath(item.icon)}
-                                            alt={item.name}
-                                            color={item.color || '#6366f1'}
-                                            className="w-6 h-6 object-contain"
-                                          />
-                                        ) : (
-                                          <Box className="w-5 h-5 text-primary/60" />
-                                        )}
+                            <div className="pt-4 border-t border-primary/20">
+                              {childItemCount > 0 ? (
+                                <div>
+                                  <p className="text-xs text-muted-foreground font-semibold mb-3">
+                                    {childItemCount} item{childItemCount !== 1 ? 's' : ''}
+                                  </p>
+                                  <div className="grid grid-cols-3 gap-2">
+                                    {getItemsByLocation(child.name).map((item) => (
+                                      <div key={item.id} className="group/item flex flex-col items-center">
+                                        <div className="w-full aspect-square rounded-lg flex items-center justify-center p-2 transform group-hover/item:scale-110 transition-transform duration-300" style={{
+                                          backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
+                                        }}>
+                                          {item.icon ? (
+                                            <ColorizedIcon
+                                              src={getItemIconPath(item.icon)}
+                                              alt={item.name}
+                                              color={item.color || '#6366f1'}
+                                              className="w-6 h-6 object-contain"
+                                            />
+                                          ) : (
+                                            <Box className="w-5 h-5 text-primary/60" />
+                                          )}
+                                        </div>
+                                        <p className="text-xs font-medium text-foreground text-center line-clamp-1 mt-1.5">{item.name}</p>
                                       </div>
-                                      <p className="text-xs font-medium text-foreground text-center line-clamp-1 mt-1">{item.name}</p>
-                                    </div>
-                                  ))}
+                                    ))}
+                                  </div>
                                 </div>
-                              </div>
-                            ) : (
-                              <div className="pt-4 border-t border-primary/20">
+                              ) : (
                                 <p className="text-xs text-muted-foreground text-center italic">No items in this section</p>
-                              </div>
-                            )}
+                              )}
+                            </div>
                           </div>
                         </div>
                       );
