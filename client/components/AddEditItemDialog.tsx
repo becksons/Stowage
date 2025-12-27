@@ -266,7 +266,7 @@ export default function AddEditItemDialog({
                 title={formData.color}
               />
             </div>
-            <p className="text-xs text-muted-foreground">Choose a color for this item and its icon. First, make sure the color column migration is applied to your Supabase database!</p>
+            <p className="text-xs text-muted-foreground">Choose a color for this item and its icon</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
