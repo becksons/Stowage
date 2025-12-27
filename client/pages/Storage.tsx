@@ -447,9 +447,9 @@ export default function Storage() {
 
               {/* Storage Sections / Child Locations */}
               {selectedChildLocations.length > 0 && (
-                <div className="space-y-6">
-                  <h3 className="text-2xl font-bold text-foreground">Storage Sections</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="space-y-4 lg:space-y-6">
+                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">Storage Sections</h3>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                     {selectedChildLocations.map((child) => {
                       const childItemCount = getItemsByLocation(child.name).length;
                       const childStorageType = storageTypes.find((t) => t.value === child.type);
