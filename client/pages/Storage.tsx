@@ -387,15 +387,39 @@ export default function Storage() {
                   >
                     <X className="w-5 h-5" />
                   </Button>
-                  <div className="flex-1">
-                    <h2 className="text-3xl lg:text-5xl font-black gradient-heading mb-3">{selectedLocation.name}</h2>
-                    {selectedLocation.description && (
-                      <p className="text-base text-muted-foreground mb-4">{selectedLocation.description}</p>
-                    )}
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="px-3 py-1.5 rounded-full bg-primary/15 text-primary text-xs font-semibold border border-primary/30">
-                        {storageTypes.find((t) => t.value === selectedLocation.type)?.label}
-                      </span>
+                  <div className="flex-1 flex items-start gap-4">
+                    {/* Room Icon */}
+                    <div className="hidden sm:flex w-16 h-16 lg:w-20 lg:h-20 rounded-lg flex-shrink-0 flex items-center justify-center" style={{
+                      backgroundColor: getColorWithOpacity('#6366f1', 0.1),
+                    }}>
+                      {selectedLocation.icon ? (
+                        <img
+                          src={getStorageIconPath(selectedLocation.icon)}
+                          alt={selectedLocation.icon}
+                          className="w-12 h-12 lg:w-16 lg:h-16 object-contain"
+                        />
+                      ) : storageTypes.find((t) => t.value === selectedLocation.type) ? (
+                        <>
+                          {(() => {
+                            const Icon = storageTypes.find((t) => t.value === selectedLocation.type)?.icon;
+                            return Icon ? <Icon className="w-10 h-10 lg:w-14 lg:h-14 text-primary" /> : null;
+                          })()}
+                        </>
+                      ) : (
+                        <Box className="w-10 h-10 lg:w-14 lg:h-14 text-primary" />
+                      )}
+                    </div>
+
+                    <div className="flex-1">
+                      <h2 className="text-3xl lg:text-5xl font-black gradient-heading mb-3">{selectedLocation.name}</h2>
+                      {selectedLocation.description && (
+                        <p className="text-base text-muted-foreground mb-4">{selectedLocation.description}</p>
+                      )}
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="px-3 py-1.5 rounded-full bg-primary/15 text-primary text-xs font-semibold border border-primary/30">
+                          {storageTypes.find((t) => t.value === selectedLocation.type)?.label}
+                        </span>
+                      </div>
                     </div>
                   </div>
                   <DropdownMenu>
