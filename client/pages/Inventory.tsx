@@ -259,16 +259,15 @@ export default function Inventory() {
                 <div className="relative flex flex-col items-center text-center mb-4">
                   {item.icon && (
                     <div className="w-16 h-16 rounded-xl border-2 p-2 flex items-center justify-center mb-3" style={{
-                      backgroundColor: item.color ? `${item.color}15` : 'rgb(99, 102, 241, 0.15)',
-                      borderColor: item.color || 'rgb(99, 102, 241, 0.3)',
+                      backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
+                      borderColor: getColorBorder(item.color || '#6366f1', 0.3),
                     }}>
                       <img
                         src={getItemIconPath(item.icon)}
                         alt={item.icon}
                         className="w-full h-full object-contain"
                         style={{
-                          filter: item.color && item.color !== '#6366f1' ? `brightness(0.8) saturate(1.2)` : undefined,
-                          opacity: 0.9,
+                          filter: getIconColorFilter(item.color || '#6366f1'),
                         }}
                       />
                     </div>
