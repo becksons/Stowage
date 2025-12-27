@@ -423,12 +423,9 @@ export default function Storage() {
 
               {/* Storage Sections / Child Locations */}
               {selectedChildLocations.length > 0 && (
-                <div className="space-y-4">
-                  <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
-                    <Layers className="w-5 h-5 text-primary" />
-                    Storage Sections
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-6">
+                  <h3 className="text-2xl font-bold text-foreground">Storage Sections</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {selectedChildLocations.map((child) => {
                       const childItemCount = getItemsByLocation(child.name).length;
                       const childStorageType = storageTypes.find((t) => t.value === child.type);
@@ -436,46 +433,21 @@ export default function Storage() {
                       return (
                         <div
                           key={child.id}
-                          className="group relative p-6 rounded-xl border-2 border-primary/20 hover:border-primary/50 transition-all duration-300 overflow-hidden hover:shadow-xl"
+                          className="group relative p-6 rounded-xl border-2 border-primary/20 hover:border-primary/40 transition-all duration-300 overflow-hidden hover:shadow-lg"
                           style={{
-                            backgroundColor: getColorWithOpacity(child.color ? child.color.replace('dark:', '').split(' ')[0] : 'bg-blue-100', 0.05),
+                            backgroundColor: getColorWithOpacity(child.color ? child.color.replace('dark:', '').split(' ')[0] : 'bg-blue-100', 0.06),
                           }}
                         >
-                          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/3 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                           <div className="relative space-y-4">
                             {/* Header */}
                             <div className="flex items-start justify-between">
-                              <div className="flex items-start gap-4 flex-1">
-                                {/* Icon */}
-                                <div className="w-16 h-16 rounded-lg flex-shrink-0 flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300" style={{
-                                  backgroundColor: getColorWithOpacity('#6366f1', 0.15),
-                                }}>
-                                  {child.icon ? (
-                                    <img
-                                      src={getStorageIconPath(child.icon)}
-                                      alt={child.icon}
-                                      className="w-12 h-12 object-contain"
-                                    />
-                                  ) : childStorageType ? (
-                                    <>
-                                      {(() => {
-                                        const Icon = childStorageType.icon;
-                                        return <Icon className="w-10 h-10 text-primary" />;
-                                      })()}
-                                    </>
-                                  ) : (
-                                    <Box className="w-10 h-10 text-primary" />
-                                  )}
-                                </div>
-
-                                {/* Info */}
-                                <div className="flex-1 min-w-0">
-                                  <h4 className="text-lg font-bold text-foreground">{child.name}</h4>
-                                  <p className="text-xs text-muted-foreground">{childStorageType?.label}</p>
-                                  {child.description && (
-                                    <p className="text-sm text-foreground/60 mt-2 italic">{child.description}</p>
-                                  )}
-                                </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-lg font-bold text-foreground mb-1">{child.name}</h4>
+                                <p className="text-xs text-muted-foreground font-semibold mb-2">{childStorageType?.label}</p>
+                                {child.description && (
+                                  <p className="text-sm text-foreground/60 italic">{child.description}</p>
+                                )}
                               </div>
 
                               {/* Menu */}
@@ -484,7 +456,7 @@ export default function Storage() {
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                                    className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 h-6 w-6 p-0"
                                   >
                                     <MoreVertical className="w-4 h-4" />
                                   </Button>
