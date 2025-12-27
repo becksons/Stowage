@@ -457,7 +457,7 @@ export default function Storage() {
                       return (
                         <div
                           key={child.id}
-                          className="group relative p-6 rounded-xl border-2 border-primary/20 hover:border-primary/40 transition-all duration-300 overflow-hidden hover:shadow-lg"
+                          className="group relative p-4 lg:p-6 rounded-xl border-2 border-primary/20 hover:border-primary/40 transition-all duration-300 overflow-hidden hover:shadow-lg"
                           style={{
                             backgroundColor: getColorWithOpacity(child.color ? child.color.replace('dark:', '').split(' ')[0] : 'bg-blue-100', 0.06),
                           }}
