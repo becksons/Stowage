@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { Box } from 'lucide-react';
 
 interface ColorizedIconProps {
@@ -10,8 +10,8 @@ interface ColorizedIconProps {
 }
 
 /**
- * Intelligently colorizes SVG icons while preserving structure.
- * Uses a combination of SVG replacement and CSS filters for best results.
+ * Applies color to icons using CSS filters.
+ * Works with SVGs containing raster images, gradients, and vector paths.
  */
 export default function ColorizedIcon({
   src,
@@ -20,123 +20,49 @@ export default function ColorizedIcon({
   className = 'w-full h-full object-contain',
   fallbackIcon = false,
 }: ColorizedIconProps) {
-  const [svgContent, setSvgContent] = useState<string | null>(null);
-  const [error, setError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  // Generate CSS filter to approximate the target color
+  const colorFilter = useMemo(() => {
+    // Don't apply filter for default color (indigo)
+    if (!color || color === '#6366f1') {
+      return undefined;
+    }
 
-  useEffect(() => {
-    const fetchAndColorize = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(src);
-        if (!response.ok) throw new Error('Failed to fetch SVG');
-        
-        let text = await response.text();
+    // Normalize hex color
+    const hex = color.startsWith('#') ? color.slice(1) : color;
+    if (hex.length !== 6) return undefined;
 
-        // More careful color replacement that preserves SVG structure
-        // Only replace actual color values in specific contexts
-        
-        // Replace fill colors (but not structural attributes)
-        text = text.replace(/fill=["']([^"']+)["']/g, (match, fillValue) => {
-          // Preserve these special values
-          if (fillValue === 'none' || fillValue === 'transparent' || fillValue === 'currentColor') {
-            return match;
-          }
-          // Only replace hex colors, rgb, named colors - not variables or references
-          if (fillValue.startsWith('url(') || fillValue.startsWith('var(')) {
-            return match;
-          }
-          return `fill="${color}"`;
-        });
+    // Convert hex to RGB
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
 
-        // Replace stroke colors similarly
-        text = text.replace(/stroke=["']([^"']+)["']/g, (match, strokeValue) => {
-          if (strokeValue === 'none' || strokeValue === 'transparent' || strokeValue === 'currentColor') {
-            return match;
-          }
-          if (strokeValue.startsWith('url(') || strokeValue.startsWith('var(')) {
-            return match;
-          }
-          return `stroke="${color}"`;
-        });
+    // Calculate hue rotation based on RGB
+    // This provides a good visual approximation for color changes
+    const hue = Math.atan2(Math.sqrt(3) * (g - b), 2 * r - g - b) * (180 / Math.PI);
+    
+    // Calculate saturation boost based on color intensity
+    const max = Math.max(r, g, b);
+    const saturation = max < 128 ? 1.2 : max > 200 ? 0.9 : 1.0;
+    
+    // Brightness adjustment
+    const brightness = max > 200 ? 0.95 : max < 50 ? 1.1 : 1.0;
 
-        // Handle inline style attributes more carefully
-        text = text.replace(/style=["']([^"']+)["']/g, (match, styleValue) => {
-          if (!styleValue.includes('fill') && !styleValue.includes('stroke')) {
-            return match;
-          }
-          
-          let newStyle = styleValue;
-          // Replace fill in styles, but be careful about URLs
-          newStyle = newStyle.replace(/fill:\s*(?!url)(?!var)([^;]+)/g, `fill: ${color}`);
-          // Replace stroke in styles
-          newStyle = newStyle.replace(/stroke:\s*(?!url)(?!var)([^;]+)/g, `stroke: ${color}`);
-          
-          return `style="${newStyle}"`;
-        });
-
-        // Handle stop-color in gradients
-        text = text.replace(/stop-color=["']([^"']+)["']/g, (match, stopValue) => {
-          if (stopValue === 'none' || stopValue === 'transparent') {
-            return match;
-          }
-          if (stopValue.startsWith('url(') || stopValue.startsWith('var(')) {
-            return match;
-          }
-          return `stop-color="${color}"`;
-        });
-
-        // Create data URL with proper encoding
-        const encodedSvg = encodeURIComponent(text);
-        const dataUrl = `data:image/svg+xml,${encodedSvg}`;
-        setSvgContent(dataUrl);
-        setError(false);
-      } catch (err) {
-        console.error(`Failed to colorize icon ${src}:`, err);
-        setError(true);
-      } finally {
-        setIsLoading(false);
-      }
+    // Combine filters for best color approximation
+    return {
+      filter: `hue-rotate(${hue}deg) saturate(${saturation}) brightness(${brightness})`,
     };
+  }, [color]);
 
-    fetchAndColorize();
-  }, [src, color]);
-
-  // Show fallback icon if there's an error and fallback is enabled
-  if (error && fallbackIcon) {
+  if (fallbackIcon && !src) {
     return <Box className={className} style={{ color }} />;
   }
 
-  // If error but no fallback, show original image
-  if (error) {
-    return (
-      <img
-        src={src}
-        alt={alt}
-        className={className}
-        onError={() => setError(true)}
-      />
-    );
-  }
-
-  // Use the colorized SVG URL if available
-  if (svgContent) {
-    return (
-      <img
-        src={svgContent}
-        alt={alt}
-        className={className}
-        onError={() => setError(true)}
-      />
-    );
-  }
-
-  // Fallback to original image while loading
   return (
     <img
       src={src}
       alt={alt}
       className={className}
+      style={colorFilter}
     />
   );
 }
