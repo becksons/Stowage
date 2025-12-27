@@ -228,6 +228,7 @@ export const useSupabaseInventory = () => {
         if (updates.location_id !== undefined) updateData.location_id = updates.location_id;
         if (updates.quantity !== undefined) updateData.quantity = updates.quantity;
         if (updates.icon !== undefined) updateData.icon = updates.icon;
+        if (updates.color !== undefined) updateData.color = updates.color;
         if (updates.isStorageItem !== undefined && updates.isStorageItem) updateData.is_storage_item = updates.isStorageItem;
 
         // Only update if there's data to update
