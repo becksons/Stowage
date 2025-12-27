@@ -580,12 +580,12 @@ export default function Storage() {
                   <h3 className="text-xl lg:text-2xl font-bold text-foreground">
                     Loose Items
                   </h3>
-                  <div className="grid grid-cols-1 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                     {getItemsByLocation(selectedLocation.name).map((item) => (
-                      <div key={item.id} className="group relative flex flex-col items-center text-center transition-all duration-300 p-2">
+                      <div key={item.id} className="group relative flex flex-col items-center text-center transition-all duration-300 p-1">
                         {/* Icon */}
                         {item.icon && (
-                          <div className="relative mb-3 transform group-hover:scale-110 transition-transform duration-300 cursor-pointer w-full">
+                          <div className="relative mb-2 transform group-hover:scale-110 transition-transform duration-300 cursor-pointer w-full">
                             <div className="w-full aspect-square rounded-lg flex items-center justify-center" style={{
                               backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.1),
                             }}>
@@ -593,29 +593,29 @@ export default function Storage() {
                                 src={getItemIconPath(item.icon)}
                                 alt={item.name}
                                 color={item.color || '#6366f1'}
-                                className="w-14 h-14 object-contain"
+                                className="w-10 h-10 object-contain"
                               />
                             </div>
                           </div>
                         )}
 
                         {/* Item name */}
-                        <h3 className="text-sm font-bold text-foreground line-clamp-2 mb-1 px-1">{item.name}</h3>
+                        <h3 className="text-xs font-bold text-foreground line-clamp-2 mb-0.5 px-0.5">{item.name}</h3>
 
                         {/* Item description */}
                         {item.description && (
-                          <p className="text-xs text-foreground/60 line-clamp-1 mb-1 px-1 italic">
+                          <p className="text-xs text-foreground/60 line-clamp-1 mb-0.5 px-0.5 italic">
                             {item.description}
                           </p>
                         )}
 
                         {/* Quantity badge */}
                         {item.quantity && item.quantity > 1 && (
-                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold mb-1" style={{
+                          <div className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-bold" style={{
                             backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
                             color: item.color || '#6366f1',
                           }}>
-                            <Package className="w-3 h-3" />
+                            <Package className="w-2.5 h-2.5" />
                             {item.quantity}
                           </div>
                         )}
