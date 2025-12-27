@@ -387,26 +387,26 @@ export default function Storage() {
                   >
                     <X className="w-5 h-5" />
                   </Button>
-                  <div className="flex-1 flex items-start gap-4">
+                  <div className="flex-1 flex items-start gap-3 sm:gap-4">
                     {/* Room Icon */}
-                    <div className="hidden sm:flex w-16 h-16 lg:w-20 lg:h-20 rounded-lg flex-shrink-0 flex items-center justify-center" style={{
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-lg flex-shrink-0 flex items-center justify-center" style={{
                       backgroundColor: getColorWithOpacity('#6366f1', 0.1),
                     }}>
                       {selectedLocation.icon ? (
                         <img
                           src={getStorageIconPath(selectedLocation.icon)}
                           alt={selectedLocation.icon}
-                          className="w-12 h-12 lg:w-16 lg:h-16 object-contain"
+                          className="w-8 h-8 sm:w-12 sm:h-12 lg:w-16 lg:h-16 object-contain"
                         />
                       ) : storageTypes.find((t) => t.value === selectedLocation.type) ? (
                         <>
                           {(() => {
                             const Icon = storageTypes.find((t) => t.value === selectedLocation.type)?.icon;
-                            return Icon ? <Icon className="w-10 h-10 lg:w-14 lg:h-14 text-primary" /> : null;
+                            return Icon ? <Icon className="w-7 h-7 sm:w-10 sm:h-10 lg:w-14 lg:h-14 text-primary" /> : null;
                           })()}
                         </>
                       ) : (
-                        <Box className="w-10 h-10 lg:w-14 lg:h-14 text-primary" />
+                        <Box className="w-7 h-7 sm:w-10 sm:h-10 lg:w-14 lg:h-14 text-primary" />
                       )}
                     </div>
 
