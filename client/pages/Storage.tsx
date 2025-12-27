@@ -481,13 +481,11 @@ export default function Storage() {
                               borderColor: getColorBorder(storageItem.color || '#6366f1', 0.3),
                             }}>
                               {storageItem.icon ? (
-                                <img
+                                <ColorizedIcon
                                   src={getItemIconPath(storageItem.icon)}
                                   alt={storageItem.icon}
+                                  color={storageItem.color || '#6366f1'}
                                   className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
-                                  style={{
-                                    filter: getIconColorFilter(storageItem.color || '#6366f1'),
-                                  }}
                                 />
                               ) : (
                                 <Box className="w-16 h-16 sm:w-20 sm:h-20" style={{ color: storageItem.color || '#6366f1' }} />
