@@ -277,25 +277,25 @@ export default function Storage() {
                   >
                     <div className="flex items-start justify-between gap-3">
                       {/* Location Icon */}
-                      <div className={`w-12 h-12 lg:w-12 lg:h-12 rounded-lg flex-shrink-0 flex items-center justify-center transform transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-105'}`} style={{
+                      <div className={`w-14 h-14 sm:w-12 sm:h-12 lg:w-12 lg:h-12 rounded-lg flex-shrink-0 flex items-center justify-center transform transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-105'}`} style={{
                         backgroundColor: getColorWithOpacity('#6366f1', 0.1),
                       }}>
                         {location.icon ? (
                           <img
                             src={getStorageIconPath(location.icon)}
                             alt={location.icon}
-                            className="w-7 h-7 object-contain"
+                            className="w-8 h-8 sm:w-7 sm:h-7 lg:w-7 lg:h-7 object-contain"
                           />
                         ) : storageType ? (
-                          <storageType.icon className="w-6 h-6 text-primary" />
+                          <storageType.icon className="w-7 h-7 sm:w-6 sm:h-6 lg:w-6 lg:h-6 text-primary" />
                         ) : (
-                          <Box className="w-6 h-6 text-primary" />
+                          <Box className="w-7 h-7 sm:w-6 sm:h-6 lg:w-6 lg:h-6 text-primary" />
                         )}
                       </div>
 
                       {/* Location Info */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-sm lg:text-sm text-foreground line-clamp-1">{location.name}</h3>
+                        <h3 className="font-bold text-base sm:text-sm lg:text-sm text-foreground line-clamp-1">{location.name}</h3>
                       </div>
 
                       {/* Menu Button */}
