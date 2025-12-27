@@ -190,9 +190,11 @@ export default function Storage() {
 
   return (
     <Layout>
-      <div className="h-screen flex flex-col lg:flex-row gap-6 animate-fade-in overflow-hidden">
+      <div className="h-screen flex flex-col lg:flex-row gap-0 lg:gap-6 animate-fade-in overflow-hidden">
         {/* Left Sidebar - Room Navigation */}
-        <div className="lg:w-80 flex flex-col border-r border-primary/20 pr-6">
+        <div className={`${
+          sidebarOpen ? 'flex' : 'hidden'
+        } lg:flex w-full lg:w-80 flex-col border-b lg:border-b-0 lg:border-r border-primary/20 pb-6 lg:pb-0 lg:pr-6 bg-card lg:bg-transparent z-10 lg:z-auto transition-all duration-300`}>
           <div className="space-y-6">
             <div>
               <h1 className="text-3xl font-black gradient-heading mb-2">Storage Spaces</h1>
