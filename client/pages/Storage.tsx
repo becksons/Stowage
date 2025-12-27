@@ -195,10 +195,20 @@ export default function Storage() {
         <div className={`${
           sidebarOpen ? 'flex' : 'hidden'
         } lg:flex w-full lg:w-80 flex-col border-b lg:border-b-0 lg:border-r border-primary/20 pb-6 lg:pb-0 lg:pr-6 bg-card lg:bg-transparent z-10 lg:z-auto transition-all duration-300`}>
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-black gradient-heading mb-2">Storage Spaces</h1>
-              <p className="text-sm text-muted-foreground">Select a room to view</p>
+          <div className="space-y-4 lg:space-y-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <h1 className="text-2xl lg:text-3xl font-black gradient-heading mb-1">Storage Spaces</h1>
+                <p className="text-xs lg:text-sm text-muted-foreground">Select a room to view</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="lg:hidden h-8 w-8 p-0"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+              >
+                <X className="w-5 h-5" />
+              </Button>
             </div>
 
             {/* Add Location Button */}
@@ -215,7 +225,7 @@ export default function Storage() {
                 });
                 setOpenDialog(true);
               }}
-              className="w-full gap-2 bg-gradient-to-r from-primary to-secondary hover:shadow-2xl hover:scale-105 transition-all duration-300 font-bold text-sm px-4 py-2 rounded-lg"
+              className="w-full gap-2 bg-gradient-to-r from-primary to-secondary hover:shadow-2xl hover:scale-105 transition-all duration-300 font-bold text-sm px-4 py-3 rounded-lg"
             >
               <Plus className="w-4 h-4" />
               Add Room
