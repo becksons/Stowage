@@ -256,18 +256,27 @@ export default function Storage() {
                         : "border-primary/20 hover:bg-primary/5"
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-start justify-between gap-3">
+                      {/* Location Icon */}
+                      <div className={`w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center transform transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-105'}`} style={{
+                        backgroundColor: getColorWithOpacity('#6366f1', 0.1),
+                      }}>
+                        {location.icon ? (
+                          <img
+                            src={getStorageIconPath(location.icon)}
+                            alt={location.icon}
+                            className="w-6 h-6 object-contain"
+                          />
+                        ) : storageType ? (
+                          <storageType.icon className="w-5 h-5 text-primary" />
+                        ) : (
+                          <Box className="w-5 h-5 text-primary" />
+                        )}
+                      </div>
+
                       {/* Location Info */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-sm text-foreground line-clamp-1 mb-1">{location.name}</h3>
-                        <p className="text-xs text-muted-foreground font-semibold mb-2">{storageType?.label}</p>
-                        {(childCount > 0 || itemCount > 0) && (
-                          <div className="flex items-center gap-2 text-xs text-primary/70">
-                            {childCount > 0 && <span>{childCount}s</span>}
-                            {childCount > 0 && itemCount > 0 && <span>•</span>}
-                            {itemCount > 0 && <span>{itemCount}i</span>}
-                          </div>
-                        )}
+                        <h3 className="font-bold text-sm text-foreground line-clamp-1">{location.name}</h3>
                       </div>
 
                       {/* Menu Button */}
