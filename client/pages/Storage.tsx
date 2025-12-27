@@ -475,15 +475,21 @@ export default function Storage() {
                           <div className="absolute top-0 right-0 w-40 h-40 bg-secondary/10 rounded-full blur-3xl opacity-0 group-hover:opacity-50 transition-opacity duration-300 -z-10" />
 
                           <div className="relative flex flex-col items-center text-center mb-6">
-                            <div className="relative p-4 rounded-2xl bg-secondary/15 border-2 border-secondary/30 transform group-hover:scale-105 transition-transform duration-300 mb-4">
+                            <div className="relative p-4 rounded-2xl border-2 transform group-hover:scale-105 transition-transform duration-300 mb-4" style={{
+                              backgroundColor: getColorWithOpacity(storageItem.color || '#6366f1', 0.15),
+                              borderColor: getColorBorder(storageItem.color || '#6366f1', 0.3),
+                            }}>
                               {storageItem.icon ? (
                                 <img
                                   src={getItemIconPath(storageItem.icon)}
                                   alt={storageItem.icon}
                                   className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+                                  style={{
+                                    filter: getIconColorFilter(storageItem.color || '#6366f1'),
+                                  }}
                                 />
                               ) : (
-                                <Box className="w-16 h-16 sm:w-20 sm:h-20 text-secondary" />
+                                <Box className="w-16 h-16 sm:w-20 sm:h-20" style={{ color: storageItem.color || '#6366f1' }} />
                               )}
                             </div>
                             <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">{storageItem.name}</h3>
