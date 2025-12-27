@@ -198,10 +198,14 @@ export default function AddEditItemDialog({
             <Label htmlFor="icon">Item Icon</Label>
             <div className="flex gap-2 items-center">
               {formData.icon && (
-                <div className="w-12 h-12 rounded-lg bg-primary/15 border border-primary/30 p-1 flex items-center justify-center flex-shrink-0">
-                  <img
+                <div className="w-12 h-12 rounded-lg border p-1 flex items-center justify-center flex-shrink-0" style={{
+                  backgroundColor: `${formData.color}15`,
+                  borderColor: formData.color,
+                }}>
+                  <ColorizedIcon
                     src={getItemIconPath(formData.icon)}
                     alt={formData.icon}
+                    color={formData.color}
                     className="w-full h-full object-contain"
                   />
                 </div>
@@ -220,9 +224,10 @@ export default function AddEditItemDialog({
                   {getItemIconOptions().map((icon) => (
                     <SelectItem key={icon} value={icon}>
                       <div className="flex items-center gap-2">
-                        <img
+                        <ColorizedIcon
                           src={getItemIconPath(icon)}
                           alt={icon}
+                          color={formData.color}
                           className="w-4 h-4"
                         />
                         <span>{icon}</span>
