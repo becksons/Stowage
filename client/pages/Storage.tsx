@@ -487,24 +487,45 @@ export default function Storage() {
                                   <p className="text-xs text-muted-foreground font-semibold mb-3">
                                     {childItemCount} item{childItemCount !== 1 ? 's' : ''}
                                   </p>
-                                  <div className="grid grid-cols-3 gap-2">
+                                  <div className="grid grid-cols-2 gap-3">
                                     {getItemsByLocation(child.name).map((item) => (
-                                      <div key={item.id} className="group/item flex flex-col items-center">
-                                        <div className="w-full aspect-square rounded-lg flex items-center justify-center p-2 transform group-hover/item:scale-110 transition-transform duration-300" style={{
-                                          backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
-                                        }}>
-                                          {item.icon ? (
-                                            <ColorizedIcon
-                                              src={getItemIconPath(item.icon)}
-                                              alt={item.name}
-                                              color={item.color || '#6366f1'}
-                                              className="w-6 h-6 object-contain"
-                                            />
-                                          ) : (
-                                            <Box className="w-5 h-5 text-primary/60" />
-                                          )}
-                                        </div>
-                                        <p className="text-xs font-medium text-foreground text-center line-clamp-1 mt-1.5">{item.name}</p>
+                                      <div key={item.id} className="group/item relative flex flex-col items-center text-center transition-all duration-300">
+                                        {/* Icon */}
+                                        {item.icon && (
+                                          <div className="relative mb-2 transform group-hover/item:scale-110 transition-transform duration-300 cursor-pointer w-full">
+                                            <div className="w-full aspect-square rounded-lg flex items-center justify-center" style={{
+                                              backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.1),
+                                            }}>
+                                              <ColorizedIcon
+                                                src={getItemIconPath(item.icon)}
+                                                alt={item.name}
+                                                color={item.color || '#6366f1'}
+                                                className="w-8 h-8 object-contain"
+                                              />
+                                            </div>
+                                          </div>
+                                        )}
+
+                                        {/* Item name */}
+                                        <h5 className="text-xs sm:text-sm font-bold text-foreground line-clamp-2 mb-1 px-1">{item.name}</h5>
+
+                                        {/* Item description */}
+                                        {item.description && (
+                                          <p className="text-xs text-foreground/60 line-clamp-1 mb-1 px-1 italic">
+                                            {item.description}
+                                          </p>
+                                        )}
+
+                                        {/* Quantity badge */}
+                                        {item.quantity && item.quantity > 1 && (
+                                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold" style={{
+                                            backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
+                                            color: item.color || '#6366f1',
+                                          }}>
+                                            <Package className="w-3 h-3" />
+                                            {item.quantity}
+                                          </div>
+                                        )}
                                       </div>
                                     ))}
                                   </div>
