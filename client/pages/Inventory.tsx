@@ -247,117 +247,125 @@ export default function Inventory() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {displayItems.map((item) => (
               <div
                 key={item.id}
-                className="group relative p-6 sm:p-7 rounded-2xl border-2 border-primary/20 bg-gradient-to-br from-white/50 to-white/30 dark:from-slate-950/50 dark:to-slate-900/30 hover:border-primary/60 hover:shadow-xl transition-all duration-300 overflow-hidden"
+                className="group relative flex flex-col items-center text-center transition-all duration-300 p-2"
               >
-                {/* Animated gradient background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl opacity-0 group-hover:opacity-50 transition-opacity duration-300 -z-10" />
-
-                <div className="relative flex flex-col items-center text-center mb-4">
-                  {item.icon && (
-                    <div className="w-16 h-16 rounded-xl border-2 p-2 flex items-center justify-center mb-3" style={{
-                      backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
-                      borderColor: getColorBorder(item.color || '#6366f1', 0.3),
+                {/* Icon - Large and prominent, like a physical object */}
+                {item.icon && (
+                  <div className="relative mb-2 transform group-hover:scale-110 transition-transform duration-300 cursor-pointer" onClick={() => handleOpenEdit(item)}>
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg flex items-center justify-center" style={{
+                      backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.1),
                     }}>
                       <ColorizedIcon
                         src={getItemIconPath(item.icon)}
                         alt={item.icon}
                         color={item.color || '#6366f1'}
-                        className="w-full h-full object-contain"
+                        className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
                       />
                     </div>
-                  )}
-                  <h3 className="text-xl font-bold text-foreground line-clamp-2 mb-2">
-                    {item.name}
-                  </h3>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border" style={{
-                    backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
-                    borderColor: getColorBorder(item.color || '#6366f1', 0.3),
-                  }}>
-                    <MapPin className="w-4 h-4" style={{ color: item.color || '#6366f1' }} />
-                    <span className="text-sm font-semibold" style={{ color: item.color || '#6366f1' }}>{item.location}</span>
+                    {/* Subtle shadow effect on hover */}
+                    <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-20 transition-opacity shadow-xl blur-lg -z-10" style={{
+                      backgroundColor: item.color || '#6366f1',
+                    }} />
                   </div>
+                )}
 
-                  <div className="absolute top-4 right-4">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <MoreVertical className="w-4 h-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleOpenEdit(item)}>
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => deleteItem(item.id)}
-                          className="text-destructive"
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
+                {/* Item name - Clean and simple */}
+                <h3 className="text-sm sm:text-base font-bold text-foreground line-clamp-2 mb-1 px-1 hover:underline cursor-pointer transition-all" onClick={() => handleOpenEdit(item)}>
+                  {item.name}
+                </h3>
+
+                {/* Location badge - Minimal */}
+                <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium mb-1" style={{
+                  backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
+                  color: item.color || '#6366f1',
+                }}>
+                  <MapPin className="w-3 h-3" />
+                  <span className="line-clamp-1">{item.location}</span>
                 </div>
 
+                {/* Description - Optional and small */}
                 {item.description && (
-                  <p className="text-sm text-foreground/70 mb-4 line-clamp-2 italic flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0 text-primary/60" />
-                    <span>{item.description}</span>
+                  <p className="text-xs text-foreground/60 line-clamp-1 mb-1 px-1 italic">
+                    {item.description}
                   </p>
                 )}
 
-                <div className="relative space-y-3">
-                  {item.quantity > 1 && (
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-bold mb-3 border" style={{
-                      backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
-                      borderColor: getColorBorder(item.color || '#6366f1', 0.3),
-                      color: item.color || '#6366f1',
-                    }}>
-                      <Package className="w-4 h-4" />
-                      Qty: {item.quantity}
-                    </div>
-                  )}
+                {/* Quantity badge */}
+                {item.quantity > 1 && (
+                  <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold" style={{
+                    backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
+                    color: item.color || '#6366f1',
+                  }}>
+                    <Package className="w-3 h-3" />
+                    {item.quantity}
+                  </div>
+                )}
 
-                  {item.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {item.tags.map((tag) => {
-                        const displayValue = tag.value
-                          ? tag.type === "price"
-                            ? `$${tag.value}`
-                            : tag.value
-                          : "";
-                        const icons: { [key: string]: React.ElementType } = {
-                          price: DollarSign,
-                          type: Tag,
-                          importance: Star,
-                          custom: Zap,
-                        };
-                        const IconComponent = icons[tag.type as keyof typeof icons] || Zap;
-                        return (
-                          <span
-                            key={tag.id}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 border border-primary/40 text-primary text-xs font-bold hover:shadow-lg transition-shadow"
-                            title={`${tag.type}: ${tag.name}`}
-                          >
-                            <IconComponent className="w-3.5 h-3.5" />
-                            {tag.name}
-                            {displayValue && <span className="font-bold text-primary ml-1">{displayValue}</span>}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  )}
+                {/* More menu - appears on hover */}
+                <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 w-7 p-0"
+                      >
+                        <MoreVertical className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleOpenEdit(item)}>
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => deleteItem(item.id)}
+                        className="text-destructive"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
+
+                {/* Tags - if any */}
+                {item.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-1 justify-center">
+                    {item.tags.map((tag) => {
+                      const displayValue = tag.value
+                        ? tag.type === "price"
+                          ? `$${tag.value}`
+                          : tag.value
+                        : "";
+                      const icons: { [key: string]: React.ElementType } = {
+                        price: DollarSign,
+                        type: Tag,
+                        importance: Star,
+                        custom: Zap,
+                      };
+                      const IconComponent = icons[tag.type as keyof typeof icons] || Zap;
+                      return (
+                        <span
+                          key={tag.id}
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium opacity-70 hover:opacity-100 transition-opacity"
+                          style={{
+                            backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
+                            color: item.color || '#6366f1',
+                          }}
+                          title={`${tag.type}: ${tag.name}`}
+                        >
+                          <IconComponent className="w-2.5 h-2.5" />
+                          {tag.name}
+                          {displayValue && <span className="font-bold">{displayValue}</span>}
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             ))}
           </div>
