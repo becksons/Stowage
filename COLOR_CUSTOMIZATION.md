@@ -239,9 +239,29 @@ The color customization feature uses standard CSS and HTML color inputs supporte
 **Problem:** Colors don't save after page refresh
 **Solution:** Check that migration has been applied and sync status shows complete
 
-### Icon Looks Wrong with Color
-**Problem:** Icon color filter makes icon look distorted
-**Solution:** Try a different color or use the icon picker to select a better icon
+### SVG Icon Not Colorizing
+**Problem:** Icon displays in original color despite color selection
+**Causes:**
+- SVG file uses hardcoded colors that aren't in `fill` or `stroke` attributes
+- SVG uses CSS classes for styling instead of attributes
+- Network error fetching the SVG file
+**Solutions:**
+1. Check browser console for fetch errors
+2. Verify SVG file exists at the icon path
+3. Try a different color to see if ColorizedIcon is working
+4. Check SVG file structure - ensure it uses `fill` or `stroke` attributes
+
+### Icon Looks Different After Colorizing
+**Problem:** Icon appearance changes after color is applied
+**Explanation:** This is expected - the ColorizedIcon component replaces all color attributes with the new color
+**Solution:**
+- If using multi-colored icons, consider using a different icon
+- Icons work best with single-color designs
+- Test color combinations before finalizing
+
+### Memory Leak Warning
+**Problem:** Console shows memory leak warning about object URLs
+**Solution:** The ColorizedIcon component handles cleanup automatically; if the issue persists, clear browser cache
 
 ## API Reference
 
