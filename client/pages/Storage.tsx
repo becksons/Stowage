@@ -487,12 +487,12 @@ export default function Storage() {
                                   <p className="text-xs text-muted-foreground font-semibold mb-3">
                                     {childItemCount} item{childItemCount !== 1 ? 's' : ''}
                                   </p>
-                                  <div className="grid grid-cols-2 gap-3">
+                                  <div className="grid grid-cols-1 gap-4">
                                     {getItemsByLocation(child.name).map((item) => (
                                       <div key={item.id} className="group/item relative flex flex-col items-center text-center transition-all duration-300">
                                         {/* Icon */}
                                         {item.icon && (
-                                          <div className="relative mb-2 transform group-hover/item:scale-110 transition-transform duration-300 cursor-pointer w-full">
+                                          <div className="relative mb-3 transform group-hover/item:scale-110 transition-transform duration-300 cursor-pointer w-full">
                                             <div className="w-full aspect-square rounded-lg flex items-center justify-center" style={{
                                               backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.1),
                                             }}>
@@ -500,7 +500,7 @@ export default function Storage() {
                                                 src={getItemIconPath(item.icon)}
                                                 alt={item.name}
                                                 color={item.color || '#6366f1'}
-                                                className="w-8 h-8 object-contain"
+                                                className="w-16 h-16 object-contain"
                                               />
                                             </div>
                                           </div>
