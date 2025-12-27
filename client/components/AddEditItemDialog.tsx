@@ -241,28 +241,41 @@ export default function AddEditItemDialog({
 
           <div className="space-y-2">
             <Label htmlFor="color">Item Color</Label>
-            <div className="flex gap-3 items-center">
-              <div
-                className="w-12 h-12 rounded-lg border-2 border-primary/30 cursor-pointer transition-transform hover:scale-110"
-                style={{ backgroundColor: formData.color }}
-              />
-              <Input
-                id="color"
-                type="color"
-                value={formData.color}
-                onChange={(e) =>
-                  setFormData({ ...formData, color: e.target.value })
-                }
-                className="w-20 h-10 p-2 cursor-pointer"
-              />
+            <div className="flex gap-3 items-end">
+              <div className="flex-shrink-0">
+                <Input
+                  id="color"
+                  type="color"
+                  value={formData.color}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setFormData({ ...formData, color: value });
+                  }}
+                  className="w-16 h-10 p-1 cursor-pointer"
+                />
+              </div>
               <Input
                 type="text"
                 value={formData.color}
-                onChange={(e) =>
-                  setFormData({ ...formData, color: e.target.value })
-                }
+                onChange={(e) => {
+                  let value = e.target.value.trim();
+                  // Add # if missing
+                  if (value && !value.startsWith("#")) {
+                    value = "#" + value;
+                  }
+                  // Validate hex color format
+                  if (value === "#" || /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(value)) {
+                    setFormData({ ...formData, color: value });
+                  }
+                }}
                 placeholder="#6366f1"
                 className="flex-1"
+                maxLength={7}
+              />
+              <div
+                className="w-10 h-10 rounded-lg border-2 border-primary/30 flex-shrink-0"
+                style={{ backgroundColor: formData.color }}
+                title={formData.color}
               />
             </div>
             <p className="text-xs text-muted-foreground">Choose a color for this item and its icon</p>
