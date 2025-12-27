@@ -245,7 +245,37 @@ export const useSupabaseInventory = () => {
 
         if (updateError) {
           console.error('Supabase update error:', updateError);
+          console.error('Update data sent:', updateData);
           throw updateError;
+        }
+
+        // Trigger a refresh to get updated data from database
+        const { data: updatedItem, error: fetchError } = await supabase
+          .from('inventory_items')
+          .select('*, item_tags(*)')
+          .eq('id', id)
+          .single();
+
+        if (!fetchError && updatedItem) {
+          // Update local state with the fresh data
+          setItems(prevItems =>
+            prevItems.map(item =>
+              item.id === id
+                ? {
+                    ...item,
+                    color: updatedItem.color || '#6366f1',
+                    name: updatedItem.name,
+                    description: updatedItem.description,
+                    location: updatedItem.location_name,
+                    location_id: updatedItem.location_id,
+                    quantity: updatedItem.quantity,
+                    icon: updatedItem.icon,
+                    isStorageItem: updatedItem.is_storage_item || false,
+                    tags: updatedItem.item_tags || [],
+                  }
+                : item
+            )
+          );
         }
 
         // Update tags if provided
