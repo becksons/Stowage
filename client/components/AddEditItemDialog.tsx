@@ -233,6 +233,35 @@ export default function AddEditItemDialog({
             </div>
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="color">Item Color</Label>
+            <div className="flex gap-3 items-center">
+              <div
+                className="w-12 h-12 rounded-lg border-2 border-primary/30 cursor-pointer transition-transform hover:scale-110"
+                style={{ backgroundColor: formData.color }}
+              />
+              <Input
+                id="color"
+                type="color"
+                value={formData.color}
+                onChange={(e) =>
+                  setFormData({ ...formData, color: e.target.value })
+                }
+                className="w-20 h-10 p-2 cursor-pointer"
+              />
+              <Input
+                type="text"
+                value={formData.color}
+                onChange={(e) =>
+                  setFormData({ ...formData, color: e.target.value })
+                }
+                placeholder="#6366f1"
+                className="flex-1"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">Choose a color for this item and its icon</p>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="location">Storage Location *</Label>
