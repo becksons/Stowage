@@ -548,29 +548,45 @@ export default function Storage() {
                   <h3 className="text-2xl font-bold text-foreground">
                     Loose Items
                   </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
                     {getItemsByLocation(selectedLocation.name).map((item) => (
-                      <div key={item.id} className="group relative flex flex-col items-center text-center transition-all duration-300">
-                        {/* Item Card */}
-                        <div className="relative mb-2 transform group-hover:scale-105 transition-transform duration-300 cursor-pointer w-full">
-                          <div className="aspect-square rounded-lg flex items-center justify-center" style={{
-                            backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.12),
-                          }}>
-                            {item.icon ? (
+                      <div key={item.id} className="group relative flex flex-col items-center text-center transition-all duration-300 p-2">
+                        {/* Icon */}
+                        {item.icon && (
+                          <div className="relative mb-2 transform group-hover:scale-110 transition-transform duration-300 cursor-pointer w-full">
+                            <div className="w-full aspect-square rounded-lg flex items-center justify-center" style={{
+                              backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.1),
+                            }}>
                               <ColorizedIcon
                                 src={getItemIconPath(item.icon)}
                                 alt={item.name}
                                 color={item.color || '#6366f1'}
                                 className="w-10 h-10 object-contain"
                               />
-                            ) : (
-                              <Box className="w-10 h-10" style={{ color: item.color || '#6366f1' }} />
-                            )}
+                            </div>
                           </div>
-                        </div>
+                        )}
 
-                        {/* Name */}
-                        <h3 className="text-xs font-bold text-foreground line-clamp-2">{item.name}</h3>
+                        {/* Item name */}
+                        <h3 className="text-sm font-bold text-foreground line-clamp-2 mb-1 px-1">{item.name}</h3>
+
+                        {/* Item description */}
+                        {item.description && (
+                          <p className="text-xs text-foreground/60 line-clamp-1 mb-1 px-1 italic">
+                            {item.description}
+                          </p>
+                        )}
+
+                        {/* Quantity badge */}
+                        {item.quantity && item.quantity > 1 && (
+                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold mb-1" style={{
+                            backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
+                            color: item.color || '#6366f1',
+                          }}>
+                            <Package className="w-3 h-3" />
+                            {item.quantity}
+                          </div>
+                        )}
 
                         {/* More menu */}
                         <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
