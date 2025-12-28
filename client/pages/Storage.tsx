@@ -22,7 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getStorageIconPath, getStorageIconOptions, getItemIconPath } from "@/lib/customIcons";
+import { getStorageIconPath, getStorageIconOptions, getItemIconPath, getItemIconOptions } from "@/lib/customIcons";
 import { getColorWithOpacity, getColorBorder } from "@/lib/colorUtils";
 
 const storageTypes = [
