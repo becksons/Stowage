@@ -126,29 +126,27 @@ export default function Storage() {
     }
 
     try {
-      if (editingLocation) {
-        // Check if this is a storage item (has isStorageItem property)
-        if ('isStorageItem' in editingLocation) {
-          // Update storage item
-          await updateItem(editingLocation.id, {
-            name: formData.name,
-            description: formData.description,
-            icon: formData.icon,
-            color: formData.color,
-          });
-          toast({
-            title: "Success",
-            description: "Container updated successfully",
-          });
-        } else {
-          // Update location
-          await updateLocation(editingLocation.id, formData);
-          toast({
-            title: "Success",
-            description: "Location updated successfully",
-          });
-        }
+      if (editingStorageItem) {
+        // Update storage item (container)
+        await updateItem(editingStorageItem.id, {
+          name: formData.name,
+          description: formData.description,
+          icon: formData.icon,
+          color: formData.color,
+        });
+        toast({
+          title: "Success",
+          description: "Container updated successfully",
+        });
+      } else if (editingLocation) {
+        // Update location
+        await updateLocation(editingLocation.id, formData);
+        toast({
+          title: "Success",
+          description: "Location updated successfully",
+        });
       } else {
+        // Create new location
         await addLocation(formData);
         toast({
           title: "Success",
@@ -158,6 +156,7 @@ export default function Storage() {
 
       setOpenDialog(false);
       setEditingLocation(null);
+      setEditingStorageItem(null);
       setFormData({
         name: "",
         type: "drawer",
