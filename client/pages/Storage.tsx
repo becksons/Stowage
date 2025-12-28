@@ -1009,7 +1009,7 @@ export default function Storage() {
             ) : null}
 
             {/* Parent location field - only for locations */}
-            {!editingLocation || !('isStorageItem' in editingLocation) ? (
+            {!editingStorageItem ? (
               <div className="space-y-2">
                 <Label htmlFor="parentId">Part of (optional)</Label>
                 <p className="text-xs text-muted-foreground mb-2">
