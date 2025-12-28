@@ -973,65 +973,71 @@ export default function Storage() {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="type">Type *</Label>
-              <Select
-                value={formData.type}
-                onValueChange={(value) =>
-                  setFormData({
-                    ...formData,
-                    type: value as "drawer" | "bag" | "room" | "cabinet" | "shelf" | "other",
-                  })
-                }
-              >
-                <SelectTrigger id="type">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {storageTypes.map((type) => {
-                    const IconComponent = type.icon;
-                    return (
-                      <SelectItem key={type.value} value={type.value}>
-                        <div className="flex items-center gap-2">
-                          <IconComponent className="w-4 h-4" />
-                          {type.label}
-                        </div>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
+            {/* Type field - only for locations */}
+            {!editingLocation || !('isStorageItem' in editingLocation) ? (
+              <div className="space-y-2">
+                <Label htmlFor="type">Type *</Label>
+                <Select
+                  value={formData.type}
+                  onValueChange={(value) =>
+                    setFormData({
+                      ...formData,
+                      type: value as "drawer" | "bag" | "room" | "cabinet" | "shelf" | "other",
+                    })
+                  }
+                >
+                  <SelectTrigger id="type">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {storageTypes.map((type) => {
+                      const IconComponent = type.icon;
+                      return (
+                        <SelectItem key={type.value} value={type.value}>
+                          <div className="flex items-center gap-2">
+                            <IconComponent className="w-4 h-4" />
+                            {type.label}
+                          </div>
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : null}
 
-            <div className="space-y-2">
-              <Label htmlFor="parentId">Part of (optional)</Label>
-              <p className="text-xs text-muted-foreground mb-2">
-                If this storage is inside another space (e.g., a dresser inside a bedroom), select the parent location here.
-              </p>
-              <Select
-                value={formData.parentId || "none"}
-                onValueChange={(value) =>
-                  setFormData({
-                    ...formData,
-                    parentId: value === "none" ? null : value,
-                  })
-                }
-              >
-                <SelectTrigger id="parentId">
-                  <SelectValue placeholder="None - Top level location" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Top level (not inside anything)</SelectItem>
-                  {locations
-                    .filter((loc) => loc.id !== editingLocation?.id)
-                    .map((location) => (
-                      <SelectItem key={location.id} value={location.id}>
-                        Inside: {getLocationPath(location.id)}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {/* Parent location field - only for locations */}
+            {!editingLocation || !('isStorageItem' in editingLocation) ? (
+              <div className="space-y-2">
+                <Label htmlFor="parentId">Part of (optional)</Label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  If this storage is inside another space (e.g., a dresser inside a bedroom), select the parent location here.
+                </p>
+                <Select
+                  value={formData.parentId || "none"}
+                  onValueChange={(value) =>
+                    setFormData({
+                      ...formData,
+                      parentId: value === "none" ? null : value,
+                    })
+                  }
+                >
+                  <SelectTrigger id="parentId">
+                    <SelectValue placeholder="None - Top level location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Top level (not inside anything)</SelectItem>
+                    {locations
+                      .filter((loc) => loc.id !== editingLocation?.id)
+                      .map((location) => (
+                        <SelectItem key={location.id} value={location.id}>
+                          Inside: {getLocationPath(location.id)}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : null}
 
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
