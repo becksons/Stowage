@@ -1122,7 +1122,11 @@ export default function Storage() {
                 Cancel
               </Button>
               <Button type="submit" className="flex-1 bg-primary hover:bg-primary/90">
-                {editingLocation ? "Update Location" : "Add Location"}
+                {editingStorageItem
+                  ? "Update Container"
+                  : editingLocation
+                  ? "Update Location"
+                  : "Add Location"}
               </Button>
             </div>
           </form>
