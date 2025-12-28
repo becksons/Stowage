@@ -426,7 +426,7 @@ export default function Storage() {
                 Choose a room or container from the sidebar to view and manage its contents.
               </p>
             </div>
-          ) : (
+          ) : selectedLocation ? (
             <div className="space-y-8">
               {/* Selected Room Header */}
               <div className="space-y-6 pb-6 border-b border-primary/20">
@@ -787,7 +787,107 @@ export default function Storage() {
                 </div>
               )}
             </div>
-          )}
+          ) : selectedStorageItem ? (
+            <div className="space-y-8">
+              {/* Selected Container Header */}
+              <div className="space-y-6 pb-6 border-b border-primary/20">
+                <div className="flex items-start justify-between gap-4">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="lg:hidden h-8 w-8 p-0 flex-shrink-0"
+                    onClick={() => {
+                      setSelectedStorageItemId(null);
+                      setSidebarOpen(true);
+                    }}
+                  >
+                    <X className="w-5 h-5" />
+                  </Button>
+                  <div className="flex-1 flex items-start gap-3 sm:gap-4">
+                    {/* Container Icon */}
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-lg flex-shrink-0 flex items-center justify-center" style={{
+                      backgroundColor: getColorWithOpacity(selectedStorageItem.color || '#6366f1', 0.1),
+                    }}>
+                      {selectedStorageItem.icon && (
+                        <img
+                          src={getItemIconPath(selectedStorageItem.icon)}
+                          alt={selectedStorageItem.icon}
+                          className="w-8 h-8 sm:w-12 sm:h-12 lg:w-16 lg:h-16 object-contain"
+                        />
+                      )}
+                    </div>
+
+                    <div className="flex-1">
+                      <h2 className="text-3xl lg:text-5xl font-black gradient-heading mb-3">{selectedStorageItem.name}</h2>
+                      {selectedStorageItem.description && (
+                        <p className="text-base text-muted-foreground mb-4">{selectedStorageItem.description}</p>
+                      )}
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="px-3 py-1.5 rounded-full bg-primary/15 text-primary text-xs font-semibold border border-primary/30">
+                          Container
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Items in Container */}
+              {getItemsByLocation(selectedStorageItem.name).length > 0 ? (
+                <div className="space-y-4 lg:space-y-6">
+                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">Items Inside</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {getItemsByLocation(selectedStorageItem.name).map((item) => (
+                      <div key={item.id} className="group/item relative flex flex-col items-center text-center transition-all duration-300 p-4 rounded-lg border border-primary/20 hover:border-primary/40">
+                        {/* Icon */}
+                        {item.icon && (
+                          <div className="relative mb-3 transform group-hover/item:scale-110 transition-transform duration-300 cursor-pointer w-full">
+                            <div className="w-full aspect-square rounded-lg flex items-center justify-center" style={{
+                              backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.1),
+                            }}>
+                              <ColorizedIcon
+                                src={getItemIconPath(item.icon)}
+                                alt={item.name}
+                                color={item.color || '#6366f1'}
+                                className="w-12 h-12 object-contain"
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Item name */}
+                        <h5 className="text-xs sm:text-sm font-bold text-foreground line-clamp-2 mb-1 px-1">{item.name}</h5>
+
+                        {/* Item description */}
+                        {item.description && (
+                          <p className="text-xs text-foreground/60 line-clamp-1 mb-1 px-1 italic">
+                            {item.description}
+                          </p>
+                        )}
+
+                        {/* Quantity badge */}
+                        {item.quantity && item.quantity > 1 && (
+                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold" style={{
+                            backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
+                            color: item.color || '#6366f1',
+                          }}>
+                            <Package className="w-3 h-3" />
+                            {item.quantity}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <Box className="w-16 h-16 text-primary/30 mx-auto mb-4" />
+                  <p className="text-muted-foreground">This container is empty. Add items to get started.</p>
+                </div>
+              )}
+            </div>
+          ) : null
+        }
         </div>
       </div>
 
