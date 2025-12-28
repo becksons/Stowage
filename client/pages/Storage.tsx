@@ -126,11 +126,27 @@ export default function Storage() {
 
     try {
       if (editingLocation) {
-        await updateLocation(editingLocation.id, formData);
-        toast({
-          title: "Success",
-          description: "Location updated successfully",
-        });
+        // Check if this is a storage item (has isStorageItem property)
+        if ('isStorageItem' in editingLocation) {
+          // Update storage item
+          await updateItem(editingLocation.id, {
+            name: formData.name,
+            description: formData.description,
+            icon: formData.icon,
+            color: formData.color,
+          });
+          toast({
+            title: "Success",
+            description: "Container updated successfully",
+          });
+        } else {
+          // Update location
+          await updateLocation(editingLocation.id, formData);
+          toast({
+            title: "Success",
+            description: "Location updated successfully",
+          });
+        }
       } else {
         await addLocation(formData);
         toast({
@@ -152,7 +168,7 @@ export default function Storage() {
     } catch (err) {
       toast({
         title: "Error",
-        description: error || "Failed to save location",
+        description: error || "Failed to save",
         variant: "destructive",
       });
     }
