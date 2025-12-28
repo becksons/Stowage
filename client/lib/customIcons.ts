@@ -6,6 +6,8 @@
 
 export const itemIcons: Record<string, string> = {
   // Item icons - normalized names to SVG paths
+  // Container icons (can be used for storage items marked as containers)
+  "backpack": "/icons/storage/Backpack.svg",
   "audio wave": "/icons/items/Audio Wave.svg",
   "bag": "/icons/items/Bag.svg",
   "ball point pen": "/icons/items/Ball Point Pen.svg",
