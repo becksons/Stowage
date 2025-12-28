@@ -1054,12 +1054,12 @@ export default function Storage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="icon">Storage Icon</Label>
+              <Label htmlFor="icon">{editingStorageItem ? "Container Icon" : "Storage Icon"}</Label>
               <div className="flex gap-2 items-center">
                 {formData.icon && (
                   <div className="w-10 h-10 rounded-lg bg-primary/15 border border-primary/30 p-1 flex items-center justify-center flex-shrink-0">
                     <img
-                      src={getStorageIconPath(formData.icon)}
+                      src={editingStorageItem ? getItemIconPath(formData.icon) : getStorageIconPath(formData.icon)}
                       alt={formData.icon}
                       className="w-full h-full object-contain"
                     />
@@ -1072,15 +1072,15 @@ export default function Storage() {
                   }
                 >
                   <SelectTrigger id="icon" className="flex-1">
-                    <SelectValue placeholder="Choose a custom icon" />
+                    <SelectValue placeholder={editingStorageItem ? "Choose a container icon" : "Choose a custom icon"} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">Use type icon</SelectItem>
-                    {getStorageIconOptions().map((icon) => (
+                    <SelectItem value="none">{editingStorageItem ? "Use default" : "Use type icon"}</SelectItem>
+                    {(editingStorageItem ? getItemIconOptions() : getStorageIconOptions()).map((icon) => (
                       <SelectItem key={icon} value={icon}>
                         <div className="flex items-center gap-2">
                           <img
-                            src={getStorageIconPath(icon)}
+                            src={editingStorageItem ? getItemIconPath(icon) : getStorageIconPath(icon)}
                             alt={icon}
                             className="w-4 h-4"
                           />
