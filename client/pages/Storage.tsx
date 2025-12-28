@@ -501,7 +501,6 @@ export default function Storage() {
 
                               <div className="flex-1 min-w-0">
                                 <h4 className="text-lg font-bold text-foreground mb-1">{child.name}</h4>
-                                <p className="text-xs text-muted-foreground font-semibold mb-2">{childStorageType?.label}</p>
                                 {child.description && (
                                   <p className="text-sm text-foreground/60 italic">{child.description}</p>
                                 )}
