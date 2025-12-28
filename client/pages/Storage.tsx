@@ -614,7 +614,15 @@ export default function Storage() {
                                   </div>
                                 </div>
                               ) : (
-                                <p className="text-xs text-muted-foreground text-center italic">No items in this section</p>
+                                <div className="text-center">
+                                  <p className="text-xs text-muted-foreground italic">No items in this section</p>
+                                  {/* Debug info */}
+                                  {getStorageItems().length > 0 && (
+                                    <p className="text-xs text-orange-600 mt-2">
+                                      Note: {getStorageItems().length} container(s) exist but may not be assigned to this location
+                                    </p>
+                                  )}
+                                </div>
                               )}
                             </div>
                           </div>
