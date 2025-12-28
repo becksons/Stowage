@@ -855,12 +855,12 @@ export default function Storage() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => {
-                        setEditingLocation(selectedStorageItem as any);
+                        setEditingStorageItem(selectedStorageItem);
                         setFormData({
                           name: selectedStorageItem.name,
                           type: "drawer",
                           description: selectedStorageItem.description || "",
-                          color: selectedStorageItem.color || "bg-blue-100 dark:bg-blue-950",
+                          color: selectedStorageItem.color || "#6366f1",
                           icon: selectedStorageItem.icon || "",
                           parentId: null,
                         });
