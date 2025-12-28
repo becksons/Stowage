@@ -467,6 +467,8 @@ export default function Storage() {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                     {selectedChildLocations.map((child) => {
                       const childItemCount = getItemsByLocation(child.name).length;
+                      const childStorageItemCount = getStorageItemsByLocation(child.name).length;
+                      const totalChildItems = childItemCount + childStorageItemCount;
                       const childStorageType = storageTypes.find((t) => t.value === child.type);
 
                       return (
@@ -550,13 +552,13 @@ export default function Storage() {
 
                             {/* Items Grid */}
                             <div className="pt-4 border-t border-primary/20">
-                              {childItemCount > 0 ? (
+                              {totalChildItems > 0 ? (
                                 <div>
                                   <p className="text-xs text-muted-foreground font-semibold mb-3">
-                                    {childItemCount} item{childItemCount !== 1 ? 's' : ''}
+                                    {totalChildItems} item{totalChildItems !== 1 ? 's' : ''}
                                   </p>
                                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                                    {getItemsByLocation(child.name).map((item) => (
+                                    {[...getStorageItemsByLocation(child.name), ...getItemsByLocation(child.name)].map((item) => (
                                       <div key={item.id} className="group/item relative flex flex-col items-center text-center transition-all duration-300 p-2">
                                         {/* Icon */}
                                         {item.icon && (
