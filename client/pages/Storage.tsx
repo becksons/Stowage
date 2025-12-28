@@ -166,9 +166,11 @@ export default function Storage() {
         parentId: null,
       });
     } catch (err) {
+      console.error("Save error:", err);
+      const errorMessage = err instanceof Error ? err.message : "Failed to save";
       toast({
         title: "Error",
-        description: error || "Failed to save",
+        description: errorMessage,
         variant: "destructive",
       });
     }
