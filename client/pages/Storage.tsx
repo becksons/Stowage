@@ -829,6 +829,46 @@ export default function Storage() {
                       </div>
                     </div>
                   </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        <MoreVertical className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => {
+                        setEditingLocation(selectedStorageItem as any);
+                        setFormData({
+                          name: selectedStorageItem.name,
+                          type: "drawer",
+                          description: selectedStorageItem.description || "",
+                          color: selectedStorageItem.color || "bg-blue-100 dark:bg-blue-950",
+                          icon: selectedStorageItem.icon || "",
+                          parentId: null,
+                        });
+                        setOpenDialog(true);
+                      }}>
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit Container
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          if (confirm("Are you sure you want to delete this container?")) {
+                            deleteItem(selectedStorageItem.id);
+                            setSelectedStorageItemId(null);
+                            toast({
+                              title: "Success",
+                              description: "Container deleted successfully",
+                            });
+                          }
+                        }}
+                        className="text-destructive"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete Container
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
 
