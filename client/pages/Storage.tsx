@@ -61,7 +61,7 @@ export default function Storage() {
     getLocationPath,
     getRootLocations,
   } = useSupabaseStorage();
-  const { items, deleteItem } = useSupabaseInventory();
+  const { items, deleteItem, updateItem, addItem } = useSupabaseInventory();
   const [openDialog, setOpenDialog] = useState(false);
   const [editingLocation, setEditingLocation] = useState(null);
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
