@@ -152,16 +152,24 @@ export default function Inventory() {
                 {items.length} item{items.length !== 1 ? "s" : ""} tracked
               </p>
             </div>
-            <Button
-              onClick={() => {
-                setEditingItem(null);
-                setDialogOpen(true);
-              }}
-              className="gap-2 bg-gradient-to-r from-primary to-secondary hover:shadow-2xl hover:scale-105 transition-all duration-300 font-bold text-base px-6 py-3 rounded-lg"
-            >
-              <Plus className="w-5 h-5" />
-              <span className="hidden sm:inline">Add Item</span>
-            </Button>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
+              {filterLocation && (
+                <div className="flex sm:hidden items-center gap-2 text-sm">
+                  <MapPin className="w-4 h-4 text-primary" />
+                  <span className="font-semibold text-foreground">{filterLocation}</span>
+                </div>
+              )}
+              <Button
+                onClick={() => {
+                  setEditingItem(null);
+                  setDialogOpen(true);
+                }}
+                className="gap-2 bg-gradient-to-r from-primary to-secondary hover:shadow-2xl hover:scale-105 transition-all duration-300 font-bold text-base px-6 py-3 rounded-lg w-full sm:w-auto"
+              >
+                <Plus className="w-5 h-5" />
+                <span className="hidden sm:inline">Add Item</span>
+              </Button>
+            </div>
           </div>
 
           {totalValue > 0 && (
