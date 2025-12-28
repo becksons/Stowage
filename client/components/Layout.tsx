@@ -42,7 +42,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary to-secondary opacity-0 group-hover:opacity-20 blur transition-opacity" />
               </div>
               <span className="hidden sm:inline text-xl font-black gradient-heading">
-                Stowage
+                Space Trace
               </span>
             </Link>
 
@@ -127,7 +127,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <div className="p-2 rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 group-hover:from-primary/30 group-hover:to-secondary/30 transition-all group-hover:scale-110 duration-300">
                 <Package className="w-5 h-5 text-primary" />
               </div>
-              <span className="text-sm font-bold gradient-heading">Stowage</span>
+              <span className="text-sm font-bold gradient-heading">Space Trace</span>
             </div>
             <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground text-center sm:text-right">
               <Sparkles className="w-4 h-4 text-primary/60 flex-shrink-0" />
