@@ -64,6 +64,7 @@ export default function Storage() {
   const { items, deleteItem, updateItem, addItem } = useSupabaseInventory();
   const [openDialog, setOpenDialog] = useState(false);
   const [editingLocation, setEditingLocation] = useState(null);
+  const [editingStorageItem, setEditingStorageItem] = useState(null);
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
   const [selectedStorageItemId, setSelectedStorageItemId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
