@@ -412,18 +412,18 @@ export default function Storage() {
           )}
         </div>
 
-        {/* Right Content Area - Room Details */}
+        {/* Right Content Area - Room/Container Details */}
         <div className={`${
-          selectedLocationId ? 'flex' : 'hidden'
+          selectedLocationId || selectedStorageItemId ? 'flex' : 'hidden'
         } lg:flex flex-1 overflow-y-auto flex-col`}>
-          {!selectedLocation ? (
+          {!selectedLocation && !selectedStorageItem ? (
             <div className="flex flex-col items-center justify-center h-full py-12">
               <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 border-2 border-primary/40 mb-6">
-                <Home className="w-12 h-12 text-primary" />
+                <Box className="w-12 h-12 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-2">Select a Room</h3>
+              <h3 className="text-2xl font-bold text-foreground mb-2">Select a Space</h3>
               <p className="text-muted-foreground text-center max-w-sm">
-                Choose a room from the sidebar to view and manage its storage spaces and items.
+                Choose a room or container from the sidebar to view and manage its contents.
               </p>
             </div>
           ) : (
