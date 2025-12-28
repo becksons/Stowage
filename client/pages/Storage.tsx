@@ -65,6 +65,7 @@ export default function Storage() {
   const [openDialog, setOpenDialog] = useState(false);
   const [editingLocation, setEditingLocation] = useState(null);
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
+  const [selectedStorageItemId, setSelectedStorageItemId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
@@ -189,7 +190,9 @@ export default function Storage() {
   }
 
   const rootLocations = getRootLocations();
+  const storageItems = getStorageItems();
   const selectedLocation = selectedLocationId ? locations.find((loc) => loc.id === selectedLocationId) : null;
+  const selectedStorageItem = selectedStorageItemId ? items.find((item) => item.id === selectedStorageItemId && item.isStorageItem) : null;
   const selectedChildLocations = selectedLocation ? getChildLocations(selectedLocation.id) : [];
 
   return (
@@ -232,7 +235,7 @@ export default function Storage() {
               className="w-full gap-2 bg-gradient-to-r from-primary to-secondary hover:shadow-2xl hover:scale-105 transition-all duration-300 font-bold text-sm px-4 py-3 rounded-lg"
             >
               <Plus className="w-4 h-4" />
-              Add Room
+              Add Storage Space
             </Button>
 
             {/* Search Bar */}
@@ -250,105 +253,153 @@ export default function Storage() {
             </div>
           </div>
 
-          {/* Room List */}
+          {/* Room & Container List */}
           <div className="flex-1 overflow-y-auto mt-4 lg:mt-6 space-y-2 px-1 lg:px-0">
-            {rootLocations.length === 0 ? (
+            {rootLocations.length === 0 && storageItems.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                <p className="text-sm">No rooms yet</p>
+                <p className="text-sm">No storage spaces yet</p>
               </div>
             ) : (
-              rootLocations.map((location) => {
-                const itemCount = getItemsByLocation(location.name).length;
-                const childCount = getChildLocations(location.id).length;
-                const storageType = storageTypes.find((t) => t.value === location.type);
-                const isSelected = selectedLocationId === location.id;
+              <>
+                {/* Root Locations (Rooms) */}
+                {rootLocations.map((location) => {
+                  const storageType = storageTypes.find((t) => t.value === location.type);
+                  const isSelected = selectedLocationId === location.id && !selectedStorageItemId;
 
-                return (
-                  <div
-                    key={location.id}
-                    onClick={() => {
-                      setSelectedLocationId(location.id);
-                      // Close sidebar on mobile after selection
-                      if (window.innerWidth < 1024) {
-                        setSidebarOpen(false);
-                      }
-                    }}
-                    className={`group relative p-4 lg:p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 active:scale-95 lg:active:scale-100 hover:border-primary/50 ${
-                      isSelected
-                        ? "border-primary/50 bg-primary/10"
-                        : "border-primary/20 hover:bg-primary/5"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      {/* Location Icon */}
-                      <div className={`w-14 h-14 sm:w-12 sm:h-12 lg:w-12 lg:h-12 rounded-lg flex-shrink-0 flex items-center justify-center transform transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-105'}`} style={{
-                        backgroundColor: getColorWithOpacity('#6366f1', 0.1),
-                      }}>
-                        {location.icon ? (
-                          <img
-                            src={getStorageIconPath(location.icon)}
-                            alt={location.icon}
-                            className="w-8 h-8 sm:w-7 sm:h-7 lg:w-7 lg:h-7 object-contain"
-                          />
-                        ) : storageType ? (
-                          <storageType.icon className="w-7 h-7 sm:w-6 sm:h-6 lg:w-6 lg:h-6 text-primary" />
-                        ) : (
-                          <Box className="w-7 h-7 sm:w-6 sm:h-6 lg:w-6 lg:h-6 text-primary" />
-                        )}
-                      </div>
+                  return (
+                    <div
+                      key={`loc-${location.id}`}
+                      onClick={() => {
+                        setSelectedLocationId(location.id);
+                        setSelectedStorageItemId(null);
+                        if (window.innerWidth < 1024) {
+                          setSidebarOpen(false);
+                        }
+                      }}
+                      className={`group relative p-4 lg:p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 active:scale-95 lg:active:scale-100 hover:border-primary/50 ${
+                        isSelected
+                          ? "border-primary/50 bg-primary/10"
+                          : "border-primary/20 hover:bg-primary/5"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        {/* Location Icon */}
+                        <div className={`w-14 h-14 sm:w-12 sm:h-12 lg:w-12 lg:h-12 rounded-lg flex-shrink-0 flex items-center justify-center transform transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-105'}`} style={{
+                          backgroundColor: getColorWithOpacity('#6366f1', 0.1),
+                        }}>
+                          {location.icon ? (
+                            <img
+                              src={getStorageIconPath(location.icon)}
+                              alt={location.icon}
+                              className="w-8 h-8 sm:w-7 sm:h-7 lg:w-7 lg:h-7 object-contain"
+                            />
+                          ) : storageType ? (
+                            <storageType.icon className="w-7 h-7 sm:w-6 sm:h-6 lg:w-6 lg:h-6 text-primary" />
+                          ) : (
+                            <Box className="w-7 h-7 sm:w-6 sm:h-6 lg:w-6 lg:h-6 text-primary" />
+                          )}
+                        </div>
 
-                      {/* Location Info */}
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-base sm:text-sm lg:text-sm text-foreground line-clamp-1">{location.name}</h3>
-                      </div>
+                        {/* Location Info */}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-base sm:text-sm lg:text-sm text-foreground line-clamp-1">{location.name}</h3>
+                        </div>
 
-                      {/* Menu Button */}
-                      <div className="flex-shrink-0 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 lg:h-6 lg:w-6 p-0"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <MoreVertical className="w-4 h-4 lg:w-3 lg:h-3" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={(e) => {
-                              e.stopPropagation();
-                              setEditingLocation(location);
-                              setFormData({
-                                name: location.name,
-                                type: location.type,
-                                description: location.description || "",
-                                color: location.color || "bg-blue-100 dark:bg-blue-950",
-                                icon: location.icon || "",
-                                parentId: location.parentId || null,
-                              });
-                              setOpenDialog(true);
-                            }}>
-                              <Edit className="w-4 h-4 mr-2" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={(e) => {
+                        {/* Menu Button */}
+                        <div className="flex-shrink-0 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 lg:h-6 lg:w-6 p-0"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <MoreVertical className="w-4 h-4 lg:w-3 lg:h-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={(e) => {
                                 e.stopPropagation();
-                                handleDeleteLocation(location.id);
-                              }}
-                              className="text-destructive"
-                            >
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                                setEditingLocation(location);
+                                setFormData({
+                                  name: location.name,
+                                  type: location.type,
+                                  description: location.description || "",
+                                  color: location.color || "bg-blue-100 dark:bg-blue-950",
+                                  icon: location.icon || "",
+                                  parentId: location.parentId || null,
+                                });
+                                setOpenDialog(true);
+                              }}>
+                                <Edit className="w-4 h-4 mr-2" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteLocation(location.id);
+                                }}
+                                className="text-destructive"
+                              >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })
+                  );
+                })}
+
+                {/* Storage Items (Containers) */}
+                {storageItems.length > 0 && (
+                  <>
+                    {storageItems.map((item) => {
+                      const isSelected = selectedStorageItemId === item.id;
+
+                      return (
+                        <div
+                          key={`item-${item.id}`}
+                          onClick={() => {
+                            setSelectedStorageItemId(item.id);
+                            setSelectedLocationId(null);
+                            if (window.innerWidth < 1024) {
+                              setSidebarOpen(false);
+                            }
+                          }}
+                          className={`group relative p-4 lg:p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 active:scale-95 lg:active:scale-100 hover:border-primary/50 ${
+                            isSelected
+                              ? "border-primary/50 bg-primary/10"
+                              : "border-primary/20 hover:bg-primary/5"
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            {/* Item Icon */}
+                            <div className={`w-14 h-14 sm:w-12 sm:h-12 lg:w-12 lg:h-12 rounded-lg flex-shrink-0 flex items-center justify-center transform transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-105'}`} style={{
+                              backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.1),
+                            }}>
+                              {item.icon && (
+                                <img
+                                  src={getItemIconPath(item.icon)}
+                                  alt={item.icon}
+                                  className="w-8 h-8 sm:w-7 sm:h-7 lg:w-7 lg:h-7 object-contain"
+                                />
+                              )}
+                            </div>
+
+                            {/* Item Info */}
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-bold text-base sm:text-sm lg:text-sm text-foreground line-clamp-1">{item.name}</h3>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </>
+                )}
+              </>
             )}
           </div>
 
