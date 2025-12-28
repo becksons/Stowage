@@ -953,11 +953,11 @@ export default function Storage() {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {editingLocation ? (
-                'isStorageItem' in editingLocation ? "Edit Container" : "Edit Location"
-              ) : (
-                "Add Storage Location"
-              )}
+              {editingStorageItem
+                ? "Edit Container"
+                : editingLocation
+                ? "Edit Location"
+                : "Add Storage Location"}
             </DialogTitle>
           </DialogHeader>
 
