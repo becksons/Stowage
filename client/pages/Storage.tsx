@@ -976,7 +976,7 @@ export default function Storage() {
             </div>
 
             {/* Type field - only for locations */}
-            {!editingLocation || !('isStorageItem' in editingLocation) ? (
+            {!editingStorageItem ? (
               <div className="space-y-2">
                 <Label htmlFor="type">Type *</Label>
                 <Select
