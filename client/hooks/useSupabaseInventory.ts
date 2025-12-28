@@ -246,9 +246,14 @@ export const useSupabaseInventory = () => {
           .eq('user_id', user.id);
 
         if (updateError) {
-          console.error('Supabase update error:', updateError);
+          console.error('Supabase update error:', {
+            message: updateError.message,
+            code: updateError.code,
+            details: updateError.details,
+            hint: updateError.hint,
+          });
           console.error('Update data sent:', updateData);
-          throw updateError;
+          throw new Error(`Update failed: ${updateError.message}`);
         }
 
         console.log('Item updated successfully, updating tags if needed');
