@@ -1,5 +1,23 @@
 import { useState, useRef } from "react";
-import { Search, Trash2, MapPin, Package, MoreVertical, Plus, Loader2, Clock, Type, Layers, Tag, DollarSign, Star, Zap, AlertCircle, Home, Box } from "lucide-react";
+import {
+  Search,
+  Trash2,
+  MapPin,
+  Package,
+  MoreVertical,
+  Plus,
+  Loader2,
+  Clock,
+  Type,
+  Layers,
+  Tag,
+  DollarSign,
+  Star,
+  Zap,
+  AlertCircle,
+  Home,
+  Box,
+} from "lucide-react";
 import Layout from "@/components/Layout";
 import AddEditItemDialog from "@/components/AddEditItemDialog";
 import ColorizedIcon from "@/components/ColorizedIcon";
@@ -8,16 +26,35 @@ import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { getItemIconPath, getStorageIconPath } from "@/lib/customIcons";
 import { getColorWithOpacity, getColorBorder } from "@/lib/colorUtils";
 
 export default function Inventory() {
   const { toast } = useToast();
-  const { items, searchQuery, setSearchQuery, isLoaded, isSyncing, error, addItem, updateItem, deleteItem, getTotalValue, getFilteredItems } = useSupabaseInventory();
+  const {
+    items,
+    searchQuery,
+    setSearchQuery,
+    isLoaded,
+    isSyncing,
+    error,
+    addItem,
+    updateItem,
+    deleteItem,
+    getTotalValue,
+    getFilteredItems,
+  } = useSupabaseInventory();
   const { locations, getLocationPath } = useSupabaseStorage();
   const [filterLocation, setFilterLocation] = useState("");
-  const [sortBy, setSortBy] = useState<"name" | "location" | "recent">("recent");
+  const [sortBy, setSortBy] = useState<"name" | "location" | "recent">(
+    "recent",
+  );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
@@ -34,7 +71,9 @@ export default function Inventory() {
   displayItems = displayItems.filter((item) => !item.isStorageItem);
 
   if (filterLocation) {
-    displayItems = displayItems.filter((item) => item.location === filterLocation);
+    displayItems = displayItems.filter(
+      (item) => item.location === filterLocation,
+    );
   }
 
   displayItems = [...displayItems].sort((a, b) => {
@@ -51,12 +90,16 @@ export default function Inventory() {
   const handleSaveItem = async (data: any) => {
     try {
       // Look up location_id from location name (could be a storage location or storage item)
-      const storageLocation = locations.find((loc) => loc.name === data.location);
+      const storageLocation = locations.find(
+        (loc) => loc.name === data.location,
+      );
       const location_id = storageLocation?.id;
 
       // If it's not a storage location, it might be a storage item being used as a container
       // For now, we'll use the location name only if it's a storage item
-      const isStorageItemContainer = !location_id && storageItems.some((item) => item.name === data.location);
+      const isStorageItemContainer =
+        !location_id &&
+        storageItems.some((item) => item.name === data.location);
 
       if (!location_id && !isStorageItemContainer) {
         toast({
@@ -90,12 +133,12 @@ export default function Inventory() {
       }
       setDialogOpen(false);
     } catch (err) {
-      console.error('Item save error:', err);
+      console.error("Item save error:", err);
       let errorMessage = "Failed to save item";
 
       if (err instanceof Error) {
         errorMessage = err.message;
-      } else if (typeof err === 'object' && err !== null) {
+      } else if (typeof err === "object" && err !== null) {
         // Handle Supabase errors and other objects
         const errObj = err as any;
         if (errObj.message) {
@@ -107,7 +150,7 @@ export default function Inventory() {
         } else {
           errorMessage = JSON.stringify(errObj);
         }
-      } else if (typeof err === 'string') {
+      } else if (typeof err === "string") {
         errorMessage = err;
       }
 
@@ -147,7 +190,9 @@ export default function Inventory() {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div>
-              <h1 className="text-4xl sm:text-5xl font-black gradient-heading mb-3">Inventory</h1>
+              <h1 className="text-4xl sm:text-5xl font-black gradient-heading mb-3">
+                Inventory
+              </h1>
               <p className="text-xs text-muted-foreground font-medium">
                 {items.length} item{items.length !== 1 ? "s" : ""} tracked
               </p>
@@ -156,7 +201,9 @@ export default function Inventory() {
               {filterLocation && (
                 <div className="flex sm:hidden items-center gap-2 text-sm">
                   <MapPin className="w-4 h-4 text-primary" />
-                  <span className="font-semibold text-foreground">{filterLocation}</span>
+                  <span className="font-semibold text-foreground">
+                    {filterLocation}
+                  </span>
                 </div>
               )}
               <Button
@@ -180,7 +227,9 @@ export default function Inventory() {
                 <div>
                   <div className="inline-flex items-center gap-2 mb-2">
                     <DollarSign className="w-5 h-5 text-primary" />
-                    <p className="text-sm font-semibold text-primary/80">Total Inventory Value</p>
+                    <p className="text-sm font-semibold text-primary/80">
+                      Total Inventory Value
+                    </p>
                   </div>
                   <p className="text-4xl font-black text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text">
                     ${totalValue.toFixed(2)}
@@ -228,7 +277,9 @@ export default function Inventory() {
             {/* Location Filter Buttons */}
             {locationNames.map((name) => {
               const location = locations.find((loc) => loc.name === name);
-              const storageItem = storageItems.find((item) => item.name === name);
+              const storageItem = storageItems.find(
+                (item) => item.name === name,
+              );
 
               return (
                 <Button
@@ -299,7 +350,9 @@ export default function Inventory() {
             <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 border-2 border-primary/40 mb-6 group">
               <Package className="w-12 h-12 text-primary transform group-hover:scale-110 transition-transform duration-300" />
             </div>
-            <h3 className="text-2xl font-black gradient-heading mb-3">No items yet</h3>
+            <h3 className="text-2xl font-black gradient-heading mb-3">
+              No items yet
+            </h3>
             <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
               {items.length === 0
                 ? "Start by adding your first item to your inventory and begin tracking!"
@@ -315,34 +368,55 @@ export default function Inventory() {
               >
                 {/* Icon - Large and prominent, like a physical object */}
                 {item.icon && (
-                  <div className="relative mb-2 transform group-hover:scale-110 transition-transform duration-300 cursor-pointer" onClick={() => handleOpenEdit(item)}>
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg flex items-center justify-center" style={{
-                      backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.1),
-                    }}>
+                  <div
+                    className="relative mb-2 transform group-hover:scale-110 transition-transform duration-300 cursor-pointer"
+                    onClick={() => handleOpenEdit(item)}
+                  >
+                    <div
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg flex items-center justify-center"
+                      style={{
+                        backgroundColor: getColorWithOpacity(
+                          item.color || "#6366f1",
+                          0.1,
+                        ),
+                      }}
+                    >
                       <ColorizedIcon
                         src={getItemIconPath(item.icon)}
                         alt={item.icon}
-                        color={item.color || '#6366f1'}
+                        color={item.color || "#6366f1"}
                         className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
                       />
                     </div>
                     {/* Subtle shadow effect on hover */}
-                    <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-20 transition-opacity shadow-xl blur-lg -z-10" style={{
-                      backgroundColor: item.color || '#6366f1',
-                    }} />
+                    <div
+                      className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-20 transition-opacity shadow-xl blur-lg -z-10"
+                      style={{
+                        backgroundColor: item.color || "#6366f1",
+                      }}
+                    />
                   </div>
                 )}
 
                 {/* Item name - Clean and simple */}
-                <h3 className="text-sm sm:text-base font-bold text-foreground line-clamp-2 mb-1 px-1 hover:underline cursor-pointer transition-all" onClick={() => handleOpenEdit(item)}>
+                <h3
+                  className="text-sm sm:text-base font-bold text-foreground line-clamp-2 mb-1 px-1 hover:underline cursor-pointer transition-all"
+                  onClick={() => handleOpenEdit(item)}
+                >
                   {item.name}
                 </h3>
 
                 {/* Location badge - Minimal */}
-                <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium mb-1" style={{
-                  backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
-                  color: item.color || '#6366f1',
-                }}>
+                <div
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium mb-1"
+                  style={{
+                    backgroundColor: getColorWithOpacity(
+                      item.color || "#6366f1",
+                      0.15,
+                    ),
+                    color: item.color || "#6366f1",
+                  }}
+                >
                   <MapPin className="w-3 h-3" />
                   <span className="line-clamp-1">{item.location}</span>
                 </div>
@@ -356,10 +430,16 @@ export default function Inventory() {
 
                 {/* Quantity badge */}
                 {item.quantity > 1 && (
-                  <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold" style={{
-                    backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
-                    color: item.color || '#6366f1',
-                  }}>
+                  <div
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold"
+                    style={{
+                      backgroundColor: getColorWithOpacity(
+                        item.color || "#6366f1",
+                        0.15,
+                      ),
+                      color: item.color || "#6366f1",
+                    }}
+                  >
                     <Package className="w-3 h-3" />
                     {item.quantity}
                   </div>
@@ -369,11 +449,7 @@ export default function Inventory() {
                 <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 w-7 p-0"
-                      >
+                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
                         <MoreVertical className="w-4 h-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -407,20 +483,26 @@ export default function Inventory() {
                         importance: Star,
                         custom: Zap,
                       };
-                      const IconComponent = icons[tag.type as keyof typeof icons] || Zap;
+                      const IconComponent =
+                        icons[tag.type as keyof typeof icons] || Zap;
                       return (
                         <span
                           key={tag.id}
                           className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium opacity-70 hover:opacity-100 transition-opacity"
                           style={{
-                            backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
-                            color: item.color || '#6366f1',
+                            backgroundColor: getColorWithOpacity(
+                              item.color || "#6366f1",
+                              0.15,
+                            ),
+                            color: item.color || "#6366f1",
                           }}
                           title={`${tag.type}: ${tag.name}`}
                         >
                           <IconComponent className="w-2.5 h-2.5" />
                           {tag.name}
-                          {displayValue && <span className="font-bold">{displayValue}</span>}
+                          {displayValue && (
+                            <span className="font-bold">{displayValue}</span>
+                          )}
                         </span>
                       );
                     })}
