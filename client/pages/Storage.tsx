@@ -725,6 +725,9 @@ export default function Storage() {
                         onClick={() => {
                           if (item.isStorageItem) {
                             setSelectedStorageItemId(item.id);
+                          } else {
+                            setSelectedItem(item);
+                            setShowItemDetailsModal(true);
                           }
                         }}
                       >
