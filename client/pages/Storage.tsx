@@ -543,13 +543,13 @@ export default function Storage() {
                       return (
                         <div
                           key={child.id}
-                          className="group relative p-4 lg:p-6 rounded-xl border-2 border-primary/20 hover:border-primary/40 transition-all duration-300 overflow-hidden hover:shadow-lg"
+                          className="group relative p-3 sm:p-4 lg:p-6 rounded-xl border-2 border-primary/20 hover:border-primary/40 transition-all duration-300 overflow-hidden hover:shadow-lg"
                           style={{
                             backgroundColor: getColorWithOpacity(child.color ? child.color.replace('dark:', '').split(' ')[0] : 'bg-blue-100', 0.06),
                           }}
                         >
                           <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                          <div className="relative space-y-4">
+                          <div className="relative space-y-3 sm:space-y-4">
                             {/* Header */}
                             <div className="flex items-start justify-between gap-3">
                               {/* Icon */}
