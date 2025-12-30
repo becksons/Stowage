@@ -714,7 +714,15 @@ export default function Storage() {
                   </h3>
                   <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3 md:gap-4">
                     {getItemsByLocation(selectedLocation.name).map((item) => (
-                      <div key={item.id} className="group relative flex flex-col items-center text-center transition-all duration-300 p-1.5 sm:p-2">
+                      <div
+                        key={item.id}
+                        className="group relative flex flex-col items-center text-center transition-all duration-300 p-1.5 sm:p-2 cursor-pointer"
+                        onClick={() => {
+                          if (item.isStorageItem) {
+                            setSelectedStorageItemId(item.id);
+                          }
+                        }}
+                      >
                         {/* Icon */}
                         {item.icon && (
                           <div className="relative mb-1.5 sm:mb-2 transform group-hover:scale-110 transition-transform duration-300 cursor-pointer w-full">
