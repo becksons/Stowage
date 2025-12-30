@@ -909,7 +909,15 @@ export default function Storage() {
                   <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">Items Inside</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
                     {getItemsByLocation(selectedStorageItem.name).map((item) => (
-                      <div key={item.id} className="group/item relative flex flex-col items-center text-center transition-all duration-300 p-2 sm:p-3 rounded-lg border border-primary/20 hover:border-primary/40">
+                      <div
+                        key={item.id}
+                        className="group/item relative flex flex-col items-center text-center transition-all duration-300 p-2 sm:p-3 rounded-lg border border-primary/20 hover:border-primary/40 cursor-pointer"
+                        onClick={() => {
+                          if (item.isStorageItem) {
+                            setSelectedStorageItemId(item.id);
+                          }
+                        }}
+                      >
                         {/* Icon */}
                         {item.icon && (
                           <div className="relative mb-1.5 sm:mb-2 transform group-hover/item:scale-110 transition-transform duration-300 cursor-pointer w-full">
