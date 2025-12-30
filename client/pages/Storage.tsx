@@ -894,11 +894,11 @@ export default function Storage() {
 
               {/* Items in Container */}
               {getItemsByLocation(selectedStorageItem.name).length > 0 ? (
-                <div className="space-y-4 lg:space-y-6">
-                  <h3 className="text-xl lg:text-2xl font-bold text-foreground">Items Inside</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="space-y-3 sm:space-y-4 lg:space-y-6">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">Items Inside</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
                     {getItemsByLocation(selectedStorageItem.name).map((item) => (
-                      <div key={item.id} className="group/item relative flex flex-col items-center text-center transition-all duration-300 p-4 rounded-lg border border-primary/20 hover:border-primary/40">
+                      <div key={item.id} className="group/item relative flex flex-col items-center text-center transition-all duration-300 p-2 sm:p-3 rounded-lg border border-primary/20 hover:border-primary/40">
                         {/* Icon */}
                         {item.icon && (
                           <div className="relative mb-3 transform group-hover/item:scale-110 transition-transform duration-300 cursor-pointer w-full">
