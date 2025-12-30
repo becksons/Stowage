@@ -620,15 +620,15 @@ export default function Storage() {
                             </div>
 
                             {/* Items Grid */}
-                            <div className="pt-4 border-t border-primary/20">
+                            <div className="pt-3 sm:pt-4 border-t border-primary/20">
                               {totalChildItems > 0 ? (
                                 <div>
-                                  <p className="text-xs text-muted-foreground font-semibold mb-3">
+                                  <p className="text-xs text-muted-foreground font-semibold mb-2 sm:mb-3">
                                     {totalChildItems} item{totalChildItems !== 1 ? 's' : ''}
                                   </p>
-                                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                  <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
                                     {[...getStorageItemsByLocation(child.name), ...getItemsByLocation(child.name)].map((item) => (
-                                      <div key={item.id} className="group/item relative flex flex-col items-center text-center transition-all duration-300 p-2">
+                                      <div key={item.id} className="group/item relative flex flex-col items-center text-center transition-all duration-300 p-1.5 sm:p-2">
                                         {/* Icon */}
                                         {item.icon && (
                                           <div className="relative mb-3 transform group-hover/item:scale-110 transition-transform duration-300 cursor-pointer w-full">
