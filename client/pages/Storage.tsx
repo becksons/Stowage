@@ -628,7 +628,16 @@ export default function Storage() {
                                   </p>
                                   <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
                                     {[...getStorageItemsByLocation(child.name), ...getItemsByLocation(child.name)].map((item) => (
-                                      <div key={item.id} className="group/item relative flex flex-col items-center text-center transition-all duration-300 p-1.5 sm:p-2">
+                                      <div
+                                        key={item.id}
+                                        className="group/item relative flex flex-col items-center text-center transition-all duration-300 p-1.5 sm:p-2 cursor-pointer"
+                                        onClick={() => {
+                                          if (item.isStorageItem) {
+                                            setSelectedStorageItemId(item.id);
+                                            setSelectedLocationId(null);
+                                          }
+                                        }}
+                                      >
                                         {/* Icon */}
                                         {item.icon && (
                                           <div className="relative mb-1 sm:mb-2 transform group-hover/item:scale-110 transition-transform duration-300 cursor-pointer w-full">
