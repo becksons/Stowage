@@ -49,7 +49,7 @@ export default function Index() {
                 <Package className="w-6 h-6 text-primary-foreground" />
               </div>
               <span className="text-lg font-bold gradient-heading hidden sm:inline">
-                Stowage
+                Space Trace
               </span>
             </div>
 
@@ -87,7 +87,7 @@ export default function Index() {
           </h1>
 
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
-            Stowage helps you organize, track, and find all your physical
+            Space Trace helps you organize, track, and find all your physical
             possessions with ease. Keep your items tagged, located, and always
             accessible.
           </p>
@@ -216,10 +216,10 @@ export default function Index() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <Package className="w-5 h-5 text-primary" />
-              <span className="font-semibold text-foreground">Stowage</span>
+              <span className="font-semibold text-foreground">Space Trace</span>
             </div>
             <p className="text-center sm:text-right">
-              © 2024 Stowage. Organize. Track. Find.
+              © 2024 Space Trace. Organize. Track. Find.
             </p>
           </div>
         </div>

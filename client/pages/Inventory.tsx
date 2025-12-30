@@ -1,29 +1,79 @@
 import { useState, useRef } from "react";
-import { Search, Trash2, MapPin, Package, MoreVertical, Plus, Loader2, Sparkles, Clock, Type, Layers, Tag, DollarSign, Star, Zap, AlertCircle } from "lucide-react";
+import {
+  Search,
+  Trash2,
+  MapPin,
+  Package,
+  MoreVertical,
+  Plus,
+  Loader2,
+  Clock,
+  Type,
+  Layers,
+  Tag,
+  DollarSign,
+  Star,
+  Zap,
+  AlertCircle,
+  Home,
+  Box,
+} from "lucide-react";
 import Layout from "@/components/Layout";
 import AddEditItemDialog from "@/components/AddEditItemDialog";
+import ColorizedIcon from "@/components/ColorizedIcon";
 import { useSupabaseInventory } from "@/hooks/useSupabaseInventory";
 import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { getItemIconPath, getStorageIconPath } from "@/lib/customIcons";
+import { getColorWithOpacity, getColorBorder } from "@/lib/colorUtils";
 
 export default function Inventory() {
   const { toast } = useToast();
-  const { items, searchQuery, setSearchQuery, isLoaded, isSyncing, error, addItem, updateItem, deleteItem, getTotalValue, getFilteredItems } = useSupabaseInventory();
+  const {
+    items,
+    searchQuery,
+    setSearchQuery,
+    isLoaded,
+    isSyncing,
+    error,
+    addItem,
+    updateItem,
+    deleteItem,
+    getTotalValue,
+    getFilteredItems,
+  } = useSupabaseInventory();
   const { locations, getLocationPath } = useSupabaseStorage();
   const [filterLocation, setFilterLocation] = useState("");
-  const [sortBy, setSortBy] = useState<"name" | "location" | "recent">("recent");
+  const [sortBy, setSortBy] = useState<"name" | "location" | "recent">(
+    "recent",
+  );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
-  const locationNames = locations.map((loc) => loc.name);
+  // Include both storage locations and storage items as available places to put items
+  const storageItems = items.filter((item) => item.isStorageItem);
+  const locationNames = [
+    ...locations.map((loc) => loc.name),
+    ...storageItems.map((item) => item.name),
+  ];
 
   let displayItems = getFilteredItems();
 
+  // Filter out items that are marked as storage items
+  displayItems = displayItems.filter((item) => !item.isStorageItem);
+
   if (filterLocation) {
-    displayItems = displayItems.filter((item) => item.location === filterLocation);
+    displayItems = displayItems.filter(
+      (item) => item.location === filterLocation,
+    );
   }
 
   displayItems = [...displayItems].sort((a, b) => {
@@ -37,12 +87,78 @@ export default function Inventory() {
     }
   });
 
-  const handleSaveItem = (data: any) => {
-    if (editingItem) {
-      updateItem(editingItem.id, data);
-      setEditingItem(null);
-    } else {
-      addItem(data);
+  const handleSaveItem = async (data: any) => {
+    try {
+      // Look up location_id from location name (could be a storage location or storage item)
+      const storageLocation = locations.find(
+        (loc) => loc.name === data.location,
+      );
+      const location_id = storageLocation?.id;
+
+      // If it's not a storage location, it might be a storage item being used as a container
+      // For now, we'll use the location name only if it's a storage item
+      const isStorageItemContainer =
+        !location_id &&
+        storageItems.some((item) => item.name === data.location);
+
+      if (!location_id && !isStorageItemContainer) {
+        toast({
+          title: "Error",
+          description: "Selected location not found",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // For storage item containers, location_id might be null, but that's ok
+      // since we store the location name which is used to find items
+      const itemData = {
+        ...data,
+        location_id: location_id || null,
+      };
+
+      if (editingItem) {
+        await updateItem(editingItem.id, itemData);
+        toast({
+          title: "Success",
+          description: "Item updated successfully",
+        });
+        setEditingItem(null);
+      } else {
+        await addItem(itemData);
+        toast({
+          title: "Success",
+          description: "Item added successfully",
+        });
+      }
+      setDialogOpen(false);
+    } catch (err) {
+      console.error("Item save error:", err);
+      let errorMessage = "Failed to save item";
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === "object" && err !== null) {
+        // Handle Supabase errors and other objects
+        const errObj = err as any;
+        if (errObj.message) {
+          errorMessage = errObj.message;
+        } else if (errObj.error_description) {
+          errorMessage = errObj.error_description;
+        } else if (errObj.msg) {
+          errorMessage = errObj.msg;
+        } else {
+          errorMessage = JSON.stringify(errObj);
+        }
+      } else if (typeof err === "string") {
+        errorMessage = err;
+      }
+
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
     }
   };
 
@@ -74,24 +190,33 @@ export default function Inventory() {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div>
-              <h1 className="text-4xl sm:text-5xl font-black gradient-heading mb-3">Inventory</h1>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 border border-primary/40 hover:border-primary/60 transition-all">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <p className="text-sm font-semibold text-primary">
-                  {items.length} item{items.length !== 1 ? "s" : ""} tracked
-                </p>
-              </div>
+              <h1 className="text-4xl sm:text-5xl font-black gradient-heading mb-3">
+                Inventory
+              </h1>
+              <p className="text-xs text-muted-foreground font-medium">
+                {items.length} item{items.length !== 1 ? "s" : ""} tracked
+              </p>
             </div>
-            <Button
-              onClick={() => {
-                setEditingItem(null);
-                setDialogOpen(true);
-              }}
-              className="gap-2 bg-gradient-to-r from-primary to-secondary hover:shadow-2xl hover:scale-105 transition-all duration-300 font-bold text-base px-6 py-3 rounded-lg"
-            >
-              <Plus className="w-5 h-5" />
-              <span className="hidden sm:inline">Add Item</span>
-            </Button>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
+              {filterLocation && (
+                <div className="flex sm:hidden items-center gap-2 text-sm">
+                  <MapPin className="w-4 h-4 text-primary" />
+                  <span className="font-semibold text-foreground">
+                    {filterLocation}
+                  </span>
+                </div>
+              )}
+              <Button
+                onClick={() => {
+                  setEditingItem(null);
+                  setDialogOpen(true);
+                }}
+                className="gap-2 bg-gradient-to-r from-primary to-secondary hover:shadow-2xl hover:scale-105 transition-all duration-300 font-bold text-base px-6 py-3 rounded-lg w-full sm:w-auto"
+              >
+                <Plus className="w-5 h-5" />
+                <span className="hidden sm:inline">Add Item</span>
+              </Button>
+            </div>
           </div>
 
           {totalValue > 0 && (
@@ -102,7 +227,9 @@ export default function Inventory() {
                 <div>
                   <div className="inline-flex items-center gap-2 mb-2">
                     <DollarSign className="w-5 h-5 text-primary" />
-                    <p className="text-sm font-semibold text-primary/80">Total Inventory Value</p>
+                    <p className="text-sm font-semibold text-primary/80">
+                      Total Inventory Value
+                    </p>
                   </div>
                   <p className="text-4xl font-black text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text">
                     ${totalValue.toFixed(2)}
@@ -130,23 +257,80 @@ export default function Inventory() {
             </div>
           </div>
 
-          <select
-            value={filterLocation}
-            onChange={(e) => setFilterLocation(e.target.value)}
-            className="px-4 py-2.5 rounded-lg border-2 border-primary/20 hover:border-primary/40 bg-card/50 backdrop-blur-sm text-sm font-semibold focus:outline-none focus:border-primary/60 focus:ring-primary/30 transition-all"
-          >
-            <option value="">All locations</option>
-            {locationNames.map((name) => (
-              <option key={name} value={name}>
-                • {name}
-              </option>
-            ))}
-          </select>
+          {/* Location Filter Buttons */}
+          <div className="flex flex-wrap gap-2 items-center">
+            {/* All Locations Button */}
+            <Button
+              onClick={() => setFilterLocation("")}
+              variant="outline"
+              size="sm"
+              className={`gap-2 transition-all duration-300 font-semibold ${
+                filterLocation === ""
+                  ? "border-3 border-primary text-primary bg-primary/5 hover:bg-primary/10"
+                  : "border-2 border-primary/30 text-muted-foreground hover:border-primary/50 hover:bg-primary/5"
+              }`}
+            >
+              <Home className="w-4 h-4" />
+              <span className="hidden sm:inline">All</span>
+            </Button>
+
+            {/* Location Filter Buttons */}
+            {locationNames.map((name) => {
+              const location = locations.find((loc) => loc.name === name);
+              const storageItem = storageItems.find(
+                (item) => item.name === name,
+              );
+
+              return (
+                <Button
+                  key={name}
+                  onClick={() => setFilterLocation(name)}
+                  variant="outline"
+                  size="sm"
+                  className={`gap-2 transition-all duration-300 font-semibold ${
+                    filterLocation === name
+                      ? "border-3 border-primary text-primary bg-primary/5 hover:bg-primary/10"
+                      : "border-2 border-primary/30 text-muted-foreground hover:border-primary/50 hover:bg-primary/5"
+                  }`}
+                  title={name}
+                >
+                  {location ? (
+                    // Storage location with icon
+                    <>
+                      {location.icon ? (
+                        <img
+                          src={getStorageIconPath(location.icon)}
+                          alt={name}
+                          className="w-4 h-4"
+                        />
+                      ) : (
+                        <Home className="w-4 h-4" />
+                      )}
+                    </>
+                  ) : storageItem ? (
+                    // Storage item container
+                    <>
+                      {storageItem.icon ? (
+                        <img
+                          src={getItemIconPath(storageItem.icon)}
+                          alt={name}
+                          className="w-4 h-4"
+                        />
+                      ) : (
+                        <Box className="w-4 h-4" />
+                      )}
+                    </>
+                  ) : null}
+                  <span className="hidden sm:inline text-xs">{name}</span>
+                </Button>
+              );
+            })}
+          </div>
 
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="px-4 py-2.5 rounded-lg border-2 border-primary/20 hover:border-primary/40 bg-card/50 backdrop-blur-sm text-sm font-semibold focus:outline-none focus:border-primary/60 focus:ring-primary/30 transition-all"
+            className="px-4 py-2.5 rounded-lg border-2 border-primary/30 bg-card/50 backdrop-blur-sm text-sm font-semibold focus:outline-none focus:border-primary/70 focus:ring-2 focus:ring-primary/30 focus:ring-offset-0 hover:border-primary/50 transition-all duration-300 cursor-pointer"
           >
             <option value="recent">Most Recent</option>
             <option value="name">By Name</option>
@@ -166,7 +350,9 @@ export default function Inventory() {
             <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 border-2 border-primary/40 mb-6 group">
               <Package className="w-12 h-12 text-primary transform group-hover:scale-110 transition-transform duration-300" />
             </div>
-            <h3 className="text-2xl font-black gradient-heading mb-3">No items yet</h3>
+            <h3 className="text-2xl font-black gradient-heading mb-3">
+              No items yet
+            </h3>
             <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
               {items.length === 0
                 ? "Start by adding your first item to your inventory and begin tracking!"
@@ -174,34 +360,96 @@ export default function Inventory() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {displayItems.map((item) => (
               <div
                 key={item.id}
-                className="group relative p-6 sm:p-7 rounded-2xl border-2 border-primary/20 bg-gradient-to-br from-white/50 to-white/30 dark:from-slate-950/50 dark:to-slate-900/30 hover:border-primary/60 hover:shadow-xl transition-all duration-300 overflow-hidden"
+                className="group relative flex flex-col items-center text-center transition-all duration-300 p-2"
               >
-                {/* Animated gradient background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl opacity-0 group-hover:opacity-50 transition-opacity duration-300 -z-10" />
-
-                <div className="relative flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-foreground line-clamp-2 mb-2">
-                      {item.name}
-                    </h3>
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/30">
-                      <MapPin className="w-4 h-4 text-primary" />
-                      <span className="text-sm font-semibold text-primary">{item.location}</span>
+                {/* Icon - Large and prominent, like a physical object */}
+                {item.icon && (
+                  <div
+                    className="relative mb-2 transform group-hover:scale-110 transition-transform duration-300 cursor-pointer"
+                    onClick={() => handleOpenEdit(item)}
+                  >
+                    <div
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg flex items-center justify-center"
+                      style={{
+                        backgroundColor: getColorWithOpacity(
+                          item.color || "#6366f1",
+                          0.1,
+                        ),
+                      }}
+                    >
+                      <ColorizedIcon
+                        src={getItemIconPath(item.icon)}
+                        alt={item.icon}
+                        color={item.color || "#6366f1"}
+                        className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+                      />
                     </div>
+                    {/* Subtle shadow effect on hover */}
+                    <div
+                      className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-20 transition-opacity shadow-xl blur-lg -z-10"
+                      style={{
+                        backgroundColor: item.color || "#6366f1",
+                      }}
+                    />
                   </div>
+                )}
 
+                {/* Item name - Clean and simple */}
+                <h3
+                  className="text-sm sm:text-base font-bold text-foreground line-clamp-2 mb-1 px-1 hover:underline cursor-pointer transition-all"
+                  onClick={() => handleOpenEdit(item)}
+                >
+                  {item.name}
+                </h3>
+
+                {/* Location badge - Minimal */}
+                <div
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium mb-1"
+                  style={{
+                    backgroundColor: getColorWithOpacity(
+                      item.color || "#6366f1",
+                      0.15,
+                    ),
+                    color: item.color || "#6366f1",
+                  }}
+                >
+                  <MapPin className="w-3 h-3" />
+                  <span className="line-clamp-1">{item.location}</span>
+                </div>
+
+                {/* Description - Optional and small */}
+                {item.description && (
+                  <p className="text-xs text-foreground/60 line-clamp-1 mb-1 px-1 italic">
+                    {item.description}
+                  </p>
+                )}
+
+                {/* Quantity badge */}
+                {item.quantity > 1 && (
+                  <div
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold"
+                    style={{
+                      backgroundColor: getColorWithOpacity(
+                        item.color || "#6366f1",
+                        0.15,
+                      ),
+                      color: item.color || "#6366f1",
+                    }}
+                  >
+                    <Package className="w-3 h-3" />
+                    {item.quantity}
+                  </div>
+                )}
+
+                {/* More menu - appears on hover */}
+                <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
+                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
                         <MoreVertical className="w-4 h-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -220,51 +468,46 @@ export default function Inventory() {
                   </DropdownMenu>
                 </div>
 
-                {item.description && (
-                  <p className="text-sm text-foreground/70 mb-4 line-clamp-2 italic flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0 text-primary/60" />
-                    <span>{item.description}</span>
-                  </p>
+                {/* Tags - if any */}
+                {item.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-1 justify-center">
+                    {item.tags.map((tag) => {
+                      const displayValue = tag.value
+                        ? tag.type === "price"
+                          ? `$${tag.value}`
+                          : tag.value
+                        : "";
+                      const icons: { [key: string]: React.ElementType } = {
+                        price: DollarSign,
+                        type: Tag,
+                        importance: Star,
+                        custom: Zap,
+                      };
+                      const IconComponent =
+                        icons[tag.type as keyof typeof icons] || Zap;
+                      return (
+                        <span
+                          key={tag.id}
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium opacity-70 hover:opacity-100 transition-opacity"
+                          style={{
+                            backgroundColor: getColorWithOpacity(
+                              item.color || "#6366f1",
+                              0.15,
+                            ),
+                            color: item.color || "#6366f1",
+                          }}
+                          title={`${tag.type}: ${tag.name}`}
+                        >
+                          <IconComponent className="w-2.5 h-2.5" />
+                          {tag.name}
+                          {displayValue && (
+                            <span className="font-bold">{displayValue}</span>
+                          )}
+                        </span>
+                      );
+                    })}
+                  </div>
                 )}
-
-                <div className="relative space-y-3">
-                  {item.quantity > 1 && (
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/15 border border-secondary/30 text-sm font-bold text-secondary mb-3">
-                      <Package className="w-4 h-4" />
-                      Qty: {item.quantity}
-                    </div>
-                  )}
-
-                  {item.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {item.tags.map((tag) => {
-                        const displayValue = tag.value
-                          ? tag.type === "price"
-                            ? `$${tag.value}`
-                            : tag.value
-                          : "";
-                        const icons: { [key: string]: React.ElementType } = {
-                          price: DollarSign,
-                          type: Tag,
-                          importance: Star,
-                          custom: Zap,
-                        };
-                        const IconComponent = icons[tag.type as keyof typeof icons] || Zap;
-                        return (
-                          <span
-                            key={tag.id}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 border border-primary/40 text-primary text-xs font-bold hover:shadow-lg transition-shadow"
-                            title={`${tag.type}: ${tag.name}`}
-                          >
-                            <IconComponent className="w-3.5 h-3.5" />
-                            {tag.name}
-                            {displayValue && <span className="font-bold text-primary ml-1">{displayValue}</span>}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
               </div>
             ))}
           </div>
@@ -279,6 +522,7 @@ export default function Inventory() {
         existingItem={editingItem}
         getLocationPath={getLocationPath}
         locationObjects={locations}
+        storageItems={storageItems}
       />
     </Layout>
   );

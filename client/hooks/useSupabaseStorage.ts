@@ -67,6 +67,7 @@ export const useSupabaseStorage = () => {
           type: loc.type,
           description: loc.description,
           color: loc.color,
+          icon: loc.icon,
           parentId: loc.parent_id,
           createdAt: new Date(loc.created_at),
           updatedAt: new Date(loc.updated_at),
@@ -129,6 +130,7 @@ export const useSupabaseStorage = () => {
             type: location.type,
             description: location.description,
             color: location.color,
+            icon: location.icon,
             parent_id: location.parentId,
           })
           .select()
@@ -176,6 +178,7 @@ export const useSupabaseStorage = () => {
         if (updates.type) updateData.type = updates.type;
         if (updates.description !== undefined) updateData.description = updates.description;
         if (updates.color) updateData.color = updates.color;
+        if (updates.icon !== undefined) updateData.icon = updates.icon;
         if (updates.parentId !== undefined) updateData.parent_id = updates.parentId;
 
         const { error: updateError } = await supabase

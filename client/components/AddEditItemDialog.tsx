@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
-import { X, Lightbulb } from "lucide-react";
+import { X, Lightbulb, ChevronDown, Box } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ColorizedIcon from "@/components/ColorizedIcon";
 import { InventoryItem, ItemTag } from "@/hooks/useInventory";
 import { StorageLocation } from "@/hooks/useStorage";
+import { getItemIconOptions, getItemIconPath } from "@/lib/customIcons";
 
 interface AddEditItemDialogProps {
   open: boolean;
@@ -17,6 +20,7 @@ interface AddEditItemDialogProps {
   existingItem?: InventoryItem;
   getLocationPath?: (locationId: string) => string;
   locationObjects?: StorageLocation[];
+  storageItems?: any[];
 }
 
 const TAG_TYPES = [
@@ -41,12 +45,16 @@ export default function AddEditItemDialog({
   existingItem,
   getLocationPath,
   locationObjects,
+  storageItems = [],
 }: AddEditItemDialogProps) {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     location: "",
     quantity: 1,
+    icon: "",
+    color: "#6366f1",
+    isStorageItem: false,
   });
   const [tags, setTags] = useState<ItemTag[]>([]);
   const [tagInput, setTagInput] = useState({
@@ -62,6 +70,9 @@ export default function AddEditItemDialog({
         description: existingItem.description || "",
         location: existingItem.location,
         quantity: existingItem.quantity,
+        icon: existingItem.icon || "",
+        color: existingItem.color || "#6366f1",
+        isStorageItem: existingItem.isStorageItem || false,
       });
       setTags(existingItem.tags);
     } else {
@@ -70,6 +81,9 @@ export default function AddEditItemDialog({
         description: "",
         location: "",
         quantity: 1,
+        icon: "",
+        color: "#6366f1",
+        isStorageItem: false,
       });
       setTags([]);
     }
@@ -116,6 +130,9 @@ export default function AddEditItemDialog({
       description: formData.description,
       location: formData.location,
       quantity: formData.quantity,
+      icon: formData.icon || undefined,
+      color: formData.color,
+      isStorageItem: formData.isStorageItem,
       tags,
     });
 
@@ -177,6 +194,81 @@ export default function AddEditItemDialog({
             />
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="icon">Item Icon</Label>
+            <div className="flex gap-2 items-center">
+              {formData.icon && (
+                <div className="w-12 h-12 rounded-lg border p-1 flex items-center justify-center flex-shrink-0" style={{
+                  backgroundColor: `${formData.color}15`,
+                  borderColor: formData.color,
+                }}>
+                  <ColorizedIcon
+                    src={getItemIconPath(formData.icon)}
+                    alt={formData.icon}
+                    color={formData.color}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              )}
+              <Select
+                value={formData.icon || "none"}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, icon: value === "none" ? "" : value })
+                }
+              >
+                <SelectTrigger id="icon" className="flex-1">
+                  <SelectValue placeholder="Choose an icon for this item" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No icon</SelectItem>
+                  {getItemIconOptions().map((icon) => (
+                    <SelectItem key={icon} value={icon}>
+                      <div className="flex items-center gap-2">
+                        <ColorizedIcon
+                          src={getItemIconPath(icon)}
+                          alt={icon}
+                          color={formData.color}
+                          className="w-4 h-4"
+                        />
+                        <span>{icon}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="color">Item Color</Label>
+            <div className="flex gap-2 items-end">
+              <Input
+                id="color"
+                type="color"
+                value={formData.color}
+                onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+                className="w-14 h-10 p-1 cursor-pointer flex-shrink-0"
+              />
+              <Input
+                type="text"
+                value={formData.color}
+                onChange={(e) => {
+                  const value = e.target.value.trim();
+                  // Allow any input while typing, will be validated on save
+                  setFormData({ ...formData, color: value });
+                }}
+                placeholder="#6366f1"
+                className="flex-1"
+              />
+              <div
+                className="w-10 h-10 rounded-lg border-2 border-primary/30 flex-shrink-0"
+                style={{ backgroundColor: formData.color }}
+                title={formData.color}
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">Choose a color for this item and its icon</p>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="location">Storage Location *</Label>
@@ -195,11 +287,44 @@ export default function AddEditItemDialog({
                       No locations available. Create one first!
                     </div>
                   ) : (
-                    locations.map((loc) => (
-                      <SelectItem key={loc} value={loc}>
-                        {getLocationDisplayName(loc)}
-                      </SelectItem>
-                    ))
+                    <>
+                      {/* Storage Locations */}
+                      {locations.filter((loc) => !storageItems.some((item) => item.name === loc)).length > 0 && (
+                        <>
+                          <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">STORAGE LOCATIONS</div>
+                          {locations
+                            .filter((loc) => !storageItems.some((item) => item.name === loc))
+                            .map((loc) => (
+                              <SelectItem key={loc} value={loc}>
+                                📍 {getLocationDisplayName(loc)}
+                              </SelectItem>
+                            ))}
+                        </>
+                      )}
+
+                      {/* Storage Items as Containers */}
+                      {storageItems.length > 0 && (
+                        <>
+                          <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">CONTAINERS (ITEMS)</div>
+                          {storageItems.map((item) => (
+                            <SelectItem key={item.name} value={item.name}>
+                              <div className="flex items-center gap-2">
+                                {item.icon ? (
+                                  <img
+                                    src={getItemIconPath(item.icon)}
+                                    alt={item.icon}
+                                    className="w-4 h-4"
+                                  />
+                                ) : (
+                                  <Box className="w-4 h-4" />
+                                )}
+                                <span>Inside: {item.name}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </>
+                      )}
+                    </>
                   )}
                 </SelectContent>
               </Select>
@@ -219,6 +344,26 @@ export default function AddEditItemDialog({
                   })
                 }
               />
+            </div>
+          </div>
+
+          {/* Storage Item Option */}
+          <div className="flex items-center gap-3 p-4 rounded-lg bg-primary/5 border border-primary/20">
+            <Checkbox
+              id="isStorageItem"
+              checked={formData.isStorageItem}
+              onCheckedChange={(checked) =>
+                setFormData({ ...formData, isStorageItem: checked === true })
+              }
+            />
+            <div className="flex-1">
+              <Label htmlFor="isStorageItem" className="cursor-pointer font-semibold flex items-center gap-2">
+                <Box className="w-4 h-4" />
+                Make this a storage container
+              </Label>
+              <p className="text-xs text-muted-foreground mt-1">
+                Converting this item to a storage container will move it to the Storage page where you can organize items inside it. The icon you selected above will be displayed for this container.
+              </p>
             </div>
           </div>
 

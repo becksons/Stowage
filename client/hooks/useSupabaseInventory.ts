@@ -16,6 +16,9 @@ export interface InventoryItem {
   location: string;
   location_id: string;
   quantity: number;
+  icon?: string;
+  color?: string;
+  isStorageItem: boolean;
   tags: ItemTag[];
   createdAt: Date;
   updatedAt: Date;
@@ -75,6 +78,9 @@ export const useSupabaseInventory = () => {
           location: item.location_name,
           location_id: item.location_id,
           quantity: item.quantity,
+          icon: item.icon,
+          color: item.color || '#6366f1',
+          isStorageItem: item.is_storage_item || false,
           tags: item.item_tags || [],
           createdAt: new Date(item.created_at),
           updatedAt: new Date(item.updated_at),
@@ -130,16 +136,25 @@ export const useSupabaseInventory = () => {
         setIsSyncing(true);
 
         // Insert item
+        const insertData: any = {
+          user_id: user.id,
+          name: item.name,
+          description: item.description,
+          location_id: item.location_id,
+          location_name: item.location,
+          quantity: item.quantity,
+          icon: item.icon,
+          color: item.color || '#6366f1',
+        };
+
+        // Only include is_storage_item if it's true (to avoid schema issues)
+        if (item.isStorageItem) {
+          insertData.is_storage_item = true;
+        }
+
         const { data: itemData, error: itemError } = await supabase
           .from('inventory_items')
-          .insert({
-            user_id: user.id,
-            name: item.name,
-            description: item.description,
-            location_id: item.location_id,
-            location_name: item.location,
-            quantity: item.quantity,
-          })
+          .insert(insertData)
           .select()
           .single();
 
@@ -172,10 +187,23 @@ export const useSupabaseInventory = () => {
         setError(null);
         return itemData;
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to add item';
+        let message = 'Failed to add item';
+
+        if (err instanceof Error) {
+          message = err.message;
+        } else if (typeof err === 'object' && err !== null) {
+          message = JSON.stringify(err);
+        } else if (typeof err === 'string') {
+          message = err;
+        }
+
         setError(message);
-        console.error('Add item error:', err);
-        throw err;
+        console.error('Add item error details:', {
+          error: err,
+          message: message,
+          item: item,
+        });
+        throw new Error(message);
       } finally {
         setIsSyncing(false);
       }
@@ -194,11 +222,22 @@ export const useSupabaseInventory = () => {
         setIsSyncing(true);
 
         const updateData: any = {};
-        if (updates.name) updateData.name = updates.name;
-        if (updates.description) updateData.description = updates.description;
-        if (updates.location) updateData.location_name = updates.location;
-        if (updates.location_id) updateData.location_id = updates.location_id;
-        if (updates.quantity) updateData.quantity = updates.quantity;
+        if (updates.name !== undefined) updateData.name = updates.name;
+        if (updates.description !== undefined) updateData.description = updates.description;
+        if (updates.location !== undefined) updateData.location_name = updates.location;
+        if (updates.location_id !== undefined) updateData.location_id = updates.location_id;
+        if (updates.quantity !== undefined) updateData.quantity = updates.quantity;
+        if (updates.icon !== undefined) updateData.icon = updates.icon;
+        if (updates.color !== undefined) updateData.color = updates.color;
+        if (updates.isStorageItem !== undefined && updates.isStorageItem) updateData.is_storage_item = updates.isStorageItem;
+
+        // Only update if there's data to update
+        if (Object.keys(updateData).length === 0) {
+          setError(null);
+          return;
+        }
+
+        console.log('Updating item with data:', updateData);
 
         const { error: updateError } = await supabase
           .from('inventory_items')
@@ -206,43 +245,101 @@ export const useSupabaseInventory = () => {
           .eq('id', id)
           .eq('user_id', user.id);
 
-        if (updateError) throw updateError;
+        if (updateError) {
+          console.error('Supabase update error:', {
+            message: updateError.message,
+            code: updateError.code,
+            details: updateError.details,
+            hint: updateError.hint,
+          });
+          console.error('Update data sent:', updateData);
+          throw new Error(`Update failed: ${updateError.message}`);
+        }
+
+        console.log('Item updated successfully, updating tags if needed');
 
         // Update tags if provided
         if (updates.tags) {
-          await supabase.from('item_tags').delete().eq('item_id', id);
+          const { error: deleteError } = await supabase.from('item_tags').delete().eq('item_id', id);
+
+          if (deleteError) {
+            console.error('Supabase delete tags error:', deleteError);
+            throw deleteError;
+          }
 
           if (updates.tags.length > 0) {
+            const tagsToInsert = updates.tags.map((tag) => ({
+              item_id: id,
+              name: tag.name,
+              value: tag.value,
+              type: tag.type,
+            }));
+
             const { error: tagsError } = await supabase
               .from('item_tags')
-              .insert(
-                updates.tags.map((tag) => ({
-                  item_id: id,
-                  name: tag.name,
-                  value: tag.value,
-                  type: tag.type,
-                }))
-              );
+              .insert(tagsToInsert);
 
-            if (tagsError) throw tagsError;
+            if (tagsError) {
+              console.error('Supabase insert tags error:', tagsError);
+              throw tagsError;
+            }
           }
         }
 
-        // Log activity
-        await supabase.from('activity_log').insert({
-          user_id: user.id,
-          action_type: 'item_updated',
-          entity_type: 'inventory_item',
-          entity_id: id,
-          changes: updateData,
-        });
+        console.log('Tags updated, fetching latest data');
+
+        // Fetch the latest data from database
+        const { data: updatedItem, error: fetchError } = await supabase
+          .from('inventory_items')
+          .select('*, item_tags(*)')
+          .eq('id', id)
+          .single();
+
+        if (fetchError) {
+          console.error('Failed to fetch updated item:', fetchError);
+          // Still proceed, the real-time subscription will update the data
+        } else if (updatedItem) {
+          console.log('Fetched updated item:', updatedItem);
+          // Update local state with the fresh data
+          setItems(prevItems =>
+            prevItems.map(item =>
+              item.id === id
+                ? {
+                    ...item,
+                    color: updatedItem.color || '#6366f1',
+                    name: updatedItem.name,
+                    description: updatedItem.description,
+                    location: updatedItem.location_name,
+                    location_id: updatedItem.location_id,
+                    quantity: updatedItem.quantity,
+                    icon: updatedItem.icon,
+                    isStorageItem: updatedItem.is_storage_item || false,
+                    tags: updatedItem.item_tags || [],
+                  }
+                : item
+            )
+          );
+        }
 
         setError(null);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to update item';
+        let message = 'Failed to update item';
+
+        if (err instanceof Error) {
+          message = err.message;
+        } else if (typeof err === 'object' && err !== null) {
+          message = JSON.stringify(err);
+        } else if (typeof err === 'string') {
+          message = err;
+        }
+
         setError(message);
-        console.error('Update item error:', err);
-        throw err;
+        console.error('Update item error details:', {
+          error: err,
+          message: message,
+          updates: updates,
+        });
+        throw new Error(message);
       } finally {
         setIsSyncing(false);
       }

@@ -91,7 +91,7 @@ export default function Auth() {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold gradient-heading mb-2">
-              {mode === "signin" ? "Welcome Back" : "Join Stowage"}
+              {mode === "signin" ? "Welcome Back" : "Join Space Trace"}
             </h1>
             <p className="text-muted-foreground text-sm">
               {mode === "signin"
