@@ -68,6 +68,8 @@ export default function Storage() {
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
   const [selectedStorageItemId, setSelectedStorageItemId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [showItemDetailsModal, setShowItemDetailsModal] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     type: "drawer" as const,
