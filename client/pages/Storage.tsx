@@ -1155,6 +1155,71 @@ export default function Storage() {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Item Details Modal */}
+      <Dialog open={showItemDetailsModal} onOpenChange={setShowItemDetailsModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Item Details</DialogTitle>
+          </DialogHeader>
+          {selectedItem && (
+            <div className="space-y-4">
+              {/* Icon and Name */}
+              <div className="flex items-center gap-4">
+                <div className="w-20 h-20 rounded-lg flex items-center justify-center flex-shrink-0" style={{
+                  backgroundColor: getColorWithOpacity(selectedItem.color || '#6366f1', 0.1),
+                }}>
+                  {selectedItem.icon && (
+                    <ColorizedIcon
+                      src={getItemIconPath(selectedItem.icon)}
+                      alt={selectedItem.name}
+                      color={selectedItem.color || '#6366f1'}
+                      className="w-12 h-12 object-contain"
+                    />
+                  )}
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-foreground">{selectedItem.name}</h3>
+                  {selectedItem.quantity && selectedItem.quantity > 1 && (
+                    <p className="text-sm text-muted-foreground">Quantity: {selectedItem.quantity}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Location Badge */}
+              <div className="pt-2 border-t border-primary/20">
+                <p className="text-xs text-muted-foreground font-semibold mb-2">Location</p>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold" style={{
+                  backgroundColor: getColorWithOpacity(selectedItem.color || '#6366f1', 0.15),
+                  color: selectedItem.color || '#6366f1',
+                }}>
+                  <MapPin className="w-4 h-4" />
+                  {selectedItem.location}
+                </div>
+              </div>
+
+              {/* Description */}
+              {selectedItem.description && (
+                <div className="pt-2 border-t border-primary/20">
+                  <p className="text-xs text-muted-foreground font-semibold mb-2">Details</p>
+                  <p className="text-sm text-foreground italic">{selectedItem.description}</p>
+                </div>
+              )}
+
+              {/* Close Button */}
+              <div className="flex gap-2 pt-4 border-t border-primary/20">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setShowItemDetailsModal(false)}
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 }
