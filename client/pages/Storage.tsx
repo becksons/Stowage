@@ -919,10 +919,13 @@ export default function Storage() {
                     {getItemsByLocation(selectedStorageItem.name).map((item) => (
                       <div
                         key={item.id}
-                        className="group/item relative flex flex-col items-center text-center transition-all duration-300 p-2 sm:p-3 rounded-lg border border-primary/20 hover:border-primary/40 cursor-pointer"
+                        className="group/item relative flex flex-col items-center text-center transition-all duration-300 p-2 sm:p-3 rounded-lg border border-primary/20 hover:border-primary/40 cursor-pointer hover:border-primary/60"
                         onClick={() => {
                           if (item.isStorageItem) {
                             setSelectedStorageItemId(item.id);
+                          } else {
+                            setSelectedItem(item);
+                            setShowItemDetailsModal(true);
                           }
                         }}
                       >
