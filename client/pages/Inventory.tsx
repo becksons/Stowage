@@ -279,7 +279,7 @@ export default function Inventory() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="px-4 py-2.5 rounded-lg border-2 border-primary/20 hover:border-primary/40 bg-card/50 backdrop-blur-sm text-sm font-semibold focus:outline-none focus:border-primary/60 focus:ring-primary/30 transition-all"
+            className="px-4 py-2.5 rounded-lg border-2 border-primary/30 bg-card/50 backdrop-blur-sm text-sm font-semibold focus:outline-none focus:border-primary/70 focus:ring-2 focus:ring-primary/30 focus:ring-offset-0 hover:border-primary/50 transition-all duration-300 cursor-pointer"
           >
             <option value="recent">Most Recent</option>
             <option value="name">By Name</option>
