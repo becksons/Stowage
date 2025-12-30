@@ -916,22 +916,22 @@ export default function Storage() {
                         )}
 
                         {/* Item name */}
-                        <h5 className="text-xs sm:text-sm font-bold text-foreground line-clamp-2 mb-1 px-1">{item.name}</h5>
+                        <h5 className="text-xs font-bold text-foreground line-clamp-2 mb-0.5 px-0.5">{item.name}</h5>
 
                         {/* Item description */}
                         {item.description && (
-                          <p className="text-xs text-foreground/60 line-clamp-1 mb-1 px-1 italic">
+                          <p className="hidden sm:block text-xs text-foreground/60 line-clamp-1 mb-0.5 px-0.5 italic">
                             {item.description}
                           </p>
                         )}
 
                         {/* Quantity badge */}
                         {item.quantity && item.quantity > 1 && (
-                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold" style={{
+                          <div className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-bold" style={{
                             backgroundColor: getColorWithOpacity(item.color || '#6366f1', 0.15),
                             color: item.color || '#6366f1',
                           }}>
-                            <Package className="w-3 h-3" />
+                            <Package className="w-2.5 h-2.5" />
                             {item.quantity}
                           </div>
                         )}
