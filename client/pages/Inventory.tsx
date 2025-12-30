@@ -215,10 +215,10 @@ export default function Inventory() {
               onClick={() => setFilterLocation("")}
               variant={filterLocation === "" ? "default" : "outline"}
               size="sm"
-              className={`gap-2 transition-all ${
+              className={`gap-2 transition-all duration-300 font-semibold ${
                 filterLocation === ""
-                  ? "bg-gradient-to-r from-primary to-secondary hover:shadow-lg"
-                  : "border-primary/20 hover:border-primary/40"
+                  ? "bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105"
+                  : "border-2 border-primary/30 text-muted-foreground hover:border-primary/50 hover:bg-primary/5"
               }`}
             >
               <Home className="w-4 h-4" />
@@ -236,10 +236,10 @@ export default function Inventory() {
                   onClick={() => setFilterLocation(name)}
                   variant={filterLocation === name ? "default" : "outline"}
                   size="sm"
-                  className={`gap-2 transition-all ${
+                  className={`gap-2 transition-all duration-300 font-semibold ${
                     filterLocation === name
-                      ? "bg-gradient-to-r from-primary to-secondary hover:shadow-lg"
-                      : "border-primary/20 hover:border-primary/40"
+                      ? "bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105"
+                      : "border-2 border-primary/30 text-muted-foreground hover:border-primary/50 hover:bg-primary/5"
                   }`}
                   title={name}
                 >
