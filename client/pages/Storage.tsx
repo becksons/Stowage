@@ -445,9 +445,9 @@ export default function Storage() {
               </p>
             </div>
           ) : selectedLocation ? (
-            <div className="space-y-8">
+            <div className="space-y-4 sm:space-y-6 lg:space-y-8">
               {/* Selected Room Header */}
-              <div className="space-y-6 pb-6 border-b border-primary/20">
+              <div className="space-y-4 sm:space-y-6 pb-4 sm:pb-6 border-b border-primary/20">
                 <div className="flex items-start justify-between gap-4">
                   <Button
                     variant="ghost"
