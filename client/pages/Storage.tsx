@@ -1167,7 +1167,7 @@ export default function Storage() {
 
       {/* Item Details Modal */}
       <Dialog open={showItemDetailsModal} onOpenChange={setShowItemDetailsModal}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md rounded-2xl">
           <DialogHeader>
             <DialogTitle>Item Details</DialogTitle>
           </DialogHeader>
