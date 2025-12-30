@@ -637,6 +637,9 @@ export default function Storage() {
                                           if (item.isStorageItem) {
                                             setSelectedStorageItemId(item.id);
                                             setSelectedLocationId(null);
+                                          } else {
+                                            setSelectedItem(item);
+                                            setShowItemDetailsModal(true);
                                           }
                                         }}
                                       >
