@@ -484,9 +484,9 @@ export default function Storage() {
                     </div>
 
                     <div className="flex-1">
-                      <h2 className="text-3xl lg:text-5xl font-black gradient-heading mb-3">{selectedLocation.name}</h2>
+                      <h2 className="text-xl sm:text-2xl lg:text-5xl font-black gradient-heading mb-3 line-clamp-1">{selectedLocation.name}</h2>
                       {selectedLocation.description && (
-                        <p className="text-base text-muted-foreground mb-4">{selectedLocation.description}</p>
+                        <p className="text-sm sm:text-base text-muted-foreground mb-4">{selectedLocation.description}</p>
                       )}
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="px-3 py-1.5 rounded-full bg-primary/15 text-primary text-xs font-semibold border border-primary/30">
