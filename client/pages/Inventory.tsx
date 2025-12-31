@@ -175,6 +175,66 @@ export default function Inventory() {
     setEditingItem(null);
   };
 
+  const handleOpenMove = (item: any) => {
+    setMoveItem(item);
+    setMoveDialogOpen(true);
+  };
+
+  const handleMove = async (newLocation: string) => {
+    if (!moveItem) return;
+
+    try {
+      // Look up location_id from location name (could be a storage location or storage item)
+      const storageLocation = locations.find(
+        (loc) => loc.name === newLocation,
+      );
+      const location_id = storageLocation?.id;
+
+      // If it's not a storage location, it might be a storage item being used as a container
+      const isStorageItemContainer =
+        !location_id &&
+        storageItems.some((item) => item.name === newLocation);
+
+      if (!location_id && !isStorageItemContainer) {
+        toast({
+          title: "Error",
+          description: "Selected location not found",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      await updateItem(moveItem.id, {
+        location: newLocation,
+        location_id: location_id || null,
+      });
+
+      toast({
+        title: "Success",
+        description: `Item moved to ${newLocation}`,
+      });
+      setMoveItem(null);
+    } catch (err) {
+      console.error("Move item error:", err);
+      let errorMessage = "Failed to move item";
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === "object" && err !== null) {
+        const errObj = err as any;
+        if (errObj.message) {
+          errorMessage = errObj.message;
+        }
+      }
+
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    }
+  };
+
   const totalValue = getTotalValue();
 
   if (!isLoaded) {
