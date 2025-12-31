@@ -1602,6 +1602,14 @@ export default function Storage() {
           )}
         </DialogContent>
       </Dialog>
+
+      <MoveStorageItemDialog
+        open={moveDialogOpen}
+        onOpenChange={setMoveDialogOpen}
+        item={moveLocation}
+        allLocations={locations}
+        onMove={handleMoveLocation}
+      />
     </Layout>
   );
 }
