@@ -1650,8 +1650,15 @@ export default function Storage() {
                 </div>
               )}
 
-              {/* Close Button */}
+              {/* Action Buttons */}
               <div className="flex gap-2 pt-4 border-t border-primary/20">
+                <Button
+                  className="flex-1 bg-primary hover:bg-primary/90"
+                  onClick={() => handleOpenMoveItem(selectedItem)}
+                >
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Move
+                </Button>
                 <Button
                   variant="outline"
                   className="flex-1"
