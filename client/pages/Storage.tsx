@@ -1679,6 +1679,19 @@ export default function Storage() {
         allLocations={locations}
         onMove={handleMoveLocation}
       />
+
+      <MoveItemDialog
+        open={moveItemDialogOpen}
+        onOpenChange={setMoveItemDialogOpen}
+        item={moveItem}
+        locations={[
+          ...locations.map((loc) => loc.name),
+          ...items.filter((item) => item.isStorageItem).map((item) => item.name),
+        ]}
+        locationObjects={locations}
+        storageItems={items.filter((item) => item.isStorageItem)}
+        onMove={handleMoveItem}
+      />
     </Layout>
   );
 }
