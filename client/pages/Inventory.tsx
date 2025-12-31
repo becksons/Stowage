@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import Layout from "@/components/Layout";
 import AddEditItemDialog from "@/components/AddEditItemDialog";
+import MoveItemDialog from "@/components/MoveItemDialog";
 import ColorizedIcon from "@/components/ColorizedIcon";
 import { useSupabaseInventory } from "@/hooks/useSupabaseInventory";
 import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
