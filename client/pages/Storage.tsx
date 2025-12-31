@@ -241,6 +241,31 @@ export default function Storage() {
     }
   };
 
+  const handleOpenMoveLocation = (location: any) => {
+    setMoveLocation(location);
+    setMoveDialogOpen(true);
+  };
+
+  const handleMoveLocation = async (parentId: string | null) => {
+    if (!moveLocation) return;
+
+    try {
+      await updateLocation(moveLocation.id, { parentId });
+      toast({
+        title: "Success",
+        description: "Location moved successfully",
+      });
+      setMoveLocation(null);
+    } catch (err) {
+      console.error("Move location error:", err);
+      toast({
+        title: "Error",
+        description: err instanceof Error ? err.message : "Failed to move location",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (!isLoaded) {
     return (
       <Layout>
