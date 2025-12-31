@@ -2,6 +2,7 @@
   command = "npm run build:client"
   functions = "netlify/functions"
   publish = "dist/spa"
+  environment = { SECRETS_SCAN_OMIT_KEYS = "PING_MESSAGE,REVIEW_ID,VITE_PUBLIC_BUILDER_KEY" }
 
 
 [functions]
