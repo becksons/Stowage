@@ -518,6 +518,30 @@ export default function Storage() {
                                 {item.name}
                               </h3>
                             </div>
+
+                            {/* Dropdown Menu */}
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0 flex-shrink-0"
+                                >
+                                  <MoreVertical className="w-4 h-4 lg:w-3 lg:h-3" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleOpenMoveLocation(item);
+                                  }}
+                                >
+                                  <MapPin className="w-4 h-4 mr-2" />
+                                  Move
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
                         </div>
                       );
