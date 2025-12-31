@@ -185,15 +185,12 @@ export default function Inventory() {
 
     try {
       // Look up location_id from location name (could be a storage location or storage item)
-      const storageLocation = locations.find(
-        (loc) => loc.name === newLocation,
-      );
+      const storageLocation = locations.find((loc) => loc.name === newLocation);
       const location_id = storageLocation?.id;
 
       // If it's not a storage location, it might be a storage item being used as a container
       const isStorageItemContainer =
-        !location_id &&
-        storageItems.some((item) => item.name === newLocation);
+        !location_id && storageItems.some((item) => item.name === newLocation);
 
       if (!location_id && !isStorageItemContainer) {
         toast({

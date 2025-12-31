@@ -263,7 +263,8 @@ export default function Storage() {
       console.error("Move location error:", err);
       toast({
         title: "Error",
-        description: err instanceof Error ? err.message : "Failed to move location",
+        description:
+          err instanceof Error ? err.message : "Failed to move location",
         variant: "destructive",
       });
     }
@@ -592,7 +593,10 @@ export default function Storage() {
 
                             {/* Dropdown Menu */}
                             <DropdownMenu>
-                              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                              <DropdownMenuTrigger
+                                asChild
+                                onClick={(e) => e.stopPropagation()}
+                              >
                                 <Button
                                   variant="ghost"
                                   size="sm"
@@ -727,9 +731,7 @@ export default function Storage() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
-                        onClick={() =>
-                          handleOpenMoveLocation(selectedLocation)
-                        }
+                        onClick={() => handleOpenMoveLocation(selectedLocation)}
                       >
                         <MapPin className="w-4 h-4 mr-2" />
                         Move Room
@@ -1686,7 +1688,9 @@ export default function Storage() {
         item={moveItem}
         locations={[
           ...locations.map((loc) => loc.name),
-          ...items.filter((item) => item.isStorageItem).map((item) => item.name),
+          ...items
+            .filter((item) => item.isStorageItem)
+            .map((item) => item.name),
         ]}
         locationObjects={locations}
         storageItems={items.filter((item) => item.isStorageItem)}

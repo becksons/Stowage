@@ -1,9 +1,20 @@
 import { useState, useEffect } from "react";
 import { Box } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ColorizedIcon from "@/components/ColorizedIcon";
 import { InventoryItem } from "@/hooks/useSupabaseInventory";
 import { StorageLocation } from "@/hooks/useSupabaseStorage";
@@ -75,7 +86,11 @@ export default function MoveItemDialog({
             {item.icon ? (
               <ColorizedIcon
                 iconName={item.icon}
-                hue={item.color ? parseInt(item.color.replace("#", ""), 16) % 360 : 0}
+                hue={
+                  item.color
+                    ? parseInt(item.color.replace("#", ""), 16) % 360
+                    : 0
+                }
                 className="w-10 h-10"
               />
             ) : (
@@ -83,14 +98,19 @@ export default function MoveItemDialog({
             )}
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-sm truncate">{item.name}</p>
-              <p className="text-xs text-muted-foreground">Currently in: {item.location}</p>
+              <p className="text-xs text-muted-foreground">
+                Currently in: {item.location}
+              </p>
             </div>
           </div>
 
           {/* Location Selection */}
           <div className="space-y-2">
             <Label htmlFor="new-location">Move to Location</Label>
-            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+            <Select
+              value={selectedLocation}
+              onValueChange={setSelectedLocation}
+            >
               <SelectTrigger id="new-location">
                 <SelectValue placeholder="Select location" />
               </SelectTrigger>
@@ -102,13 +122,18 @@ export default function MoveItemDialog({
                 ) : (
                   <>
                     {/* Storage Locations */}
-                    {locations.filter((loc) => !storageItems.some((si) => si.name === loc)).length > 0 && (
+                    {locations.filter(
+                      (loc) => !storageItems.some((si) => si.name === loc),
+                    ).length > 0 && (
                       <>
                         <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
                           STORAGE LOCATIONS
                         </div>
                         {locations
-                          .filter((loc) => !storageItems.some((si) => si.name === loc))
+                          .filter(
+                            (loc) =>
+                              !storageItems.some((si) => si.name === loc),
+                          )
                           .map((loc) => (
                             <SelectItem key={loc} value={loc}>
                               📍 {loc}
@@ -124,7 +149,10 @@ export default function MoveItemDialog({
                           CONTAINERS (ITEMS)
                         </div>
                         {storageItems.map((storageItem) => (
-                          <SelectItem key={storageItem.name} value={storageItem.name}>
+                          <SelectItem
+                            key={storageItem.name}
+                            value={storageItem.name}
+                          >
                             <div className="flex items-center gap-2">
                               {storageItem.icon ? (
                                 <img
@@ -158,7 +186,11 @@ export default function MoveItemDialog({
             </Button>
             <Button
               onClick={handleMove}
-              disabled={isMoving || !selectedLocation || selectedLocation === item.location}
+              disabled={
+                isMoving ||
+                !selectedLocation ||
+                selectedLocation === item.location
+              }
             >
               {isMoving ? "Moving..." : "Move"}
             </Button>
