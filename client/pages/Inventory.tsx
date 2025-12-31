@@ -591,6 +591,16 @@ export default function Inventory() {
         locationObjects={locations}
         storageItems={storageItems}
       />
+
+      <MoveItemDialog
+        open={moveDialogOpen}
+        onOpenChange={setMoveDialogOpen}
+        item={moveItem}
+        locations={locationNames}
+        locationObjects={locations}
+        storageItems={storageItems}
+        onMove={handleMove}
+      />
     </Layout>
   );
 }
