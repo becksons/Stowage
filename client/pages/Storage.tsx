@@ -19,6 +19,7 @@ import {
 import Layout from "@/components/Layout";
 import ColorizedIcon from "@/components/ColorizedIcon";
 import MoveStorageItemDialog from "@/components/MoveStorageItemDialog";
+import MoveItemDialog from "@/components/MoveItemDialog";
 import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
 import { useSupabaseInventory } from "@/hooks/useSupabaseInventory";
 import { useToast } from "@/hooks/use-toast";
