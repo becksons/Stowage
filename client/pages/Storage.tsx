@@ -101,6 +101,8 @@ export default function Storage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [showItemDetailsModal, setShowItemDetailsModal] = useState(false);
+  const [moveDialogOpen, setMoveDialogOpen] = useState(false);
+  const [moveLocation, setMoveLocation] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     type: "drawer" as const,
