@@ -508,8 +508,18 @@ export default function Inventory() {
                   </div>
                 )}
 
-                {/* More menu - appears on hover */}
-                <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                {/* Action buttons - appears on hover */}
+                <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="h-7 px-2 text-xs font-semibold"
+                    onClick={() => handleOpenMove(item)}
+                    title="Move item to another location"
+                  >
+                    <MapPin className="w-3 h-3 mr-1" />
+                    Move
+                  </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
@@ -519,10 +529,6 @@ export default function Inventory() {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => handleOpenEdit(item)}>
                         Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleOpenMove(item)}>
-                        <MapPin className="w-4 h-4 mr-2" />
-                        Move
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => deleteItem(item.id)}
