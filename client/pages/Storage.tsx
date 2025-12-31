@@ -665,6 +665,14 @@ export default function Storage() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
+                        onClick={() =>
+                          handleOpenMoveLocation(selectedLocation)
+                        }
+                      >
+                        <MapPin className="w-4 h-4 mr-2" />
+                        Move Room
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
                         onClick={() => {
                           setEditingLocation(selectedLocation);
                           setFormData({
