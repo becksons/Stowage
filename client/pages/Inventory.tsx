@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import Layout from "@/components/Layout";
 import AddEditItemDialog from "@/components/AddEditItemDialog";
+import MoveItemDialog from "@/components/MoveItemDialog";
 import ColorizedIcon from "@/components/ColorizedIcon";
 import { useSupabaseInventory } from "@/hooks/useSupabaseInventory";
 import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
@@ -57,6 +58,8 @@ export default function Inventory() {
   );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [moveDialogOpen, setMoveDialogOpen] = useState(false);
+  const [moveItem, setMoveItem] = useState(null);
 
   // Include both storage locations and storage items as available places to put items
   const storageItems = items.filter((item) => item.isStorageItem);
@@ -170,6 +173,63 @@ export default function Inventory() {
   const handleCloseDialog = () => {
     setDialogOpen(false);
     setEditingItem(null);
+  };
+
+  const handleOpenMove = (item: any) => {
+    setMoveItem(item);
+    setMoveDialogOpen(true);
+  };
+
+  const handleMove = async (newLocation: string) => {
+    if (!moveItem) return;
+
+    try {
+      // Look up location_id from location name (could be a storage location or storage item)
+      const storageLocation = locations.find((loc) => loc.name === newLocation);
+      const location_id = storageLocation?.id;
+
+      // If it's not a storage location, it might be a storage item being used as a container
+      const isStorageItemContainer =
+        !location_id && storageItems.some((item) => item.name === newLocation);
+
+      if (!location_id && !isStorageItemContainer) {
+        toast({
+          title: "Error",
+          description: "Selected location not found",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      await updateItem(moveItem.id, {
+        location: newLocation,
+        location_id: location_id || null,
+      });
+
+      toast({
+        title: "Success",
+        description: `Item moved to ${newLocation}`,
+      });
+      setMoveItem(null);
+    } catch (err) {
+      console.error("Move item error:", err);
+      let errorMessage = "Failed to move item";
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === "object" && err !== null) {
+        const errObj = err as any;
+        if (errObj.message) {
+          errorMessage = errObj.message;
+        }
+      }
+
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    }
   };
 
   const totalValue = getTotalValue();
@@ -445,8 +505,18 @@ export default function Inventory() {
                   </div>
                 )}
 
-                {/* More menu - appears on hover */}
-                <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                {/* Action buttons - appears on hover */}
+                <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="h-7 px-2 text-xs font-semibold"
+                    onClick={() => handleOpenMove(item)}
+                    title="Move item to another location"
+                  >
+                    <MapPin className="w-3 h-3 mr-1" />
+                    Move
+                  </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
@@ -523,6 +593,16 @@ export default function Inventory() {
         getLocationPath={getLocationPath}
         locationObjects={locations}
         storageItems={storageItems}
+      />
+
+      <MoveItemDialog
+        open={moveDialogOpen}
+        onOpenChange={setMoveDialogOpen}
+        item={moveItem}
+        locations={locationNames}
+        locationObjects={locations}
+        storageItems={storageItems}
+        onMove={handleMove}
       />
     </Layout>
   );

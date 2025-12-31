@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import Layout from "@/components/Layout";
 import ColorizedIcon from "@/components/ColorizedIcon";
+import MoveStorageItemDialog from "@/components/MoveStorageItemDialog";
+import MoveItemDialog from "@/components/MoveItemDialog";
 import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
 import { useSupabaseInventory } from "@/hooks/useSupabaseInventory";
 import { useToast } from "@/hooks/use-toast";
@@ -100,6 +102,10 @@ export default function Storage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [showItemDetailsModal, setShowItemDetailsModal] = useState(false);
+  const [moveDialogOpen, setMoveDialogOpen] = useState(false);
+  const [moveLocation, setMoveLocation] = useState(null);
+  const [moveItemDialogOpen, setMoveItemDialogOpen] = useState(false);
+  const [moveItem, setMoveItem] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     type: "drawer" as const,
@@ -235,6 +241,91 @@ export default function Storage() {
           variant: "destructive",
         });
       }
+    }
+  };
+
+  const handleOpenMoveLocation = (location: any) => {
+    setMoveLocation(location);
+    setMoveDialogOpen(true);
+  };
+
+  const handleMoveLocation = async (parentId: string | null) => {
+    if (!moveLocation) return;
+
+    try {
+      await updateLocation(moveLocation.id, { parentId });
+      toast({
+        title: "Success",
+        description: "Location moved successfully",
+      });
+      setMoveLocation(null);
+    } catch (err) {
+      console.error("Move location error:", err);
+      toast({
+        title: "Error",
+        description:
+          err instanceof Error ? err.message : "Failed to move location",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleOpenMoveItem = (item: any) => {
+    setMoveItem(item);
+    setMoveItemDialogOpen(true);
+  };
+
+  const handleMoveItem = async (newLocation: string) => {
+    if (!moveItem) return;
+
+    try {
+      // Look up location_id from location name (could be a storage location or storage item)
+      const storageLocation = locations.find((loc) => loc.name === newLocation);
+      const location_id = storageLocation?.id;
+
+      // If it's not a storage location, it might be a storage item being used as a container
+      const isStorageItemContainer =
+        !location_id &&
+        items.some((item) => item.name === newLocation && item.isStorageItem);
+
+      if (!location_id && !isStorageItemContainer) {
+        toast({
+          title: "Error",
+          description: "Selected location not found",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      await updateItem(moveItem.id, {
+        location: newLocation,
+        location_id: location_id || null,
+      });
+
+      toast({
+        title: "Success",
+        description: `Item moved to ${newLocation}`,
+      });
+      setMoveItem(null);
+      setShowItemDetailsModal(false);
+    } catch (err) {
+      console.error("Move item error:", err);
+      let errorMessage = "Failed to move item";
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === "object" && err !== null) {
+        const errObj = err as any;
+        if (errObj.message) {
+          errorMessage = errObj.message;
+        }
+      }
+
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
     }
   };
 
@@ -407,6 +498,15 @@ export default function Storage() {
                               <DropdownMenuItem
                                 onClick={(e) => {
                                   e.stopPropagation();
+                                  handleOpenMoveLocation(location);
+                                }}
+                              >
+                                <MapPin className="w-4 h-4 mr-2" />
+                                Move
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                   setEditingLocation(location);
                                   setFormData({
                                     name: location.name,
@@ -490,6 +590,33 @@ export default function Storage() {
                                 {item.name}
                               </h3>
                             </div>
+
+                            {/* Dropdown Menu */}
+                            <DropdownMenu>
+                              <DropdownMenuTrigger
+                                asChild
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0 flex-shrink-0"
+                                >
+                                  <MoreVertical className="w-4 h-4 lg:w-3 lg:h-3" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleOpenMoveLocation(item);
+                                  }}
+                                >
+                                  <MapPin className="w-4 h-4 mr-2" />
+                                  Move
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
                         </div>
                       );
@@ -603,6 +730,12 @@ export default function Storage() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={() => handleOpenMoveLocation(selectedLocation)}
+                      >
+                        <MapPin className="w-4 h-4 mr-2" />
+                        Move Room
+                      </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
                           setEditingLocation(selectedLocation);
@@ -1519,8 +1652,15 @@ export default function Storage() {
                 </div>
               )}
 
-              {/* Close Button */}
+              {/* Action Buttons */}
               <div className="flex gap-2 pt-4 border-t border-primary/20">
+                <Button
+                  className="flex-1 bg-primary hover:bg-primary/90"
+                  onClick={() => handleOpenMoveItem(selectedItem)}
+                >
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Move
+                </Button>
                 <Button
                   variant="outline"
                   className="flex-1"
@@ -1533,6 +1673,29 @@ export default function Storage() {
           )}
         </DialogContent>
       </Dialog>
+
+      <MoveStorageItemDialog
+        open={moveDialogOpen}
+        onOpenChange={setMoveDialogOpen}
+        item={moveLocation}
+        allLocations={locations}
+        onMove={handleMoveLocation}
+      />
+
+      <MoveItemDialog
+        open={moveItemDialogOpen}
+        onOpenChange={setMoveItemDialogOpen}
+        item={moveItem}
+        locations={[
+          ...locations.map((loc) => loc.name),
+          ...items
+            .filter((item) => item.isStorageItem)
+            .map((item) => item.name),
+        ]}
+        locationObjects={locations}
+        storageItems={items.filter((item) => item.isStorageItem)}
+        onMove={handleMoveItem}
+      />
     </Layout>
   );
 }
