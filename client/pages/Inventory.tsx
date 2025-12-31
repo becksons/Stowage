@@ -58,6 +58,8 @@ export default function Inventory() {
   );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [moveDialogOpen, setMoveDialogOpen] = useState(false);
+  const [moveItem, setMoveItem] = useState(null);
 
   // Include both storage locations and storage items as available places to put items
   const storageItems = items.filter((item) => item.isStorageItem);
