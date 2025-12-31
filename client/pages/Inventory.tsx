@@ -520,6 +520,10 @@ export default function Inventory() {
                       <DropdownMenuItem onClick={() => handleOpenEdit(item)}>
                         Edit
                       </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleOpenMove(item)}>
+                        <MapPin className="w-4 h-4 mr-2" />
+                        Move
+                      </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => deleteItem(item.id)}
                         className="text-destructive"
