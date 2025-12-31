@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import Layout from "@/components/Layout";
 import ColorizedIcon from "@/components/ColorizedIcon";
+import MoveStorageItemDialog from "@/components/MoveStorageItemDialog";
 import { useSupabaseStorage } from "@/hooks/useSupabaseStorage";
 import { useSupabaseInventory } from "@/hooks/useSupabaseInventory";
 import { useToast } from "@/hooks/use-toast";
