@@ -435,6 +435,15 @@ export default function Storage() {
                               <DropdownMenuItem
                                 onClick={(e) => {
                                   e.stopPropagation();
+                                  handleOpenMoveLocation(location);
+                                }}
+                              >
+                                <MapPin className="w-4 h-4 mr-2" />
+                                Move
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                   setEditingLocation(location);
                                   setFormData({
                                     name: location.name,
