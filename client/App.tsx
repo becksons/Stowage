@@ -12,6 +12,7 @@ import Inventory from "./pages/Inventory";
 import Storage from "./pages/Storage";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
+import RedditPixelTracker from "./components/RedditPixelTracker";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <RedditPixelTracker />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
