@@ -27,7 +27,7 @@ import { trackSignUp } from "@/hooks/useRedditPixel";
 
 function handleSignUp(userId: string) {
   // ... your signup logic ...
-  
+
   // Track the conversion with unique ID for CAPI dedup
   trackSignUp(`signup-${userId}-${Date.now()}`);
 }
@@ -40,7 +40,7 @@ import { trackPurchase } from "@/hooks/useRedditPixel";
 
 function handlePurchase(amount: number, orderId: string) {
   // ... your purchase logic ...
-  
+
   // Track with value and currency
   trackPurchase(amount, "USD", `purchase-${orderId}`);
 }
@@ -53,7 +53,7 @@ import { trackLead } from "@/hooks/useRedditPixel";
 
 function handleLeadSubmit(leadId: string) {
   // ... your lead logic ...
-  
+
   trackLead(`lead-${leadId}`);
 }
 ```
@@ -83,11 +83,13 @@ trackEvent("AddToWishlist", { content_id: "item-456" });
 If you set up server-side tracking (Conversions API), prevent double-counting:
 
 **Browser event:**
+
 ```tsx
 trackPurchase(99.99, "USD", "conv-abc123-xyz");
 ```
 
 **Server event (Node.js example):**
+
 ```javascript
 // Send to Reddit CAPI with same conversionId
 {

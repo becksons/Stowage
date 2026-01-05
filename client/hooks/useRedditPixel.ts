@@ -25,7 +25,11 @@ export function trackPageVisit() {
  * @param currency - Currency code (default: "USD")
  * @param conversionId - Unique ID for deduplication with server-side CAPI
  */
-export function trackPurchase(value: number, currency = "USD", conversionId?: string) {
+export function trackPurchase(
+  value: number,
+  currency = "USD",
+  conversionId?: string,
+) {
   if (typeof window !== "undefined" && window.rdt) {
     window.rdt("track", "Purchase", {
       value,
